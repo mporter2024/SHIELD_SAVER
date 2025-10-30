@@ -1,0 +1,16 @@
+# --- Core Web Framework ---
+Flask>=3.0,<4
+
+# --- Cross-Origin Resource Sharing (Frontend Communication) ---
+Flask-Cors>=4.0,<5
+
+# --- HTTP Client Library for Testing ---
+requests>=2.31,<3
+
+# --- (Optional) Developer Tools ---
+# python-dotenv>=1.0,<2        # For environment variables
+# Flask-DebugToolbar>=0.14,<0.15   # For easier debugging in development
+
+# --- (Future AI / ML Expansion) ---
+# pandas>=2.0,<3
+# scikit-learn>=1.5,<2
