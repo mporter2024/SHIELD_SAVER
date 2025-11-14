@@ -32,5 +32,14 @@ def init_db(app):
             user_id INTEGER,
             FOREIGN KEY (user_id) REFERENCES users (id)
         );
+        CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            completed INTEGER DEFAULT 0,
+            due_date TEXT,
+            FOREIGN KEY (event_id) REFERENCES events(id)
+);
+                
         """)
         db.commit()

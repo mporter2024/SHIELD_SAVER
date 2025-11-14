@@ -3,7 +3,7 @@ from models.database import init_db
 from routes.events import events_bp
 from routes.users import users_bp
 from routes.ai import ai_bp
-
+from routes.tasks import tasks_bp
 def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
@@ -15,6 +15,8 @@ def create_app():
     app.register_blueprint(events_bp, url_prefix="/api/events")
     app.register_blueprint(users_bp, url_prefix="/api/users")
     app.register_blueprint(ai_bp, url_prefix="/api/ai")
+    app.register_blueprint(tasks_bp)
+
 
     @app.route('/')
     def home():
