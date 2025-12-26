@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
 from models.database import get_db
+import sqlite3
 
-tasks_bp = Blueprint("tasks", __name__, url_prefix="/api/tasks")
-
+tasks_bp = Blueprint("tasks", __name__)
 
 # -------------------------------
 # GET all tasks
@@ -32,34 +32,48 @@ def get_tasks_by_event(event_id):
 @tasks_bp.post("/")
 def create_task():
     db = get_db()
-    data = request.json
+    data = request.get_json(silent=True) or {}
 
     title = data.get("title")
     event_id = data.get("event_id")
     due_date = data.get("due_date")
     completed = data.get("completed", 0)
 
-    if not title or not event_id:
-        return {"error": "title and event_id are required"}, 400
+    # Basic validation
+    if not title or event_id is None:
+        return jsonify({"error": "title and event_id are required"}), 400
 
-    cursor = db.execute(
-        """
-        INSERT INTO tasks (event_id, title, completed, due_date)
-        VALUES (?, ?, ?, ?)
-        """,
-        (event_id, title, completed, due_date),
-    )
-    db.commit()
+    # Normalize types
+    try:
+        event_id = int(event_id)
+    except (TypeError, ValueError):
+        return jsonify({"error": "event_id must be an integer"}), 400
+
+    # Normalize completed to 0/1 (accepts True/False, 0/1, "0"/"1")
+    completed = 1 if str(completed).lower() in ("1", "true", "yes") else 0
+
+    try:
+        cursor = db.execute(
+            """
+            INSERT INTO tasks (event_id, title, completed, due_date)
+            VALUES (?, ?, ?, ?)
+            """,
+            (event_id, title, completed, due_date),
+        )
+        db.commit()
+    except sqlite3.IntegrityError as e:
+        # This commonly triggers if foreign keys are enforced and event_id doesn't exist
+        return jsonify({"error": "Database constraint failed", "details": str(e)}), 400
 
     task_id = cursor.lastrowid
 
-    return {
+    return jsonify({
         "id": task_id,
         "event_id": event_id,
         "title": title,
         "completed": completed,
         "due_date": due_date,
-    }, 201
+    }), 201
 
 
 # -------------------------------
@@ -68,13 +82,17 @@ def create_task():
 @tasks_bp.put("/<int:task_id>")
 def update_task(task_id):
     db = get_db()
-    data = request.json
+    data = request.get_json(silent=True) or {}
 
     title = data.get("title")
     completed = data.get("completed")
     due_date = data.get("due_date")
 
-    db.execute(
+    # If "completed" is provided, normalize it; otherwise keep as None
+    if completed is not None:
+        completed = 1 if str(completed).lower() in ("1", "true", "yes") else 0
+
+    cursor = db.execute(
         """
         UPDATE tasks
         SET title = COALESCE(?, title),
@@ -86,7 +104,10 @@ def update_task(task_id):
     )
     db.commit()
 
-    return {"message": "Task updated successfully"}
+    if cursor.rowcount == 0:
+        return jsonify({"error": "Task not found"}), 404
+
+    return jsonify({"message": "Task updated successfully"}), 200
 
 
 # -------------------------------
@@ -96,7 +117,10 @@ def update_task(task_id):
 def delete_task(task_id):
     db = get_db()
 
-    db.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
+    cursor = db.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
     db.commit()
 
-    return {"message": "Task deleted successfully"}
+    if cursor.rowcount == 0:
+        return jsonify({"error": "Task not found"}), 404
+
+    return jsonify({"message": "Task deleted successfully"}), 200
