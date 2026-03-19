@@ -6,31 +6,29 @@ def get_db():
         db_path = current_app.config.get("DATABASE", "event_planner.db")
         g.db = sqlite3.connect(db_path)
         g.db.row_factory = sqlite3.Row
-
-        # Enforce FK constraints in SQLite (off by default)
         g.db.execute("PRAGMA foreign_keys = ON;")
 
     return g.db
 
 
 def close_db(e=None):
-    db = g.pop("db", None)  # <-- key matches if "db" in g
+    db = g.pop("db", None)
     if db is not None:
         db.close()
 
 
 def init_db(app):
-    # Close DB connection at end of each request
     app.teardown_appcontext(close_db)
 
-    # Create tables if they don’t exist
     with app.app_context():
         db = get_db()
         db.executescript("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL
+            username TEXT UNIQUE NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL
         );
 
         CREATE TABLE IF NOT EXISTS events (
