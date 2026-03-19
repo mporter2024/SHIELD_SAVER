@@ -9,6 +9,13 @@ registerForm.addEventListener("submit", async function (event) {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
 
+    const confirmPassword = document.getElementById("confirm-password").value.trim();
+
+if (password !== confirmPassword) {
+    messageEl.textContent = "Passwords do not match.";
+    return;
+}
+
     messageEl.textContent = "Creating account...";
 
     try {
@@ -30,7 +37,7 @@ registerForm.addEventListener("submit", async function (event) {
         if (response.ok) {
             messageEl.textContent = "Account created successfully! Redirecting to login...";
             setTimeout(() => {
-                window.location.href = "index.html";
+                window.location.href = "/Frontend/pages/index.html";
             }, 1500);
         } else {
             messageEl.textContent = data.error || "Registration failed.";
