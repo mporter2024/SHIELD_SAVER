@@ -6,7 +6,27 @@
     <title>Dashboard</title>
 </head>
 <body>
-    <h1>Welcome to Spartan Shield Saver</h1>
-    <p>You are logged in.</p>
+
+    <h1>Dashboard</h1>
+    <p id="welcome-message"></p>
+
+    <button onclick="logout()">Logout</button>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+        if (!user) {
+            window.location.href = "index.html";
+        } else {
+            document.getElementById("welcome-message").textContent =
+                `Welcome, ${user.name}!`;
+        }
+
+        function logout() {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "index.html";
+        }
+    </script>
+
 </body>
 </html>
