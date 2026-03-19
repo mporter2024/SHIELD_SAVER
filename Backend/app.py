@@ -8,9 +8,11 @@ from routes.tasks import tasks_bp
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_pyfile('config.py')
+    app.config.from_pyfile("config.py")
 
-    CORS(app)
+    app.config["SECRET_KEY"] = "super-secret-key-change-this-later"
+
+    CORS(app, supports_credentials=True)
 
     init_db(app)
 
@@ -19,7 +21,7 @@ def create_app():
     app.register_blueprint(ai_bp, url_prefix="/api/ai")
     app.register_blueprint(tasks_bp, url_prefix="/api/tasks")
 
-    @app.route('/')
+    @app.route("/")
     def home():
         return {"message": "Welcome to the Event Planning API!"}
 

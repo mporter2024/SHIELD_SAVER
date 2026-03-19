@@ -15,6 +15,7 @@ loginForm.addEventListener("submit", async function (event) {
             headers: {
                 "Content-Type": "application/json"
             },
+            credentials: "include",
             body: JSON.stringify({
                 username: username,
                 password: password
@@ -26,7 +27,7 @@ loginForm.addEventListener("submit", async function (event) {
         if (response.ok) {
             messageEl.textContent = data.message;
 
-            localStorage.setItem("loggedInUser", JSON.stringify(data.user));
+          
 
             window.location.href = "/Frontend/pages/dashboard.html";
         } else {

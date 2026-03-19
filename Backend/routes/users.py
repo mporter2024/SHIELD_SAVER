@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from models.database import get_db
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
@@ -62,6 +62,10 @@ def login_user():
     if not check_password_hash(user["password"], password):
         return jsonify({"error": "Invalid username or password"}), 401
 
+    session["user_id"] = user["id"]
+    session["username"] = user["username"]
+    session["name"] = user["name"]
+
     return jsonify({
         "message": "Login successful",
         "user": {
@@ -85,3 +89,27 @@ def get_user(user_id):
         return jsonify({"error": "User not found"}), 404
 
     return jsonify(dict(user)), 200
+
+
+@users_bp.get("/me")
+def get_current_user():
+    if "user_id" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    db = get_db()
+    user = db.execute(
+        "SELECT id, name, username, email FROM users WHERE id = ?",
+        (session["user_id"],)
+    ).fetchone()
+
+    if user is None:
+        session.clear()
+        return jsonify({"error": "User not found"}), 404
+
+    return jsonify({"user": dict(user)}), 200
+
+
+@users_bp.post("/logout")
+def logout_user():
+    session.clear()
+    return jsonify({"message": "Logged out successfully"}), 200
