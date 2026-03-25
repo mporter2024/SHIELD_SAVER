@@ -10,8 +10,6 @@ def create_app():
     app = Flask(__name__)
     app.config.from_pyfile("config.py")
 
-    app.config["SECRET_KEY"] = "super-secret-key-change-this-later"
-
     CORS(app, supports_credentials=True)
 
     init_db(app)
