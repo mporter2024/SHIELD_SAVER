@@ -3,13 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard - Spartan Shield Saver</title>
+    <link rel="stylesheet" href="../styles/Spartan.css">
 </head>
-<body>
-    <h1>Dashboard</h1>
-    <p id="welcome-message"></p>
+<body class="dashboard-page">
 
-    <button id="logout-btn">Logout</button>
+    <div class="dashboard-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <img src="../logo.png" alt="Shield Saver Logo" class="brand-logo">
+                <div>
+                    <h2>Spartan Shield Saver</h2>
+                    <p>Event Planning Dashboard</p>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <h3>Welcome</h3>
+                <p id="welcome-message">Loading...</p>
+                <p id="user-email" class="muted-text"></p>
+            </div>
+
+            <div class="sidebar-actions">
+                <button id="refresh-btn" class="secondary-btn">Refresh Dashboard</button>
+                <button id="logout-btn" class="danger-btn">Logout</button>
+            </div>
+        </aside>
+
+        <main class="dashboard-main">
+            <section class="hero-panel">
+                <div>
+                    <h1>Dashboard</h1>
+                    <p class="muted-text">
+                        Manage your events, track tasks, and keep planning organized.
+                    </p>
+                </div>
+            </section>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Events</h3>
+                    <p id="total-events">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Tasks</h3>
+                    <p id="total-tasks">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Completed Tasks</h3>
+                    <p id="completed-tasks">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending Tasks</h3>
+                    <p id="pending-tasks">0</p>
+                </div>
+            </section>
+
+            <section class="dashboard-grid">
+                <div class="panel">
+                    <h2>Create Event</h2>
+                    <form id="event-form" class="event-form">
+                        <input type="text" id="event-title" placeholder="Event title" required>
+                        <input type="date" id="event-date" required>
+                        <input type="text" id="event-location" placeholder="Location" required>
+                        <textarea id="event-description" placeholder="Event description" rows="4" required></textarea>
+                        <button type="submit">Create Event</button>
+                    </form>
+                    <p id="event-message" class="form-message"></p>
+                </div>
+
+                <div class="panel">
+                    <h2>Planner Notes</h2>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <strong>Purpose</strong>
+                            <span>Keep all event planning details in one place.</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Next Goal</strong>
+                            <span>Add cost estimation and AI success scoring.</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Current Focus</strong>
+                            <span>Make the dashboard useful, readable, and interactive.</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="section-header">
+                    <h2>Your Events</h2>
+                </div>
+                <div id="events-container" class="events-container">
+                    <p class="muted-text">Loading events...</p>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script src="../scripts/dashboard.js"></script>
 </body>
