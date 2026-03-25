@@ -6,50 +6,11 @@
     <title>Dashboard</title>
 </head>
 <body>
-
     <h1>Dashboard</h1>
     <p id="welcome-message"></p>
 
-    <button onclick="logout()">Logout</button>
+    <button id="logout-btn">Logout</button>
 
-    <script>
-    async function loadDashboard() {
-        try {
-            const response = await fetch("http://127.0.0.1:5000/api/users/me", {
-                method: "GET",
-                credentials: "include"
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                window.location.href = "/Frontend/pages/index.html";
-                return;
-            }
-
-            document.getElementById("welcome-message").textContent =
-                `Welcome, ${data.user.name}!`;
-        } catch (error) {
-            console.error("Dashboard error:", error);
-            window.location.href = "/Frontend/pages/index.html";
-        }
-    }
-
-    async function logout() {
-        try {
-            await fetch("http://127.0.0.1:5000/api/users/logout", {
-                method: "POST",
-                credentials: "include"
-            });
-        } catch (error) {
-            console.error("Logout error:", error);
-        }
-
-        window.location.href = "/Frontend/pages/index.html";
-    }
-
-    loadDashboard();
-</script>
-
+    <script src="../scripts/dashboard.js"></script>
 </body>
 </html>
