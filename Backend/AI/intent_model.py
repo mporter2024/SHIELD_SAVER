@@ -7,6 +7,7 @@ texts = [
     "create event",
     "start planning an event",
     "how do I get started with an event",
+    "help me plan a school event",
     "hello",
     "hi",
     "hey",
@@ -17,11 +18,19 @@ texts = [
     "how do I plan a timeline",
     "how do I organize tasks for an event",
     "what should I prepare for an event",
+    "help me with logistics",
     "how much does an event cost",
     "help me make a budget",
     "estimate event expenses",
     "how much should I spend on food",
-    "how much will catering cost"
+    "how much will catering cost",
+    "what should I do next",
+    "what is my next step",
+    "show my tasks",
+    "what tasks are pending",
+    "summarize my event",
+    "what is the status of my event",
+    "give me an event summary"
 ]
 
 labels = [
@@ -30,11 +39,13 @@ labels = [
     "event_creation",
     "event_creation",
     "event_creation",
+    "event_creation",
     "greeting",
     "greeting",
     "greeting",
     "greeting",
     "greeting",
+    "event_help",
     "event_help",
     "event_help",
     "event_help",
@@ -44,7 +55,14 @@ labels = [
     "budgeting",
     "budgeting",
     "budgeting",
-    "budgeting"
+    "budgeting",
+    "task_help",
+    "task_help",
+    "task_help",
+    "task_help",
+    "event_summary",
+    "event_summary",
+    "event_summary"
 ]
 
 vectorizer = TfidfVectorizer(ngram_range=(1, 2))
