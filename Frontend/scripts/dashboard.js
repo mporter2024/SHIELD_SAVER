@@ -7,6 +7,7 @@ let allTasks = [];
 document.getElementById("logout-btn").addEventListener("click", logout);
 document.getElementById("refresh-btn").addEventListener("click", initializeDashboard);
 document.getElementById("event-form").addEventListener("submit", createEvent);
+document.getElementById("chat-form").addEventListener("submit", handleChatSubmit);
 
 async function initializeDashboard() {
     try {
@@ -316,16 +317,53 @@ function escapeJs(value) {
 }
 
 async function sendMessage(message) {
-    const response = await fetch("http://127.0.0.1:5000/api/ai/chat", {
+    const response = await fetch(`${API_BASE}/api/ai/chat`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
+        credentials: "include",
         body: JSON.stringify({ message })
     });
 
     const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error || "Chat request failed");
+    }
+
     return data.reply;
+}
+
+async function handleChatSubmit(event) {
+    event.preventDefault();
+
+    const input = document.getElementById("chat-input");
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    appendChatMessage("user", message);
+    input.value = "";
+
+    try {
+        const reply = await sendMessage(message);
+        appendChatMessage("bot", reply || "I couldn't generate a reply.");
+    } catch (error) {
+        console.error("Chat error:", error);
+        appendChatMessage("bot", "There was a problem reaching the chatbot.");
+    }
+}
+
+function appendChatMessage(sender, text) {
+    const container = document.getElementById("chat-messages");
+    const bubble = document.createElement("div");
+
+    bubble.className = `chat-bubble ${sender}`;
+    bubble.textContent = text;
+
+    container.appendChild(bubble);
+    container.scrollTop = container.scrollHeight;
 }
 
 initializeDashboard();

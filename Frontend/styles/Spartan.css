@@ -396,3 +396,53 @@ a:hover {
     flex-direction: column;
   }
 }
+
+.chatbot-panel {
+  margin-top: 22px;
+}
+
+.chat-messages {
+  min-height: 280px;
+  max-height: 360px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  background: #f7faf7;
+  border: 1px solid #dfe8df;
+  border-radius: 16px;
+  margin-bottom: 14px;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  line-height: 1.4;
+}
+
+.chat-bubble.bot {
+  align-self: flex-start;
+  background: #eaf5ec;
+  color: #183024;
+  border: 1px solid #d2e4d5;
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  background: #198754;
+  color: white;
+}
+
+.chat-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.chat-form button {
+  width: auto;
+  padding: 12px 18px;
+}
