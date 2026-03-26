@@ -332,7 +332,7 @@ async function sendMessage(message) {
         throw new Error(data.error || "Chat request failed");
     }
 
-    return data.reply;
+    return data;
 }
 
 async function handleChatSubmit(event) {
@@ -347,8 +347,12 @@ async function handleChatSubmit(event) {
     input.value = "";
 
     try {
-        const reply = await sendMessage(message);
-        appendChatMessage("bot", reply || "I couldn't generate a reply.");
+        const result = await sendMessage(message);
+        appendChatMessage("bot", result.reply || "I couldn't generate a reply.");
+
+        if (result.action === "task_created" || result.action === "task_completed") {
+    await initializeDashboard();
+}
     } catch (error) {
         console.error("Chat error:", error);
         appendChatMessage("bot", "There was a problem reaching the chatbot.");
