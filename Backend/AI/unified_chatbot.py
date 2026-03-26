@@ -1,5 +1,5 @@
-from ai.intent_model import detect_intent
-from ai.response_engine import get_response
+from .intent_model import detect_intent
+from .response_engine import get_response
 
 class UnifiedChatbot:
 
