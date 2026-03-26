@@ -16,17 +16,16 @@ async function initializeDashboard() {
         document.getElementById("welcome-message").textContent = user.name;
         document.getElementById("user-email").textContent = user.email;
 
-        const events = await fetchUserEvents(user.id);
+        const [events, tasks] = await Promise.all([
+            fetchMyEvents(),
+            fetchMyTasks()
+        ]);
+
         currentEvents = events;
+        allTasks = tasks;
 
-        const taskLists = await Promise.all(
-            events.map(event => fetchTasksByEvent(event.id))
-        );
-
-        allTasks = taskLists.flat();
-
-        updateStats(events, allTasks);
-        renderEvents(events, taskLists);
+        updateStats(events, tasks);
+        renderEvents(events, tasks);
     } catch (error) {
         console.error("Dashboard initialization failed:", error);
         window.location.href = "index.html";
@@ -48,8 +47,8 @@ async function fetchCurrentUser() {
     return data.user;
 }
 
-async function fetchUserEvents(userId) {
-    const response = await fetch(`${API_BASE}/api/events/user/${userId}`, {
+async function fetchMyEvents() {
+    const response = await fetch(`${API_BASE}/api/events/mine`, {
         method: "GET",
         credentials: "include"
     });
@@ -63,8 +62,8 @@ async function fetchUserEvents(userId) {
     return data;
 }
 
-async function fetchTasksByEvent(eventId) {
-    const response = await fetch(`${API_BASE}/api/tasks/event/${eventId}`, {
+async function fetchMyTasks() {
+    const response = await fetch(`${API_BASE}/api/tasks/mine`, {
         method: "GET",
         credentials: "include"
     });
@@ -72,7 +71,7 @@ async function fetchTasksByEvent(eventId) {
     const data = await response.json();
 
     if (!response.ok) {
-        return [];
+        throw new Error(data.error || "Could not load tasks");
     }
 
     return data;
@@ -88,7 +87,7 @@ function updateStats(events, tasks) {
     document.getElementById("pending-tasks").textContent = pending;
 }
 
-function renderEvents(events, taskLists) {
+function renderEvents(events, tasks) {
     const container = document.getElementById("events-container");
 
     if (!events.length) {
@@ -101,8 +100,8 @@ function renderEvents(events, taskLists) {
         return;
     }
 
-    container.innerHTML = events.map((event, index) => {
-        const tasks = taskLists[index] || [];
+    container.innerHTML = events.map((event) => {
+        const eventTasks = tasks.filter(task => Number(task.event_id) === Number(event.id));
 
         return `
             <div class="event-card">
@@ -120,9 +119,9 @@ function renderEvents(events, taskLists) {
                 <div class="task-section">
                     <h4>Tasks</h4>
                     ${
-                        tasks.length
+                        eventTasks.length
                             ? `<ul class="task-list">
-                                ${tasks.map(task => `
+                                ${eventTasks.map(task => `
                                     <li class="task-item">
                                         <label>
                                             <input
@@ -162,8 +161,7 @@ async function createEvent(event) {
         title: document.getElementById("event-title").value.trim(),
         date: document.getElementById("event-date").value,
         location: document.getElementById("event-location").value.trim(),
-        description: document.getElementById("event-description").value.trim(),
-        user_id: currentUser.id
+        description: document.getElementById("event-description").value.trim()
     };
 
     try {
