@@ -1,5 +1,5 @@
 import re
-from .intent_model import detect_intent
+from .intent_model import detect_intent_with_confidence
 from .response_engine import get_response
 
 
@@ -15,53 +15,81 @@ class UnifiedChatbot:
             "catering": "event_help",
             "timeline": "event_help",
             "schedule": "event_help",
+            "logistics": "event_help",
             "task": "task_help",
             "todo": "task_help",
             "next step": "task_help",
             "what should i do next": "task_help",
-            "plan": "event_creation",
-            "create": "event_creation",
-            "organize": "event_creation",
+            "status": "event_summary",
+            "summary": "event_summary",
+            "overview": "event_summary",
             "hello": "greeting",
             "hi": "greeting",
             "hey": "greeting",
-            "summary": "event_summary",
-            "status": "event_summary"
+            "plan": "event_creation",
+            "create": "event_creation",
+            "organize": "event_creation"
         }
 
-    def detect_with_fallback(self, message: str) -> str:
-        lowered = message.lower().strip()
+    def normalize_text(self, text: str) -> str:
+        text = text.lower().strip()
+        text = text.replace("to do", "todo")
+        text = text.replace("next steps", "next step")
+        text = text.replace("fund-raiser", "fundraiser")
+        text = re.sub(r"[^\w\s\-]", "", text)
+        text = re.sub(r"\s+", " ", text)
+        return text
+
+    def detect_intent_with_rules(self, message: str):
+        normalized = self.normalize_text(message)
 
         for keyword, intent in self.fallback_keywords.items():
-            if keyword in lowered:
-                return intent
+            if keyword in normalized:
+                return intent, 0.99
 
-        return detect_intent(lowered)
+        intent, confidence = detect_intent_with_confidence(normalized)
 
-    def pick_relevant_event(self, message: str, context: dict):
+        if confidence < 0.45:
+            return "unclear", confidence
+
+        return intent, confidence
+
+    def pick_relevant_event(self, message: str, context: dict, allow_fallback=True):
         events = context.get("events", [])
-        lowered = message.lower()
+        if not events:
+            return None
 
+        normalized_message = self.normalize_text(message)
+
+        # exact title match
         for event in events:
-            title = (event.get("title") or "").lower()
-            if title and title in lowered:
+            title = self.normalize_text(event.get("title", ""))
+            if title and title in normalized_message:
                 return event
 
+        # strongest word overlap
         best_event = None
         best_score = 0
 
+        message_words = set(normalized_message.split())
+
         for event in events:
-            title_words = set((event.get("title") or "").lower().split())
-            msg_words = set(lowered.split())
-            score = len(title_words.intersection(msg_words))
+            title_words = set(self.normalize_text(event.get("title", "")).split())
+            if not title_words:
+                continue
+
+            score = len(title_words.intersection(message_words))
             if score > best_score:
                 best_score = score
                 best_event = event
 
-        if best_score > 0:
+        if best_score >= 2:
             return best_event
 
-        if events:
+        if allow_fallback and len(events) == 1:
+            return events[0]
+
+        if allow_fallback and any(phrase in normalized_message for phrase in ["my event", "this event", "that event"]):
             return events[0]
 
         return None
@@ -70,12 +98,19 @@ class UnifiedChatbot:
         if context is None:
             context = {"events": [], "tasks": []}
 
-        lowered = message.lower().strip()
+        normalized = self.normalize_text(message)
 
-        if not lowered.startswith(("add task", "add a task", "create task", "create a task")):
+        valid_starts = (
+            "add task",
+            "add a task",
+            "create task",
+            "create a task"
+        )
+
+        if not normalized.startswith(valid_starts):
             return None
 
-        cleaned = message.strip()
+        original = message.strip()
 
         prefixes = [
             "add a task called ",
@@ -88,10 +123,12 @@ class UnifiedChatbot:
             "create task "
         ]
 
-        remainder = cleaned
+        remainder = original
+        lowered_original = original.lower()
+
         for prefix in prefixes:
-            if lowered.startswith(prefix):
-                remainder = cleaned[len(prefix):].strip()
+            if lowered_original.startswith(prefix):
+                remainder = original[len(prefix):].strip()
                 break
 
         if not remainder:
@@ -118,30 +155,54 @@ class UnifiedChatbot:
         events = context.get("events", [])
 
         if event_name:
-            event_name_lower = event_name.lower()
+            normalized_event_name = self.normalize_text(event_name)
 
             for event in events:
-                if (event.get("title") or "").lower() == event_name_lower:
+                event_title = self.normalize_text(event.get("title", ""))
+                if event_title == normalized_event_name:
                     selected_event = event
                     break
 
             if selected_event is None:
                 for event in events:
-                    event_title = (event.get("title") or "").lower()
-                    if event_name_lower in event_title or event_title in event_name_lower:
+                    event_title = self.normalize_text(event.get("title", ""))
+                    if normalized_event_name in event_title or event_title in normalized_event_name:
                         selected_event = event
                         break
         else:
-            selected_event = self.pick_relevant_event(message, context)
+            selected_event = self.pick_relevant_event(message, context, allow_fallback=False)
+
+            if selected_event is None and len(events) == 1:
+                selected_event = events[0]
 
         if selected_event is None:
-            return None
+            return {
+                "error": "I couldn’t tell which event this task belongs to. Please include the event name."
+            }
 
         return {
             "title": title,
             "due_date": due_date,
             "event_id": selected_event["id"]
         }
+
+    def build_response(self, message: str, context=None, selected_event=None):
+        if context is None:
+            context = {"events": [], "tasks": []}
+
+        normalized = self.normalize_text(message)
+        intent, confidence = self.detect_intent_with_rules(normalized)
+
+        if selected_event is None:
+            selected_event = self.pick_relevant_event(normalized, context)
+
+        return get_response(
+            intent=intent,
+            text=normalized,
+            context=context,
+            selected_event=selected_event,
+            confidence=confidence
+        )
 
     def get_response(self, message: str, context=None) -> str:
         cleaned_message = message.strip()
@@ -152,12 +213,4 @@ class UnifiedChatbot:
         if context is None:
             context = {"events": [], "tasks": []}
 
-        intent = self.detect_with_fallback(cleaned_message)
-        selected_event = self.pick_relevant_event(cleaned_message, context)
-
-        return get_response(
-            intent=intent,
-            text=cleaned_message,
-            context=context,
-            selected_event=selected_event
-        )
+        return self.build_response(cleaned_message, context=context)

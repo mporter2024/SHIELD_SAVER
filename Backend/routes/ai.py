@@ -93,6 +93,12 @@ def chat():
         action = chatbot.parse_add_task_command(user_message, context=context)
 
         if action:
+            if "error" in action:
+                return jsonify({
+                    "reply": action["error"],
+                    "action": "task_create_needs_event"
+                }), 200
+
             created_task, error = create_task_for_user(session["user_id"], action)
 
             if error:
@@ -105,10 +111,7 @@ def chat():
                 "reply": (
                     f"Task '{created_task['title']}' was added to "
                     f"'{created_task['event_title']}'"
-                    + (
-                        f" with due date {created_task['due_date']}."
-                        if created_task["due_date"] else "."
-                    )
+                    + (f" with due date {created_task['due_date']}." if created_task["due_date"] else ".")
                 ),
                 "action": "task_created",
                 "task": created_task
