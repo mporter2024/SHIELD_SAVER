@@ -1,3 +1,4 @@
+import re
 from .intent_model import detect_intent
 from .response_engine import get_response
 
@@ -41,13 +42,11 @@ class UnifiedChatbot:
         events = context.get("events", [])
         lowered = message.lower()
 
-        # First try exact title match
         for event in events:
             title = (event.get("title") or "").lower()
             if title and title in lowered:
                 return event
 
-        # Then try partial word overlap
         best_event = None
         best_score = 0
 
@@ -62,11 +61,87 @@ class UnifiedChatbot:
         if best_score > 0:
             return best_event
 
-        # Fallback: nearest upcoming / first event in list
         if events:
             return events[0]
 
         return None
+
+    def parse_add_task_command(self, message: str, context=None):
+        if context is None:
+            context = {"events": [], "tasks": []}
+
+        lowered = message.lower().strip()
+
+        if not lowered.startswith(("add task", "add a task", "create task", "create a task")):
+            return None
+
+        cleaned = message.strip()
+
+        prefixes = [
+            "add a task called ",
+            "add a task ",
+            "add task called ",
+            "add task ",
+            "create a task called ",
+            "create a task ",
+            "create task called ",
+            "create task "
+        ]
+
+        remainder = cleaned
+        for prefix in prefixes:
+            if lowered.startswith(prefix):
+                remainder = cleaned[len(prefix):].strip()
+                break
+
+        if not remainder:
+            return None
+
+        due_date = None
+        due_match = re.search(r"\s+due\s+(\d{4}-\d{2}-\d{2})\s*$", remainder, re.IGNORECASE)
+        if due_match:
+            due_date = due_match.group(1)
+            remainder = remainder[:due_match.start()].strip()
+
+        event_name = None
+        event_match = re.search(r"\s+for\s+(.+)$", remainder, re.IGNORECASE)
+        if event_match:
+            event_name = event_match.group(1).strip()
+            title = remainder[:event_match.start()].strip()
+        else:
+            title = remainder.strip()
+
+        if not title:
+            return None
+
+        selected_event = None
+        events = context.get("events", [])
+
+        if event_name:
+            event_name_lower = event_name.lower()
+
+            for event in events:
+                if (event.get("title") or "").lower() == event_name_lower:
+                    selected_event = event
+                    break
+
+            if selected_event is None:
+                for event in events:
+                    event_title = (event.get("title") or "").lower()
+                    if event_name_lower in event_title or event_title in event_name_lower:
+                        selected_event = event
+                        break
+        else:
+            selected_event = self.pick_relevant_event(message, context)
+
+        if selected_event is None:
+            return None
+
+        return {
+            "title": title,
+            "due_date": due_date,
+            "event_id": selected_event["id"]
+        }
 
     def get_response(self, message: str, context=None) -> str:
         cleaned_message = message.strip()

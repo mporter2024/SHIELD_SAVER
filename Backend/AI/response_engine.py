@@ -42,9 +42,7 @@ def get_response(intent, text, context=None, selected_event=None):
 
     if intent == "event_summary":
         if not events:
-            return (
-                "You do not have any events yet. Start by creating one with a title, date, location, and description."
-            )
+            return "You do not have any events yet. Start by creating one with a title, date, location, and description."
 
         if selected_event:
             return (
@@ -77,22 +75,18 @@ def get_response(intent, text, context=None, selected_event=None):
             )
 
         if pending_tasks:
-            next_three = tasks[:3]
-            task_list = ", ".join(task["title"] for task in next_three)
+            next_three = [task for task in tasks if int(task.get("completed", 0)) == 0][:3]
+            task_list = ", ".join(task["title"] for task in next_three) if next_three else "your pending tasks"
             return (
                 f"You currently have {pending_tasks} pending task(s). "
                 f"Some of the next ones to handle are: {task_list}."
             )
 
-        return (
-            "You do not have any tasks yet. Once you add tasks to an event, I can help you decide what to do next."
-        )
+        return "You do not have any tasks yet. Once you add tasks to an event, I can help you decide what to do next."
 
     if intent == "event_creation":
         if "school" in text_lower:
-            return (
-                "For a school event, start with the event goal, expected attendance, date, location, required approvals, and budget."
-            )
+            return "For a school event, start with the event goal, expected attendance, date, location, required approvals, and budget."
 
         return (
             "A strong event plan starts with five basics: goal, audience, date, location, and budget. "
@@ -103,26 +97,29 @@ def get_response(intent, text, context=None, selected_event=None):
         if "venue" in text_lower or "location" in text_lower:
             if selected_event:
                 return (
-                    f"For '{selected_event['title']}', make sure the venue matches your guest count, budget, parking needs, "
-                    f"accessibility needs, and event style."
+                    f"For '{selected_event['title']}', make sure the venue matches your guest count, budget, "
+                    f"parking needs, accessibility needs, and event style."
                 )
             return (
-                "When choosing a venue, think about guest count, cost, parking, accessibility, availability, and whether the space fits the tone of the event."
+                "When choosing a venue, think about guest count, cost, parking, accessibility, availability, "
+                "and whether the space fits the tone of the event."
             )
 
         if "timeline" in text_lower or "schedule" in text_lower:
             if selected_event:
                 return (
-                    f"A simple timeline for '{selected_event['title']}' should include booking, promotion, final confirmations, setup, event-day execution, and post-event review."
+                    f"A simple timeline for '{selected_event['title']}' should include booking, promotion, "
+                    f"final confirmations, setup, event-day execution, and post-event review."
                 )
             return (
-                "A simple event timeline usually includes planning, booking, promotion, final confirmations, event-day setup, and post-event review."
+                "A simple event timeline usually includes planning, booking, promotion, final confirmations, "
+                "event-day setup, and post-event review."
             )
 
         if "food" in text_lower or "catering" in text_lower:
             return (
-                "For catering, estimate guest count first, then decide whether you need meals, snacks, drinks, or light refreshments. "
-                "Also account for dietary restrictions and serving supplies."
+                "For catering, estimate guest count first, then decide whether you need meals, snacks, drinks, "
+                "or light refreshments. Also account for dietary restrictions and serving supplies."
             )
 
         return (
@@ -133,12 +130,13 @@ def get_response(intent, text, context=None, selected_event=None):
     if intent == "budgeting":
         if selected_event:
             return (
-                f"For '{selected_event['title']}', build your budget in categories: venue, food, decorations, equipment, labor, marketing, and emergency cushion."
+                f"For '{selected_event['title']}', build your budget in categories: venue, food, decorations, "
+                f"equipment, labor, marketing, and emergency cushion."
             )
 
         return (
-            "A strong event budget usually includes venue, food, decorations, equipment, labor, marketing, and a backup cushion. "
-            "Tell me your event type and expected attendance, and I can help you break it down."
+            "A strong event budget usually includes venue, food, decorations, equipment, labor, marketing, "
+            "and a backup cushion. Tell me your event type and expected attendance, and I can help you break it down."
         )
 
     if events:
@@ -147,6 +145,4 @@ def get_response(intent, text, context=None, selected_event=None):
             f"Ask me about an event’s budget, venue, tasks, timeline, or next steps."
         )
 
-    return (
-        "I’m not fully sure what you mean yet, but I can help with event planning, budgeting, venues, catering, timelines, and tasks."
-    )
+    return "I’m not fully sure what you mean yet, but I can help with event planning, budgeting, venues, catering, timelines, and tasks."
