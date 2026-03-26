@@ -76,6 +76,40 @@ def create_task_for_user(user_id, task_data):
     }, None
 
 
+def complete_task_for_user(user_id, task_id):
+    db = get_db()
+
+    task = db.execute(
+        """
+        SELECT tasks.id, tasks.title, tasks.completed, tasks.event_id, events.title AS event_title
+        FROM tasks
+        INNER JOIN events ON tasks.event_id = events.id
+        WHERE tasks.id = ? AND events.user_id = ?
+        """,
+        (task_id, user_id)
+    ).fetchone()
+
+    if task is None:
+        return None, "That task was not found for the current user."
+
+    if int(task["completed"]) == 1:
+        return None, f"'{task['title']}' is already marked complete."
+
+    db.execute(
+        "UPDATE tasks SET completed = 1 WHERE id = ?",
+        (task_id,)
+    )
+    db.commit()
+
+    return {
+        "id": task["id"],
+        "title": task["title"],
+        "event_id": task["event_id"],
+        "event_title": task["event_title"],
+        "completed": 1
+    }, None
+
+
 @ai_bp.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json(silent=True) or {}
@@ -90,16 +124,15 @@ def chat():
     try:
         context = load_user_context(session["user_id"])
 
-        action = chatbot.parse_add_task_command(user_message, context=context)
-
-        if action:
-            if "error" in action:
+        add_action = chatbot.parse_add_task_command(user_message, context=context)
+        if add_action:
+            if "error" in add_action:
                 return jsonify({
-                    "reply": action["error"],
+                    "reply": add_action["error"],
                     "action": "task_create_needs_event"
                 }), 200
 
-            created_task, error = create_task_for_user(session["user_id"], action)
+            created_task, error = create_task_for_user(session["user_id"], add_action)
 
             if error:
                 return jsonify({
@@ -115,6 +148,31 @@ def chat():
                 ),
                 "action": "task_created",
                 "task": created_task
+            }), 200
+
+        complete_action = chatbot.parse_complete_task_command(user_message, context=context)
+        if complete_action:
+            if "error" in complete_action:
+                return jsonify({
+                    "reply": complete_action["error"],
+                    "action": "task_complete_failed"
+                }), 200
+
+            completed_task, error = complete_task_for_user(session["user_id"], complete_action["task_id"])
+
+            if error:
+                return jsonify({
+                    "reply": error,
+                    "action": "task_complete_failed"
+                }), 200
+
+            return jsonify({
+                "reply": (
+                    f"Task '{completed_task['title']}' for "
+                    f"'{completed_task['event_title']}' was marked complete."
+                ),
+                "action": "task_completed",
+                "task": completed_task
             }), 200
 
         reply = chatbot.get_response(user_message, context=context)

@@ -61,16 +61,13 @@ class UnifiedChatbot:
 
         normalized_message = self.normalize_text(message)
 
-        # exact title match
         for event in events:
             title = self.normalize_text(event.get("title", ""))
             if title and title in normalized_message:
                 return event
 
-        # strongest word overlap
         best_event = None
         best_score = 0
-
         message_words = set(normalized_message.split())
 
         for event in events:
@@ -89,7 +86,9 @@ class UnifiedChatbot:
         if allow_fallback and len(events) == 1:
             return events[0]
 
-        if allow_fallback and any(phrase in normalized_message for phrase in ["my event", "this event", "that event"]):
+        if allow_fallback and any(
+            phrase in normalized_message for phrase in ["my event", "this event", "that event"]
+        ):
             return events[0]
 
         return None
@@ -184,6 +183,126 @@ class UnifiedChatbot:
             "title": title,
             "due_date": due_date,
             "event_id": selected_event["id"]
+        }
+
+    def parse_complete_task_command(self, message: str, context=None):
+        if context is None:
+            context = {"events": [], "tasks": []}
+
+        normalized = self.normalize_text(message)
+
+        command_starts = (
+            "complete task",
+            "complete",
+            "mark task",
+            "mark",
+            "finish task",
+            "finish"
+        )
+
+        if not normalized.startswith(command_starts):
+            return None
+
+        if "complete" not in normalized and "finish" not in normalized and "mark" not in normalized:
+            return None
+
+        original = message.strip()
+        task_part = original
+
+        patterns = [
+            r"^complete task\s+",
+            r"^complete\s+",
+            r"^mark task\s+",
+            r"^mark\s+",
+            r"^finish task\s+",
+            r"^finish\s+"
+        ]
+
+        for pattern in patterns:
+            task_part = re.sub(pattern, "", task_part, flags=re.IGNORECASE).strip()
+            if task_part != original.strip():
+                break
+
+        task_part = re.sub(r"\s+as\s+complete$", "", task_part, flags=re.IGNORECASE).strip()
+        task_part = re.sub(r"\s+complete$", "", task_part, flags=re.IGNORECASE).strip()
+        task_part = re.sub(r"\s+for\s+(.+)$", "", task_part, flags=re.IGNORECASE).strip()
+
+        event_name = None
+        event_match = re.search(r"\s+for\s+(.+)$", original, re.IGNORECASE)
+        if event_match:
+            event_name = event_match.group(1).strip()
+
+        if not task_part:
+            return {"error": "Please include the task name you want to complete."}
+
+        tasks = context.get("tasks", [])
+        events = context.get("events", [])
+
+        selected_event = None
+        if event_name:
+            normalized_event_name = self.normalize_text(event_name)
+            for event in events:
+                event_title = self.normalize_text(event.get("title", ""))
+                if event_title == normalized_event_name:
+                    selected_event = event
+                    break
+            if selected_event is None:
+                for event in events:
+                    event_title = self.normalize_text(event.get("title", ""))
+                    if normalized_event_name in event_title or event_title in normalized_event_name:
+                        selected_event = event
+                        break
+
+        candidate_tasks = tasks
+        if selected_event is not None:
+            candidate_tasks = [
+                task for task in tasks
+                if int(task.get("event_id", 0)) == int(selected_event["id"])
+            ]
+
+        normalized_task_name = self.normalize_text(task_part)
+
+        exact_matches = []
+        partial_matches = []
+
+        for task in candidate_tasks:
+            task_title = self.normalize_text(task.get("title", ""))
+
+            if task_title == normalized_task_name:
+                exact_matches.append(task)
+            elif normalized_task_name in task_title or task_title in normalized_task_name:
+                partial_matches.append(task)
+
+        matches = exact_matches if exact_matches else partial_matches
+
+        if not matches:
+            return {
+                "error": "I couldn’t find a matching task to complete. Try using the full task name."
+            }
+
+        incomplete_matches = [
+            task for task in matches
+            if int(task.get("completed", 0)) == 0
+        ]
+
+        if len(incomplete_matches) == 1:
+            return {
+                "task_id": incomplete_matches[0]["id"]
+            }
+
+        if len(incomplete_matches) > 1:
+            task_titles = ", ".join(task["title"] for task in incomplete_matches[:3])
+            return {
+                "error": f"I found multiple matching incomplete tasks: {task_titles}. Please be more specific."
+            }
+
+        if len(matches) == 1 and int(matches[0].get("completed", 0)) == 1:
+            return {
+                "error": f"'{matches[0]['title']}' is already marked complete."
+            }
+
+        return {
+            "error": "I couldn’t find an incomplete version of that task."
         }
 
     def build_response(self, message: str, context=None, selected_event=None):

@@ -350,9 +350,9 @@ async function handleChatSubmit(event) {
         const result = await sendMessage(message);
         appendChatMessage("bot", result.reply || "I couldn't generate a reply.");
 
-        if (result.action === "task_created") {
-            await initializeDashboard();
-        }
+        if (result.action === "task_created" || result.action === "task_completed") {
+    await initializeDashboard();
+}
     } catch (error) {
         console.error("Chat error:", error);
         appendChatMessage("bot", "There was a problem reaching the chatbot.");
