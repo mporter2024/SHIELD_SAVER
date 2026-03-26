@@ -1,34 +1,45 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from models.database import get_db
 import sqlite3
 
 tasks_bp = Blueprint("tasks", __name__)
 
-# -------------------------------
-# GET all tasks
-# -------------------------------
 @tasks_bp.get("/")
 def get_tasks():
     db = get_db()
     tasks = db.execute("SELECT * FROM tasks").fetchall()
-    return jsonify([dict(task) for task in tasks])
+    return jsonify([dict(task) for task in tasks]), 200
 
 
-# -------------------------------
-# GET all tasks for a specific event
-# -------------------------------
+@tasks_bp.get("/mine")
+def get_my_tasks():
+    if "user_id" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    db = get_db()
+    tasks = db.execute(
+        """
+        SELECT tasks.*
+        FROM tasks
+        INNER JOIN events ON tasks.event_id = events.id
+        WHERE events.user_id = ?
+        ORDER BY tasks.due_date ASC, tasks.id DESC
+        """,
+        (session["user_id"],)
+    ).fetchall()
+
+    return jsonify([dict(task) for task in tasks]), 200
+
+
 @tasks_bp.get("/event/<int:event_id>")
 def get_tasks_by_event(event_id):
     db = get_db()
     tasks = db.execute(
         "SELECT * FROM tasks WHERE event_id = ?", (event_id,)
     ).fetchall()
-    return jsonify([dict(task) for task in tasks])
+    return jsonify([dict(task) for task in tasks]), 200
 
 
-# -------------------------------
-# CREATE a task
-# -------------------------------
 @tasks_bp.post("/")
 def create_task():
     db = get_db()
@@ -39,17 +50,14 @@ def create_task():
     due_date = data.get("due_date")
     completed = data.get("completed", 0)
 
-    # Basic validation
     if not title or event_id is None:
         return jsonify({"error": "title and event_id are required"}), 400
 
-    # Normalize types
     try:
         event_id = int(event_id)
     except (TypeError, ValueError):
         return jsonify({"error": "event_id must be an integer"}), 400
 
-    # Normalize completed to 0/1 (accepts True/False, 0/1, "0"/"1")
     completed = 1 if str(completed).lower() in ("1", "true", "yes") else 0
 
     try:
@@ -62,7 +70,6 @@ def create_task():
         )
         db.commit()
     except sqlite3.IntegrityError as e:
-        # This commonly triggers if foreign keys are enforced and event_id doesn't exist
         return jsonify({"error": "Database constraint failed", "details": str(e)}), 400
 
     task_id = cursor.lastrowid
@@ -76,9 +83,6 @@ def create_task():
     }), 201
 
 
-# -------------------------------
-# UPDATE a task (title/status/date)
-# -------------------------------
 @tasks_bp.put("/<int:task_id>")
 def update_task(task_id):
     db = get_db()
@@ -88,7 +92,6 @@ def update_task(task_id):
     completed = data.get("completed")
     due_date = data.get("due_date")
 
-    # If "completed" is provided, normalize it; otherwise keep as None
     if completed is not None:
         completed = 1 if str(completed).lower() in ("1", "true", "yes") else 0
 
@@ -110,9 +113,6 @@ def update_task(task_id):
     return jsonify({"message": "Task updated successfully"}), 200
 
 
-# -------------------------------
-# DELETE a task
-# -------------------------------
 @tasks_bp.delete("/<int:task_id>")
 def delete_task(task_id):
     db = get_db()

@@ -36,9 +36,9 @@ loginForm.addEventListener("submit", async function (event) {
         console.error("Login error:", error);
         messageEl.textContent = "Could not connect to the server.";
     }
+});
 
-
-    async function checkExistingSession() {
+async function checkExistingSession() {
     try {
         const response = await fetch(`${API_BASE}/api/users/me`, {
             method: "GET",
@@ -54,4 +54,3 @@ loginForm.addEventListener("submit", async function (event) {
 }
 
 checkExistingSession();
-});
