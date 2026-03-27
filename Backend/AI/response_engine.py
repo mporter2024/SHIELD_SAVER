@@ -1,6 +1,31 @@
-def get_response(intent, text):
-    text_lower = text.lower()
+from .planning_engine import get_venues, get_catering, estimate_budget
 
+def get_response(intent, text):
+    
+    text_lower = text.lower()
+    if "venue" in text_lower and ("suggest" in text_lower or "find" in text_lower):
+        venue_list = get_venues()
+
+        formatted = "\n\n".join(
+            f"{v['name']} ({v['type']})\n"
+            f"Capacity: {v['capacity']}\n"
+            f"Estimated Cost: ${v['cost']}\n"
+            f"{v['description']}"
+            for v in venue_list
+        )
+
+    return f"Here are some venue options in Norfolk:\n\n{formatted}"
+
+    if "catering" in text_lower or "food" in text_lower:
+        options = get_catering()
+
+        formatted = "\n".join(
+            f"- {c['name']} ({c['type']}, ${c['cost_per_person']} per person)"
+            for c in options
+        )
+
+    return f"Here are some catering options:\n{formatted}"
+    
     if intent == "greeting":
         return (
             "Hey! I can help you plan events, estimate budgets, think through venues, "
