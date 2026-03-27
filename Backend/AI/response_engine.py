@@ -1,4 +1,6 @@
 from .planning_engine import get_venues, get_catering, estimate_budget
+
+
 def get_event_tasks(selected_event, all_tasks):
     if not selected_event:
         return []
@@ -36,9 +38,6 @@ def get_response(intent, text, context=None, selected_event=None, confidence=Non
             "venue selection, timelines, or tasks."
         )
 
-def get_response(intent, text):
-    
-    text_lower = text.lower()
     if "venue" in text_lower and ("suggest" in text_lower or "find" in text_lower):
         venue_list = get_venues()
 
@@ -50,7 +49,7 @@ def get_response(intent, text):
             for v in venue_list
         )
 
-    return f"Here are some venue options in Norfolk:\n\n{formatted}"
+        return f"Here are some venue options in Norfolk:\n\n{formatted}"
 
     if "catering" in text_lower or "food" in text_lower:
         options = get_catering()
@@ -60,8 +59,19 @@ def get_response(intent, text):
             for c in options
         )
 
-    return f"Here are some catering options:\n{formatted}"
-    
+        return f"Here are some catering options:\n{formatted}"
+
+    if "budget" in text_lower or "estimate" in text_lower:
+        result = estimate_budget(selected_event)
+
+        return (
+            f"Estimated budget:\n"
+            f"- Venue: ${result['venue']}\n"
+            f"- Food: ${result['food']}\n"
+            f"- Misc: ${result['misc']}\n"
+            f"Total: ${result['total']}"
+        )
+
     if intent == "greeting":
         if selected_event:
             return (
@@ -143,12 +153,6 @@ def get_response(intent, text):
                     f"promotion, confirmations, setup, and post-event follow-up."
                 )
             return "Break your event into milestones: planning, booking, promotion, execution, and follow-up."
-
-        if "food" in text_lower or "catering" in text_lower:
-            return (
-                "Estimate guest count first, then decide whether you need full meals, snacks, or drinks. "
-                "Also account for dietary restrictions."
-            )
 
         return "I can help with venues, timelines, logistics, catering, vendors, and more."
 
