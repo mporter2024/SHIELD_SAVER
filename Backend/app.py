@@ -24,7 +24,7 @@ def create_app():
         return {"message": "Welcome to the Event Planning API!"}
 
     return app
-
+app = create_app()
 if __name__ == "__main__":
-    app = create_app()
+    
     app.run(debug=True)
