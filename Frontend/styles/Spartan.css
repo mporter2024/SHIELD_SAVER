@@ -591,3 +591,33 @@ a:hover {
     grid-template-columns: 1fr;
   }
 }
+
+.sidebar-nav {
+  margin: 20px 0;
+}
+
+.sidebar-nav h3 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #dcefe0;
+  opacity: 0.8;
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  text-decoration: none;
+  color: white;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-nav a.active {
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
