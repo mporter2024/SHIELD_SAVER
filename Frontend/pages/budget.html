@@ -19,13 +19,17 @@
     <main class="main-content">
       <header class="page-header">
         <h2>Event Budget Calculator</h2>
-        <p>Estimate event costs by category and view your total budget instantly.</p>
+        <p>Estimate event costs by category, attach them to an event, and ask the chatbot for help from this page.</p>
       </header>
 
       <section class="panel budget-panel">
         <div class="budget-grid">
           <div class="budget-form">
             <h3>Budget Inputs</h3>
+
+            <label for="event-select">Select Existing Event</label>
+            <select id="event-select"></select>
+            <p id="budget-status" class="form-message"></p>
 
             <label for="event-name">Event Name</label>
             <input type="text" id="event-name" placeholder="Spring Fundraiser" />
@@ -59,6 +63,7 @@
 
             <div class="budget-buttons">
               <button id="calculate-btn" type="button">Calculate Budget</button>
+              <button id="save-btn" type="button">Save To Event</button>
               <button id="reset-btn" type="button" class="secondary-btn">Reset</button>
             </div>
           </div>
@@ -122,6 +127,19 @@
             </div>
           </div>
         </div>
+      </section>
+
+      <section class="panel chatbot-panel">
+        <h2>AI Budget Assistant</h2>
+        <div id="chat-messages" class="chat-messages">
+          <div class="chat-bubble bot">
+            Hi! I can help you think through budget categories, event costs, and next planning steps.
+          </div>
+        </div>
+        <form id="chat-form" class="chat-form">
+          <input type="text" id="chat-input" placeholder="Ask about budget or planning..." required>
+          <button type="submit">Send</button>
+        </form>
       </section>
     </main>
   </div>
