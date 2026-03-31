@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Spartan Shield Saver</title>
+    <link rel="stylesheet" href="../styles/Spartan.css">
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-shell">
+        <aside class="sidebar" id="sidebar"></aside>
+
+        <main class="dashboard-main">
+            <section class="dashboard-header">
+                <h1>Admin Dashboard</h1>
+                <p>Administrative overview of users and events.</p>
+            </section>
+
+            <section class="dashboard-grid">
+                <div class="info-card">
+                    <h3>Total Users</h3>
+                    <p id="total-users">0</p>
+                </div>
+                <div class="info-card">
+                    <h3>Total Events</h3>
+                    <p id="total-events">0</p>
+                </div>
+                <div class="info-card">
+                    <h3>Total Tasks</h3>
+                    <p id="total-tasks">0</p>
+                </div>
+            </section>
+
+            <section class="panel-card">
+                <h2>All Users</h2>
+                <div id="users-list"></div>
+            </section>
+
+            <section class="panel-card">
+                <h2>All Events</h2>
+                <div id="events-list"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../scripts/sidebar.js"></script>
+    <script src="../scripts/admin.js"></script>
+</body>
+</html>

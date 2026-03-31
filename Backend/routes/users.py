@@ -30,8 +30,8 @@ def create_user():
 
     try:
         db.execute(
-            "INSERT INTO users (name, username, email, password) VALUES (?, ?, ?, ?)",
-            (name, username, email, hashed_password)
+            "INSERT INTO users (name, username, email, password, role) VALUES (?, ?, ?, ?, ?)",
+            (name, username, email, hashed_password, "user")
         )
         db.commit()
     except sqlite3.IntegrityError as e:
@@ -74,6 +74,7 @@ def login_user():
             "name": user["name"],
             "username": user["username"],
             "email": user["email"]
+            "role": user["role"]
         }
     }), 200
 

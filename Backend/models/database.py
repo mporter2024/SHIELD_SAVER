@@ -37,7 +37,14 @@ def init_db(app):
             username TEXT UNIQUE NOT NULL,
             email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL
+            role TEXT NOT NULL DEFAULT 'user'
         );
+
+   columns = db.execute("PRAGMA table_info(users)").fetchall()
+column_names = [column["name"] for column in columns]
+
+if "role" not in column_names:
+    db.execute("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'user'")                      
 
         CREATE TABLE IF NOT EXISTS events (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
