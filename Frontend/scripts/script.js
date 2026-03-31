@@ -12,29 +12,32 @@ loginForm.addEventListener("submit", async function (event) {
     messageEl.textContent = "Logging in...";
 
     try {
-        const response = await fetch(`${API_BASE}/api/users/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                username,
-                password
-            })
-        });
+       const response = await fetch("http://127.0.0.1:5000/api/users/login", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    credentials: "include",
+    body: JSON.stringify({
+        email,
+        password
+    })
+});
 
-        const data = await response.json();
+const data = await response.json();
 
-        if (response.ok) {
-            messageEl.textContent = data.message;
-            if (data.user) {
-                localStorage.setItem("user", JSON.stringify(data.user));
-            }
-            window.location.href = "dashboard.html";
-        } else {
-            messageEl.textContent = data.error || "Login failed.";
-        }
+if (!response.ok) {
+    alert(data.error || "Login failed.");
+    return;
+}
+
+localStorage.setItem("user", JSON.stringify(data.user));
+
+if (data.user.role === "admin") {
+    window.location.href = "admin.html";
+} else {
+    window.location.href = "dashboard.html";
+} 
     } catch (error) {
         console.error("Login error:", error);
         messageEl.textContent = "Could not connect to the server.";

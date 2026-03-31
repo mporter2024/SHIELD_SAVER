@@ -1,19 +1,21 @@
-function loadSidebar(activePage, title = "Admin", subtitle = "System overview") {
+function loadSidebar(activePage, title = "Welcome", subtitle = "Manage your events") {
     const sidebar = document.getElementById("sidebar");
     if (!sidebar) return;
+
+    const user = JSON.parse(localStorage.getItem("user"));
 
     sidebar.innerHTML = `
         <div class="brand">
             <img src="../logo.png" alt="Shield Saver Logo" class="brand-logo">
             <div>
                 <h2>Spartan Shield Saver</h2>
-                <p>Administrative View</p>
+                <p>Event Planning</p>
             </div>
         </div>
 
         <div class="profile-card">
-            <h3 id="sidebar-title">${title}</h3>
-            <p id="sidebar-subtitle" class="muted-text">${subtitle}</p>
+            <h3 id="sidebar-title">Welcome</h3>
+            <p id="sidebar-subtitle" class="muted-text">Manage your events</p>
         </div>
 
         <nav class="sidebar-nav">
@@ -21,27 +23,42 @@ function loadSidebar(activePage, title = "Admin", subtitle = "System overview") 
             <a href="dashboard.html" data-page="dashboard">Dashboard</a>
             <a href="planner.html" data-page="planner">Planning</a>
             <a href="budget.html" data-page="budget">Budget Calculator</a>
-            <a href="admin.html" data-page="admin">Admin</a>
+            <a href="admin.html" data-page="admin" id="admin-link" style="display:none;">Admin</a>
         </nav>
 
         <div class="sidebar-actions">
-            <button id="sidebar-refresh-btn" class="secondary-btn" type="button">Refresh</button>
-            <button id="sidebar-logout-btn" class="danger-btn" type="button">Logout</button>
+            <button id="refresh-btn" class="secondary-btn" type="button">Refresh</button>
+            <button id="logout-btn" class="danger-btn" type="button">Logout</button>
         </div>
     `;
 
-    sidebar.querySelectorAll(".sidebar-nav a").forEach((link) => {
+    const titleEl = document.getElementById("sidebar-title");
+    const subtitleEl = document.getElementById("sidebar-subtitle");
+
+    if (titleEl) titleEl.textContent = title;
+    if (subtitleEl) subtitleEl.textContent = subtitle;
+
+    document.querySelectorAll(".sidebar-nav a").forEach(link => {
         if (link.dataset.page === activePage) {
             link.classList.add("active");
         }
     });
 
-    const refreshBtn = document.getElementById("sidebar-refresh-btn");
-    if (refreshBtn) {
-        refreshBtn.addEventListener("click", () => window.location.reload());
+    if (user && user.role === "admin") {
+        const adminLink = document.getElementById("admin-link");
+        if (adminLink) {
+            adminLink.style.display = "block";
+        }
     }
 
-    const logoutBtn = document.getElementById("sidebar-logout-btn");
+    const refreshBtn = document.getElementById("refresh-btn");
+    if (refreshBtn) {
+        refreshBtn.addEventListener("click", () => {
+            window.location.reload();
+        });
+    }
+
+    const logoutBtn = document.getElementById("logout-btn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", async () => {
             try {
@@ -50,9 +67,10 @@ function loadSidebar(activePage, title = "Admin", subtitle = "System overview") 
                     credentials: "include"
                 });
             } catch (error) {
-                console.error("Logout failed:", error);
+                console.error("Logout request failed:", error);
             }
 
+            localStorage.removeItem("user");
             localStorage.removeItem("selectedEventId");
             window.location.href = "index.html";
         });
