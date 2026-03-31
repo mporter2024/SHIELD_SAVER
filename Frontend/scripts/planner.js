@@ -1,5 +1,11 @@
 const API_BASE = "http://127.0.0.1:5000";
 
+const eventId = getEventIdFromUrl();
+
+if (eventId) {
+    localStorage.setItem("selectedEventId", eventId);
+}
+
 let selectedEventId = null;
 let currentEvent = null;
 let currentTasks = [];

@@ -44,13 +44,33 @@ def get_my_events():
 
 @events_bp.get("/<int:event_id>")
 def get_event(event_id):
+    if "user_id" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
     db = get_db()
-    event = db.execute("SELECT * FROM events WHERE id = ?", (event_id,)).fetchone()
+
+    event = db.execute(
+        "SELECT * FROM events WHERE id = ? AND user_id = ?",
+        (event_id, session["user_id"])
+    ).fetchone()
 
     if event is None:
         return jsonify({"error": "Event not found"}), 404
 
-    return jsonify(dict(event)), 200
+    tasks = db.execute(
+        """
+        SELECT *
+        FROM tasks
+        WHERE event_id = ?
+        ORDER BY COALESCE(start_datetime, due_date) ASC, id DESC
+        """,
+        (event_id,)
+    ).fetchall()
+
+    return jsonify({
+        "event": dict(event),
+        "tasks": [dict(task) for task in tasks]
+    }), 200
 
 
 @events_bp.get("/user/<int:user_id>")

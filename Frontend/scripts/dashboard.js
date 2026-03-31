@@ -152,6 +152,7 @@ async function createEvent(event) {
 }
 
 function openPlanner(eventId) {
+    localStorage.setItem("selectedEventId", eventId);
     window.location.href = `planner.html?event_id=${eventId}`;
 }
 
@@ -266,6 +267,32 @@ function appendChatMessage(sender, text) {
     container.appendChild(bubble);
     container.scrollTop = container.scrollHeight;
 }
+
+const plannerLink = document.getElementById("planner-nav-link");
+
+if (plannerLink) {
+    plannerLink.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const eventId = localStorage.getItem("selectedEventId");
+
+        if (eventId) {
+            window.location.href = `planner.html?event_id=${eventId}`;
+        } else {
+            alert("Please select an event first.");
+        }
+    });
+}
+
+document.getElementById("planner-nav-btn").addEventListener("click", () => {
+    const eventId = localStorage.getItem("selectedEventId");
+
+    if (eventId) {
+        window.location.href = `planner.html?event_id=${eventId}`;
+    } else {
+        alert("Please select an event first.");
+    }
+});
 
 window.openPlanner = openPlanner;
 window.deleteEvent = deleteEvent;
