@@ -1,4 +1,4 @@
-async function loadSidebar(activePage, title = "Welcome", subtitle = "Manage your events") {
+function loadSidebar(activePage, title = "Welcome", subtitle = "Manage your events") {
     const sidebar = document.getElementById("sidebar");
     if (!sidebar) return;
 
@@ -12,8 +12,9 @@ async function loadSidebar(activePage, title = "Welcome", subtitle = "Manage you
         </div>
 
         <div class="profile-card">
-            <h3 id="sidebar-title">Welcome</h3>
-            <p id="sidebar-subtitle" class="muted-text">Manage your events</p>
+            <h3 id="sidebar-title">${escapeHtml(title)}</h3>
+            <p id="welcome-message">${escapeHtml(subtitle)}</p>
+            <p id="user-email" class="muted-text"></p>
         </div>
 
         <nav class="sidebar-nav">
@@ -29,13 +30,7 @@ async function loadSidebar(activePage, title = "Welcome", subtitle = "Manage you
         </div>
     `;
 
-    const titleEl = document.getElementById("sidebar-title");
-    const subtitleEl = document.getElementById("sidebar-subtitle");
-
-    if (titleEl) titleEl.textContent = title;
-    if (subtitleEl) subtitleEl.textContent = subtitle;
-
-    document.querySelectorAll(".sidebar-nav a").forEach(link => {
+    sidebar.querySelectorAll(".sidebar-nav a").forEach((link) => {
         if (link.dataset.page === activePage) {
             link.classList.add("active");
         }
@@ -43,17 +38,33 @@ async function loadSidebar(activePage, title = "Welcome", subtitle = "Manage you
 
     const refreshBtn = document.getElementById("refresh-btn");
     if (refreshBtn) {
-        refreshBtn.addEventListener("click", () => {
-            window.location.reload();
-        });
+        refreshBtn.addEventListener("click", () => window.location.reload());
     }
 
     const logoutBtn = document.getElementById("logout-btn");
     if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
+        logoutBtn.addEventListener("click", async () => {
+            try {
+                await fetch("http://127.0.0.1:5000/api/users/logout", {
+                    method: "POST",
+                    credentials: "include"
+                });
+            } catch (error) {
+                console.error("Logout error:", error);
+            }
+
             localStorage.removeItem("user");
             localStorage.removeItem("selectedEventId");
             window.location.href = "index.html";
         });
     }
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }

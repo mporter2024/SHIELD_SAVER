@@ -8,29 +8,7 @@
 </head>
 <body class="dashboard-page">
     <div class="dashboard-shell">
-        <aside class="sidebar">
-            <div class="brand">
-                <img src="../logo.png" alt="Shield Saver Logo" class="brand-logo">
-                <div>
-                    <h2>Spartan Shield Saver</h2>
-                    <p>Event Planner</p>
-                </div>
-            </div>
-
-            <div class="profile-card">
-                <h3 id="planner-sidebar-title">Planner</h3>
-                <p id="planner-sidebar-subtitle" class="muted-text">Manage one event in detail</p>
-            </div>
-
-            <nav class="sidebar-nav">
-                <h3>Navigation</h3>
-                <aside class="sidebar" id="sidebar"></aside>
-            </nav>
-
-            <div class="sidebar-actions">
-                <button id="back-dashboard-btn" class="secondary-btn">Back to Dashboard</button>
-            </div>
-        </aside>
+        <aside class="sidebar" id="sidebar"></aside>
 
         <main class="dashboard-main">
             <section class="hero-panel">
@@ -146,10 +124,8 @@
             </section>
         </main>
     </div>
-<script src="../scripts/sidebar.js"></script>
-<script>
-    loadSidebar("planner", "Planner", "Manage your event details");
-</script>
+    <script src="../scripts/sidebar.js"></script>
+    <script>loadSidebar("planner", "Planner", "Manage your selected event.");</script>
     <script src="../scripts/planner.js"></script>
 </body>
 </html>

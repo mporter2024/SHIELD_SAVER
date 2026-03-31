@@ -7,32 +7,8 @@
     <link rel="stylesheet" href="../styles/Spartan.css">
 </head>
 <body class="dashboard-page">
-
     <div class="dashboard-shell">
-        <aside class="sidebar">
-            <div class="brand">
-                <img src="../logo.png" alt="Shield Saver Logo" class="brand-logo">
-                <div>
-                    <h2>Spartan Shield Saver</h2>
-                    <p>Event Planning Dashboard</p>
-                </div>
-            </div>
-
-            <div class="profile-card">
-                <h3>Welcome</h3>
-                <p id="welcome-message">Loading...</p>
-                <p id="user-email" class="muted-text"></p>
-            </div>
-            <nav class="sidebar-nav">
-                <h3>Navigation</h3>
-                <aside class="sidebar" id="sidebar"></aside>
-            </nav>
-            <div class="sidebar-actions">
-                <button id="refresh-btn" class="secondary-btn">Refresh Dashboard</button>
-                <button id="logout-btn" class="danger-btn">Logout</button>
-                
-            </div>
-        </aside>
+        <aside class="sidebar" id="sidebar"></aside>
 
         <main class="dashboard-main">
             <section class="hero-panel">
@@ -88,7 +64,7 @@
                         </div>
                         <div class="info-item">
                             <strong>2. Open the planner page</strong>
-                            <span>Each event gets its own workspace for editing details, tasks, and budget.</span>
+                            <span>Each event gets its own workspace for editing details, tasks, agenda items, and budget.</span>
                         </div>
                         <div class="info-item">
                             <strong>3. Build the plan</strong>
@@ -116,21 +92,15 @@
                 </div>
 
                 <form id="chat-form" class="chat-form">
-                    <input
-                        type="text"
-                        id="chat-input"
-                        placeholder="Ask about your event..."
-                        required
-                    >
+                    <input type="text" id="chat-input" placeholder="Ask about your event..." required>
                     <button type="submit">Send</button>
                 </form>
             </section>
         </main>
     </div>
-<script src="../scripts/sidebar.js"></script>
-<script>
-    loadSidebar("dashboard", "Welcome", "Your event overview");
-</script>
+
+    <script src="../scripts/sidebar.js"></script>
+    <script>loadSidebar("dashboard", "Welcome", "Loading your dashboard...");</script>
     <script src="../scripts/dashboard.js"></script>
 </body>
 </html>
