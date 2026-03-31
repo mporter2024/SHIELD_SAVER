@@ -7,24 +7,11 @@ const logoutBtn = document.getElementById("logout-btn");
 const refreshBtn = document.getElementById("refresh-btn");
 const eventForm = document.getElementById("event-form");
 const chatForm = document.getElementById("chat-form");
-const plannerLink = document.getElementById("planner-nav-link");
-const plannerNavButton = document.getElementById("planner-nav-btn");
 
-logoutBtn?.addEventListener("click", logout);
-refreshBtn?.addEventListener("click", initializeDashboard);
-eventForm?.addEventListener("submit", createEvent);
-chatForm?.addEventListener("submit", handleChatSubmit);
-
-if (plannerLink) {
-    plannerLink.addEventListener("click", (event) => {
-        event.preventDefault();
-        openMostRecentPlanner();
-    });
-}
-
-if (plannerNavButton) {
-    plannerNavButton.addEventListener("click", openMostRecentPlanner);
-}
+logoutBtn.addEventListener("click", logout);
+refreshBtn.addEventListener("click", initializeDashboard);
+eventForm.addEventListener("submit", createEvent);
+chatForm.addEventListener("submit", handleChatSubmit);
 
 async function initializeDashboard() {
     try {
@@ -32,7 +19,11 @@ async function initializeDashboard() {
         document.getElementById("welcome-message").textContent = user.name;
         document.getElementById("user-email").textContent = user.email;
 
-        const [events, tasks] = await Promise.all([fetchMyEvents(), fetchMyTasks()]);
+        const [events, tasks] = await Promise.all([
+            fetchMyEvents(),
+            fetchMyTasks()
+        ]);
+
         currentEvents = events;
         allTasks = tasks;
 
@@ -75,7 +66,7 @@ async function fetchMyTasks() {
 }
 
 function updateStats(events, tasks) {
-    const completed = tasks.filter((task) => Number(task.completed) === 1).length;
+    const completed = tasks.filter(task => Number(task.completed) === 1).length;
     const pending = tasks.length - completed;
 
     document.getElementById("total-events").textContent = events.length;
@@ -97,26 +88,27 @@ function renderEvents(events, tasks) {
         return;
     }
 
-    container.innerHTML = events.map((eventItem) => {
-        const eventTasks = tasks.filter((task) => Number(task.event_id) === Number(eventItem.id));
-        const completedCount = eventTasks.filter((task) => Number(task.completed) === 1).length;
+    container.innerHTML = events.map((event) => {
+        const eventTasks = tasks.filter(task => Number(task.event_id) === Number(event.id));
+        const completedCount = eventTasks.filter(task => Number(task.completed) === 1).length;
 
         return `
             <div class="event-card">
                 <div class="event-card-top">
                     <div>
-                        <h3>${escapeHtml(eventItem.title)}</h3>
-                        <p><strong>When:</strong> ${formatDateTimeRange(eventItem.start_datetime, eventItem.end_datetime, eventItem.date)}</p>
-                        <p><strong>Location:</strong> ${escapeHtml(eventItem.location || "Not set")}</p>
-                        <p><strong>Budget:</strong> ${formatCurrency(Number(eventItem.budget_total || 0))}</p>
+                        <h3>${escapeHtml(event.title)}</h3>
+                        <p><strong>When:</strong> ${formatDateTimeRange(event.start_datetime, event.end_datetime, event.date)}</p>
+                        <p><strong>Location:</strong> ${escapeHtml(event.location || "Not set")}</p>
+                        <p><strong>Budget:</strong> ${formatCurrency(Number(event.budget_total || 0))}</p>
                         <p><strong>Task Progress:</strong> ${completedCount} / ${eventTasks.length} complete</p>
                     </div>
                     <div class="event-card-actions">
-                        <button class="secondary-btn small-action-btn" onclick="openPlanner(${eventItem.id})">Open Planner</button>
-                        <button class="small-danger-btn" onclick="deleteEvent(${eventItem.id})">Delete</button>
+                        <button class="secondary-btn small-action-btn" onclick="openPlanner(${event.id})">Open Planner</button>
+                        <button class="small-danger-btn" onclick="deleteEvent(${event.id})">Delete</button>
                     </div>
                 </div>
-                <p class="event-description">${escapeHtml(eventItem.description)}</p>
+
+                <p class="event-description">${escapeHtml(event.description)}</p>
             </div>
         `;
     }).join("");
@@ -150,9 +142,8 @@ async function createEvent(event) {
             return;
         }
 
-        eventForm.reset();
+        document.getElementById("event-form").reset();
         messageEl.textContent = "Event created successfully.";
-        localStorage.setItem("selectedEventId", data.id);
         await initializeDashboard();
     } catch (error) {
         console.error("Create event error:", error);
@@ -163,17 +154,6 @@ async function createEvent(event) {
 function openPlanner(eventId) {
     localStorage.setItem("selectedEventId", eventId);
     window.location.href = `planner.html?event_id=${eventId}`;
-}
-
-function openMostRecentPlanner() {
-    const eventId = localStorage.getItem("selectedEventId");
-
-    if (eventId) {
-        window.location.href = `planner.html?event_id=${eventId}`;
-        return;
-    }
-
-    alert("Please select an event first.");
 }
 
 async function deleteEvent(eventId) {
@@ -189,10 +169,6 @@ async function deleteEvent(eventId) {
         if (!response.ok) {
             alert(data.error || "Could not delete event.");
             return;
-        }
-
-        if (String(localStorage.getItem("selectedEventId")) === String(eventId)) {
-            localStorage.removeItem("selectedEventId");
         }
 
         await initializeDashboard();
@@ -291,6 +267,23 @@ function appendChatMessage(sender, text) {
     container.appendChild(bubble);
     container.scrollTop = container.scrollHeight;
 }
+
+const plannerLink = document.getElementById("planner-nav-link");
+
+if (plannerLink) {
+    plannerLink.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const eventId = localStorage.getItem("selectedEventId");
+
+        if (eventId) {
+            window.location.href = `planner.html?event_id=${eventId}`;
+        } else {
+            alert("Please select an event first.");
+        }
+    });
+}
+
 
 window.openPlanner = openPlanner;
 window.deleteEvent = deleteEvent;

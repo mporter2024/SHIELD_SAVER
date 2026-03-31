@@ -6,46 +6,21 @@
   <title>Budget Calculator - Spartan Shield Saver</title>
   <link rel="stylesheet" href="../styles/Spartan.css" />
 </head>
-<body class="dashboard-page">
-  <div class="dashboard-shell">
-    <aside class="sidebar" id="sidebar"></aside>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <h1>Spartan Shield Saver</h1>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="budget.html" class="active">Budget Calculator</a>
+      </nav>
+    </aside>
 
-    <main class="dashboard-main">
-      <section class="hero-panel">
-        <div>
-          <h1>Event Budget Calculator</h1>
-          <p class="muted-text">Estimate event costs by category, save them to an event, and ask the chatbot for help from this page.</p>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="section-header planner-header">
-          <div>
-            <h2>Selected Event Snapshot</h2>
-            <p class="muted-text">Choose an event below to load its saved budget values and event details.</p>
-          </div>
-          <a id="back-to-planner-link" class="secondary-btn planner-link" href="planner.html">Back to Planner</a>
-        </div>
-
-        <div class="snapshot-grid">
-          <div class="info-item">
-            <strong>Schedule</strong>
-            <span id="budget-snapshot-schedule">—</span>
-          </div>
-          <div class="info-item">
-            <strong>Location</strong>
-            <span id="budget-snapshot-location">—</span>
-          </div>
-          <div class="info-item">
-            <strong>Description</strong>
-            <span id="budget-snapshot-description">—</span>
-          </div>
-          <div class="info-item">
-            <strong>Tasks Progress</strong>
-            <span id="budget-snapshot-progress">0 / 0 complete</span>
-          </div>
-        </div>
-      </section>
+    <main class="main-content">
+      <header class="page-header">
+        <h2>Event Budget Calculator</h2>
+        <p>Estimate event costs by category, attach them to an event, and ask the chatbot for help from this page.</p>
+      </header>
 
       <section class="panel budget-panel">
         <div class="budget-grid">
@@ -102,21 +77,53 @@
             </div>
 
             <div class="budget-breakdown">
-              <div class="budget-row"><span>Venue</span><span id="summary-venue">$0.00</span></div>
-              <div class="budget-row"><span>Food Total</span><span id="summary-food">$0.00</span></div>
-              <div class="budget-row"><span>Decorations</span><span id="summary-decorations">$0.00</span></div>
-              <div class="budget-row"><span>Equipment</span><span id="summary-equipment">$0.00</span></div>
-              <div class="budget-row"><span>Staff / Labor</span><span id="summary-staff">$0.00</span></div>
-              <div class="budget-row"><span>Marketing</span><span id="summary-marketing">$0.00</span></div>
-              <div class="budget-row"><span>Miscellaneous</span><span id="summary-misc">$0.00</span></div>
-              <div class="budget-row"><span>Subtotal</span><span id="summary-subtotal">$0.00</span></div>
-              <div class="budget-row"><span>Contingency</span><span id="summary-contingency">$0.00</span></div>
-              <div class="budget-row total-row"><span>Final Total</span><span id="summary-total">$0.00</span></div>
+              <div class="budget-row">
+                <span>Venue</span>
+                <span id="summary-venue">$0.00</span>
+              </div>
+              <div class="budget-row">
+                <span>Food Total</span>
+                <span id="summary-food">$0.00</span>
+              </div>
+              <div class="budget-row">
+                <span>Decorations</span>
+                <span id="summary-decorations">$0.00</span>
+              </div>
+              <div class="budget-row">
+                <span>Equipment</span>
+                <span id="summary-equipment">$0.00</span>
+              </div>
+              <div class="budget-row">
+                <span>Staff / Labor</span>
+                <span id="summary-staff">$0.00</span>
+              </div>
+              <div class="budget-row">
+                <span>Marketing</span>
+                <span id="summary-marketing">$0.00</span>
+              </div>
+              <div class="budget-row">
+                <span>Miscellaneous</span>
+                <span id="summary-misc">$0.00</span>
+              </div>
+              <div class="budget-row">
+                <span>Subtotal</span>
+                <span id="summary-subtotal">$0.00</span>
+              </div>
+              <div class="budget-row">
+                <span>Contingency</span>
+                <span id="summary-contingency">$0.00</span>
+              </div>
+              <div class="budget-row total-row">
+                <span>Final Total</span>
+                <span id="summary-total">$0.00</span>
+              </div>
             </div>
 
             <div class="budget-tip-box">
               <h4>Planning Tip</h4>
-              <p id="budget-tip">Add a contingency amount to protect against last-minute cost changes.</p>
+              <p id="budget-tip">
+                Add a contingency amount to protect against last-minute cost changes.
+              </p>
             </div>
           </div>
         </div>
@@ -137,8 +144,6 @@
     </main>
   </div>
 
-  <script src="../scripts/sidebar.js"></script>
-  <script>loadSidebar("budget", "Budget", "Track event expenses.");</script>
   <script src="../scripts/budget.js"></script>
 </body>
 </html>

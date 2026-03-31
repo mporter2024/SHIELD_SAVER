@@ -190,8 +190,7 @@ function loadEventIntoForm(eventId) {
   document.getElementById("misc-cost").value = Number(selectedEvent.misc_cost || 0);
   document.getElementById("contingency-percent").value = Number(selectedEvent.contingency_percent || 0);
 
-  const backLink = document.getElementById("back-to-planner-link");
-  if (backLink) backLink.href = `planner.html?event_id=${selectedEvent.id}`;
+  document.getElementById("back-to-planner-link").href = `planner.html?event_id=${selectedEvent.id}`;
 
   renderSelectedEventSnapshot(selectedEvent);
   calculateBudget();
@@ -202,8 +201,6 @@ function renderSelectedEventSnapshot(selectedEvent) {
   const locationEl = document.getElementById("budget-snapshot-location");
   const descriptionEl = document.getElementById("budget-snapshot-description");
   const progressEl = document.getElementById("budget-snapshot-progress");
-
-  if (!scheduleEl || !locationEl || !descriptionEl || !progressEl) return;
 
   if (!selectedEvent) {
     scheduleEl.textContent = "—";

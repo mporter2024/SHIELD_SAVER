@@ -10,20 +10,22 @@ const selectedTaskForm = document.getElementById("selected-task-form");
 const agendaForm = document.getElementById("agenda-form");
 const backDashboardBtn = document.getElementById("back-dashboard-btn");
 
-editForm?.addEventListener("submit", saveSelectedEvent);
-selectedTaskForm?.addEventListener("submit", addTaskToSelectedEvent);
-agendaForm?.addEventListener("submit", addAgendaItem);
-backDashboardBtn?.addEventListener("click", () => {
-    window.location.href = "dashboard.html";
-});
+if (editForm) editForm.addEventListener("submit", saveSelectedEvent);
+if (selectedTaskForm) selectedTaskForm.addEventListener("submit", addTaskToSelectedEvent);
+if (agendaForm) agendaForm.addEventListener("submit", addAgendaItem);
+if (backDashboardBtn) {
+    backDashboardBtn.addEventListener("click", () => {
+        window.location.href = "dashboard.html";
+    });
+}
 
 function getEventIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
-    return params.get("event_id");
+    return params.get("event_id") || localStorage.getItem("selectedEventId");
 }
 
 async function initializePlanner() {
-    selectedEventId = getEventIdFromUrl() || localStorage.getItem("selectedEventId");
+    selectedEventId = getEventIdFromUrl();
 
     if (!selectedEventId) {
         showError("No event was selected. Go back to the dashboard and open a planner from one of your events.");
@@ -50,7 +52,6 @@ async function initializePlanner() {
         if (!eventResponse.ok) {
             throw new Error(eventData.error || "Could not load event planner.");
         }
-
         if (!agendaResponse.ok) {
             throw new Error(agendaData.error || "Could not load agenda.");
         }
@@ -94,7 +95,7 @@ function renderPlanner() {
     document.getElementById("edit-event-location").value = currentEvent.location || "";
     document.getElementById("edit-event-description").value = currentEvent.description || "";
 
-    const completedCount = currentTasks.filter((task) => Number(task.completed) === 1).length;
+    const completedCount = currentTasks.filter(task => Number(task.completed) === 1).length;
     document.getElementById("snapshot-schedule").textContent = formatDateTimeRange(currentEvent.start_datetime, currentEvent.end_datetime, currentEvent.date);
     document.getElementById("snapshot-location").textContent = currentEvent.location || "Not set";
     document.getElementById("snapshot-progress").textContent = `${completedCount} / ${currentTasks.length} complete`;
@@ -124,14 +125,14 @@ function renderTasks() {
 
     taskContainer.innerHTML = `
         <ul class="task-list selected-task-list">
-            ${sortedTasks.map((task) => `
+            ${sortedTasks.map(task => `
                 <li class="task-item">
                     <div class="task-main">
                         <label>
                             <input
                                 type="checkbox"
                                 ${Number(task.completed) === 1 ? "checked" : ""}
-                                onchange="toggleTask(${task.id}, ${thisAsJson(task.title)}, ${thisAsJson(task.due_date || "")}, ${thisAsJson(task.start_datetime || "")}, ${thisAsJson(task.end_datetime || "")}, this.checked)"
+                                onchange="toggleTask(${task.id}, ${jsonSafe(task.title)}, ${jsonSafe(task.due_date || "")}, ${jsonSafe(task.start_datetime || "")}, ${jsonSafe(task.end_datetime || "")}, this.checked)"
                             >
                             <span class="${Number(task.completed) === 1 ? "completed-task" : ""}">
                                 ${escapeHtml(task.title)}
@@ -152,55 +153,45 @@ function renderAgenda() {
     if (!currentAgenda.length) {
         agendaList.innerHTML = `
             <div class="empty-state compact-empty-state">
-                <h3>No agenda items yet</h3>
-                <p>Add the first time block for this event using the form on the right.</p>
+                <h3>No agenda yet</h3>
+                <p>Add your first timed agenda item on the right.</p>
             </div>
         `;
         return;
     }
 
-    agendaList.innerHTML = currentAgenda.map((item) => `
+    agendaList.innerHTML = currentAgenda.map(item => `
         <div class="agenda-card">
             <div class="agenda-card-header">
                 <div>
-                    <h3>${escapeHtml(item.title)}</h3>
-                    <p class="muted-text">${formatDateTimeRange(item.start_datetime, item.end_datetime, currentEvent?.date)}</p>
+                    <h4>${escapeHtml(item.title)}</h4>
+                    <p class="muted-text">${formatTimeRange(item.start_time, item.end_time)}</p>
                 </div>
                 <button class="small-danger-btn" onclick="deleteAgendaItem(${item.id})">Delete</button>
             </div>
-
-            <p class="agenda-description">${escapeHtml(item.description || "No description yet.")}</p>
+            ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
 
             <div class="lineup-block">
-                <h4>Lineup</h4>
-                ${renderLineupList(item)}
-                <form class="inline-lineup-form" onsubmit="addLineupItem(event, ${item.id})">
-                    <input type="text" id="lineup-name-${item.id}" placeholder="Person or act name" required>
-                    <input type="text" id="lineup-role-${item.id}" placeholder="Role (speaker, host, performer)">
+                <strong>Lineup</strong>
+                ${item.lineup && item.lineup.length ? `
+                    <ul class="lineup-list">
+                        ${item.lineup.map(person => `
+                            <li>
+                                <span>${escapeHtml(person.name)}${person.role ? ` — ${escapeHtml(person.role)}` : ""}</span>
+                                <button class="small-danger-btn" onclick="deleteLineupItem(${person.id})">Remove</button>
+                            </li>
+                        `).join("")}
+                    </ul>
+                ` : `<p class="muted-text">No lineup entries yet.</p>`}
+
+                <form class="lineup-form" onsubmit="addLineupItem(event, ${item.id})">
+                    <input type="text" name="name" placeholder="Person or act name" required>
+                    <input type="text" name="role" placeholder="Role or note">
                     <button type="submit">Add Lineup Entry</button>
                 </form>
             </div>
         </div>
     `).join("");
-}
-
-function renderLineupList(agendaItem) {
-    const lineup = agendaItem.lineup || [];
-
-    if (!lineup.length) {
-        return `<p class="muted-text">No lineup entries yet.</p>`;
-    }
-
-    return `
-        <ul class="lineup-list">
-            ${lineup.map((entry) => `
-                <li class="lineup-item">
-                    <span><strong>${escapeHtml(entry.name)}</strong>${entry.role ? ` — ${escapeHtml(entry.role)}` : ""}</span>
-                    <button class="small-danger-btn" onclick="deleteLineupItem(${entry.id})">Remove</button>
-                </li>
-            `).join("")}
-        </ul>
-    `;
 }
 
 async function saveSelectedEvent(event) {
@@ -285,26 +276,25 @@ async function addAgendaItem(event) {
     const payload = {
         event_id: selectedEventId,
         title: document.getElementById("agenda-title").value.trim(),
-        start_datetime: document.getElementById("agenda-start").value,
-        end_datetime: document.getElementById("agenda-end").value,
+        start_time: document.getElementById("agenda-start").value,
+        end_time: document.getElementById("agenda-end").value,
         description: document.getElementById("agenda-description").value.trim()
     };
 
     try {
-        const response = await fetch(`${API_BASE}/api/agenda/`, {
+        const response = await fetch(`${API_BASE}/api/agenda/items`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify(payload)
         });
-
         const data = await response.json();
         if (!response.ok) {
             messageEl.textContent = data.error || "Could not create agenda item.";
             return;
         }
 
-        agendaForm.reset();
+        if (agendaForm) agendaForm.reset();
         messageEl.textContent = "Agenda item added.";
         await initializePlanner();
     } catch (error) {
@@ -315,27 +305,26 @@ async function addAgendaItem(event) {
 
 async function addLineupItem(event, agendaItemId) {
     event.preventDefault();
-
-    const nameInput = document.getElementById(`lineup-name-${agendaItemId}`);
-    const roleInput = document.getElementById(`lineup-role-${agendaItemId}`);
+    const form = event.target;
+    const payload = {
+        agenda_item_id: agendaItemId,
+        name: form.name.value.trim(),
+        role: form.role.value.trim()
+    };
 
     try {
-        const response = await fetch(`${API_BASE}/api/agenda/${agendaItemId}/lineup`, {
+        const response = await fetch(`${API_BASE}/api/agenda/lineup`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify({
-                name: nameInput.value.trim(),
-                role: roleInput.value.trim()
-            })
+            body: JSON.stringify(payload)
         });
-
         const data = await response.json();
         if (!response.ok) {
             alert(data.error || "Could not add lineup entry.");
             return;
         }
-
+        form.reset();
         await initializePlanner();
     } catch (error) {
         console.error("Add lineup error:", error);
@@ -350,7 +339,7 @@ async function toggleTask(taskId, title, dueDate, startDateTime, endDateTime, ch
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify({
-                title,
+                title: title,
                 due_date: dueDate,
                 start_datetime: startDateTime,
                 end_datetime: endDateTime,
@@ -372,8 +361,7 @@ async function toggleTask(taskId, title, dueDate, startDateTime, endDateTime, ch
 }
 
 async function deleteTask(taskId) {
-    const confirmed = confirm("Delete this task?");
-    if (!confirmed) return;
+    if (!confirm("Delete this task?")) return;
 
     try {
         const response = await fetch(`${API_BASE}/api/tasks/${taskId}`, {
@@ -395,21 +383,18 @@ async function deleteTask(taskId) {
 }
 
 async function deleteAgendaItem(agendaItemId) {
-    const confirmed = confirm("Delete this agenda item and all of its lineup entries?");
-    if (!confirmed) return;
+    if (!confirm("Delete this agenda item and its lineup entries?")) return;
 
     try {
-        const response = await fetch(`${API_BASE}/api/agenda/${agendaItemId}`, {
+        const response = await fetch(`${API_BASE}/api/agenda/items/${agendaItemId}`, {
             method: "DELETE",
             credentials: "include"
         });
-
         const data = await response.json();
         if (!response.ok) {
             alert(data.error || "Could not delete agenda item.");
             return;
         }
-
         await initializePlanner();
     } catch (error) {
         console.error("Delete agenda error:", error);
@@ -418,18 +403,18 @@ async function deleteAgendaItem(agendaItemId) {
 }
 
 async function deleteLineupItem(lineupItemId) {
+    if (!confirm("Remove this lineup entry?")) return;
+
     try {
         const response = await fetch(`${API_BASE}/api/agenda/lineup/${lineupItemId}`, {
             method: "DELETE",
             credentials: "include"
         });
-
         const data = await response.json();
         if (!response.ok) {
             alert(data.error || "Could not delete lineup entry.");
             return;
         }
-
         await initializePlanner();
     } catch (error) {
         console.error("Delete lineup error:", error);
@@ -462,12 +447,19 @@ function formatDateTimeRange(startDateTime, endDateTime, fallbackDate) {
     return "No date";
 }
 
+function formatTimeRange(startTime, endTime) {
+    if (startTime && endTime) return `${startTime} - ${endTime}`;
+    if (startTime) return startTime;
+    if (endTime) return endTime;
+    return "Time not set";
+}
+
 function formatCurrency(amount) {
     return `$${Number(amount || 0).toFixed(2)}`;
 }
 
 function escapeHtml(value) {
-    return String(value)
+    return String(value ?? "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
@@ -475,7 +467,7 @@ function escapeHtml(value) {
         .replaceAll("'", "&#039;");
 }
 
-function thisAsJson(value) {
+function jsonSafe(value) {
     return JSON.stringify(String(value ?? ""));
 }
 

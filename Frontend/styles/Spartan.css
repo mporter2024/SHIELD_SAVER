@@ -621,128 +621,52 @@ a:hover {
   background: rgba(255, 255, 255, 0.2);
   font-weight: 600;
 }
-.hidden {
-  display: none;
-}
-
-.planner-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 22px;
-}
-
-.planner-lower-grid {
-  align-items: start;
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 18px;
-}
-
-.snapshot-grid {
-  display: grid;
-  gap: 12px;
-}
-
-.task-list,
-.lineup-list {
-  list-style: none;
-  display: grid;
-  gap: 12px;
-}
-
-.selected-task-list {
-  padding-left: 0;
-}
-
-.task-main {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-}
-
 .agenda-card {
-  border: 1px solid #dfe8df;
-  border-radius: 16px;
-  padding: 18px;
-  background: #fafcf9;
-  margin-bottom: 16px;
+  background: white;
+  border: 1px solid #d9e6db;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
 }
 
 .agenda-card-header {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   align-items: flex-start;
-  margin-bottom: 10px;
 }
 
-.agenda-description {
-  margin-bottom: 14px;
-  color: #385043;
+.agenda-card-header h4 {
+  margin: 0 0 4px 0;
 }
 
 .lineup-block {
-  border-top: 1px solid #e4ece5;
-  padding-top: 14px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #edf3ee;
 }
 
-.lineup-block h4 {
-  margin-bottom: 10px;
-  color: #0f5132;
+.lineup-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
 }
 
-.lineup-item {
+.lineup-list li {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   align-items: center;
-  gap: 12px;
-  background: white;
-  border: 1px solid #e3ebe4;
-  border-radius: 10px;
-  padding: 10px 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #edf3ee;
 }
 
-.inline-lineup-form {
+.lineup-list li:last-child {
+  border-bottom: none;
+}
+
+.lineup-form {
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
   gap: 10px;
   margin-top: 12px;
-}
-
-.inline-lineup-form button,
-.planner-link,
-.small-action-btn {
-  width: auto;
-}
-
-.compact-empty-state {
-  min-height: 160px;
-  display: grid;
-  place-items: center;
-}
-
-.dashboard-layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  min-height: 100vh;
-  background: #f4f7f3;
-}
-
-.main-content {
-  padding: 28px;
-}
-
-@media (max-width: 960px) {
-  .planner-grid,
-  .inline-lineup-form,
-  .dashboard-layout {
-    grid-template-columns: 1fr;
-  }
 }

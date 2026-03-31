@@ -1,38 +1,9 @@
-"""Routes for event tasks."""
-
-import sqlite3
-from flask import Blueprint, jsonify, request, session
-
+from flask import Blueprint, request, jsonify, session
 from models.database import get_db
+import sqlite3
+
 
 tasks_bp = Blueprint("tasks", __name__)
-
-
-def require_login():
-    if "user_id" not in session:
-        return jsonify({"error": "Not logged in"}), 401
-    return None
-
-
-def get_owned_task(task_id: int):
-    db = get_db()
-    return db.execute(
-        """
-        SELECT tasks.*
-        FROM tasks
-        INNER JOIN events ON tasks.event_id = events.id
-        WHERE tasks.id = ? AND events.user_id = ?
-        """,
-        (task_id, session["user_id"]),
-    ).fetchone()
-
-
-def get_owned_event(event_id: int):
-    db = get_db()
-    return db.execute(
-        "SELECT * FROM events WHERE id = ? AND user_id = ?",
-        (event_id, session["user_id"]),
-    ).fetchone()
 
 
 @tasks_bp.get("/")
@@ -44,9 +15,8 @@ def get_tasks():
 
 @tasks_bp.get("/mine")
 def get_my_tasks():
-    login_error = require_login()
-    if login_error:
-        return login_error
+    if "user_id" not in session:
+        return jsonify({"error": "Not logged in"}), 401
 
     db = get_db()
     tasks = db.execute(
@@ -57,39 +27,27 @@ def get_my_tasks():
         WHERE events.user_id = ?
         ORDER BY COALESCE(tasks.start_datetime, tasks.due_date) ASC, tasks.id DESC
         """,
-        (session["user_id"],),
+        (session["user_id"],)
     ).fetchall()
+
     return jsonify([dict(task) for task in tasks]), 200
 
 
 @tasks_bp.get("/event/<int:event_id>")
-def get_tasks_by_event(event_id: int):
-    login_error = require_login()
-    if login_error:
-        return login_error
-
-    owned_event = get_owned_event(event_id)
-    if owned_event is None:
-        return jsonify({"error": "Event not found"}), 404
-
+def get_tasks_by_event(event_id):
     db = get_db()
     tasks = db.execute(
-        "SELECT * FROM tasks WHERE event_id = ? ORDER BY COALESCE(start_datetime, due_date) ASC, id DESC",
-        (event_id,),
+        "SELECT * FROM tasks WHERE event_id = ? ORDER BY COALESCE(start_datetime, due_date) ASC, id DESC", (event_id,)
     ).fetchall()
     return jsonify([dict(task) for task in tasks]), 200
 
 
 @tasks_bp.post("/")
 def create_task():
-    login_error = require_login()
-    if login_error:
-        return login_error
-
     db = get_db()
     data = request.get_json(silent=True) or {}
 
-    title = (data.get("title") or "").strip()
+    title = data.get("title")
     event_id = data.get("event_id")
     due_date = data.get("due_date")
     start_datetime = data.get("start_datetime") or None
@@ -104,10 +62,6 @@ def create_task():
     except (TypeError, ValueError):
         return jsonify({"error": "event_id must be an integer"}), 400
 
-    owned_event = get_owned_event(event_id)
-    if owned_event is None:
-        return jsonify({"error": "Event not found"}), 404
-
     completed = 1 if str(completed).lower() in ("1", "true", "yes") else 0
     due_date = due_date or (start_datetime[:10] if start_datetime else None)
 
@@ -120,10 +74,11 @@ def create_task():
             (event_id, title, completed, due_date, start_datetime, end_datetime),
         )
         db.commit()
-    except sqlite3.IntegrityError as error:
-        return jsonify({"error": "Database constraint failed", "details": str(error)}), 400
+    except sqlite3.IntegrityError as e:
+        return jsonify({"error": "Database constraint failed", "details": str(e)}), 400
 
     task_id = cursor.lastrowid
+
     return jsonify({
         "id": task_id,
         "event_id": event_id,
@@ -136,15 +91,7 @@ def create_task():
 
 
 @tasks_bp.put("/<int:task_id>")
-def update_task(task_id: int):
-    login_error = require_login()
-    if login_error:
-        return login_error
-
-    existing = get_owned_task(task_id)
-    if existing is None:
-        return jsonify({"error": "Task not found"}), 404
-
+def update_task(task_id):
     db = get_db()
     data = request.get_json(silent=True) or {}
 
@@ -160,7 +107,7 @@ def update_task(task_id: int):
     if start_datetime:
         due_date = start_datetime[:10]
 
-    db.execute(
+    cursor = db.execute(
         """
         UPDATE tasks
         SET title = COALESCE(?, title),
@@ -174,21 +121,21 @@ def update_task(task_id: int):
     )
     db.commit()
 
-    updated = get_owned_task(task_id)
+    if cursor.rowcount == 0:
+        return jsonify({"error": "Task not found"}), 404
+
+    updated = db.execute("SELECT * FROM tasks WHERE id = ?", (task_id,)).fetchone()
     return jsonify({"message": "Task updated successfully", "task": dict(updated)}), 200
 
 
 @tasks_bp.delete("/<int:task_id>")
-def delete_task(task_id: int):
-    login_error = require_login()
-    if login_error:
-        return login_error
+def delete_task(task_id):
+    db = get_db()
 
-    existing = get_owned_task(task_id)
-    if existing is None:
+    cursor = db.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
+    db.commit()
+
+    if cursor.rowcount == 0:
         return jsonify({"error": "Task not found"}), 404
 
-    db = get_db()
-    db.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
-    db.commit()
     return jsonify({"message": "Task deleted successfully"}), 200
