@@ -28,6 +28,9 @@ loginForm.addEventListener("submit", async function (event) {
 
         if (response.ok) {
             messageEl.textContent = data.message;
+            if (data.user) {
+                localStorage.setItem("user", JSON.stringify(data.user));
+            }
             window.location.href = "dashboard.html";
         } else {
             messageEl.textContent = data.error || "Login failed.";

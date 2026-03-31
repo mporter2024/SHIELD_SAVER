@@ -1,12 +1,14 @@
-from flask import Flask, app
+from flask import Flask
 from flask_cors import CORS
+
 from models.database import init_db
-from routes.ai import ai_bp
+from routes.admin import admin_bp
 from routes.agenda import agenda_bp
+from routes.ai import ai_bp
 from routes.events import events_bp
 from routes.tasks import tasks_bp
 from routes.users import users_bp
-from routes.admin import admin_bp
+
 
 def create_app():
     app = Flask(__name__)

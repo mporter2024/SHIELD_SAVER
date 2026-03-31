@@ -4,7 +4,8 @@ from utils.auth import admin_required
 
 admin_bp = Blueprint("admin", __name__)
 
-@admin_bp.route("/stats", methods=["GET"])
+
+@admin_bp.get("/stats")
 @admin_required
 def get_admin_stats():
     db = get_db()
@@ -16,34 +17,42 @@ def get_admin_stats():
     return jsonify({
         "total_users": user_count,
         "total_events": event_count,
-        "total_tasks": task_count
+        "total_tasks": task_count,
     }), 200
 
 
-@admin_bp.route("/users", methods=["GET"])
+@admin_bp.get("/users")
 @admin_required
 def get_all_users():
     db = get_db()
-
-    users = db.execute("""
+    users = db.execute(
+        """
         SELECT id, name, username, email, role
         FROM users
         ORDER BY id DESC
-    """).fetchall()
-
+        """
+    ).fetchall()
     return jsonify([dict(user) for user in users]), 200
 
 
-@admin_bp.route("/events", methods=["GET"])
+@admin_bp.get("/events")
 @admin_required
 def get_all_events():
     db = get_db()
-
-    events = db.execute("""
-        SELECT events.id, events.name, events.date, events.location, users.name AS owner_name, users.email AS owner_email
+    events = db.execute(
+        """
+        SELECT
+            events.id,
+            events.title,
+            events.date,
+            events.start_datetime,
+            events.end_datetime,
+            events.location,
+            users.name AS owner_name,
+            users.email AS owner_email
         FROM events
         JOIN users ON events.user_id = users.id
-        ORDER BY events.id DESC
-    """).fetchall()
-
+        ORDER BY COALESCE(events.start_datetime, events.date) DESC, events.id DESC
+        """
+    ).fetchall()
     return jsonify([dict(event) for event in events]), 200
