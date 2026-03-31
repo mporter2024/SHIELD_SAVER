@@ -63,6 +63,27 @@ def init_db(app):
             FOREIGN KEY (user_id) REFERENCES users (id)
         );
 
+                         
+        -- Agenda items (time blocks)
+CREATE TABLE agenda_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_id INTEGER,
+    title TEXT NOT NULL,
+    description TEXT,
+    start_time TEXT,
+    end_time TEXT,
+    FOREIGN KEY (event_id) REFERENCES events(id)
+);
+
+-- Lineup (people/participants)
+CREATE TABLE lineup_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    agenda_item_id INTEGER,
+    name TEXT NOT NULL,
+    role TEXT,
+    FOREIGN KEY (agenda_item_id) REFERENCES agenda_items(id)
+);
+
         CREATE TABLE IF NOT EXISTS tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             event_id INTEGER NOT NULL,
@@ -74,6 +95,8 @@ def init_db(app):
             FOREIGN KEY (event_id) REFERENCES events(id)
         );
         """)
+
+
 
         ensure_column(db, "events", "start_datetime", "TEXT")
         ensure_column(db, "events", "end_datetime", "TEXT")

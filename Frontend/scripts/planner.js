@@ -299,6 +299,25 @@ function thisAsJson(value) {
     return JSON.stringify(String(value ?? ""));
 }
 
+async function addAgenda() {
+    const title = document.getElementById("title").value;
+    const start = document.getElementById("start").value;
+    const end = document.getElementById("end").value;
+
+    await fetch("/api/agenda/", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            event_id: currentEventId,
+            title: title,
+            start_time: start,
+            end_time: end
+        })
+    });
+
+    loadAgenda();
+}
+
 window.toggleTask = toggleTask;
 window.deleteTask = deleteTask;
 
