@@ -1,19 +1,21 @@
 const API_BASE = "http://127.0.0.1:5000";
 
-let currentUser = null;
 let currentEvents = [];
 let allTasks = [];
 
-document.getElementById("logout-btn").addEventListener("click", logout);
-document.getElementById("refresh-btn").addEventListener("click", initializeDashboard);
-document.getElementById("event-form").addEventListener("submit", createEvent);
-document.getElementById("chat-form").addEventListener("submit", handleChatSubmit);
+const logoutBtn = document.getElementById("logout-btn");
+const refreshBtn = document.getElementById("refresh-btn");
+const eventForm = document.getElementById("event-form");
+const chatForm = document.getElementById("chat-form");
+
+logoutBtn.addEventListener("click", logout);
+refreshBtn.addEventListener("click", initializeDashboard);
+eventForm.addEventListener("submit", createEvent);
+chatForm.addEventListener("submit", handleChatSubmit);
 
 async function initializeDashboard() {
     try {
         const user = await fetchCurrentUser();
-        currentUser = user;
-
         document.getElementById("welcome-message").textContent = user.name;
         document.getElementById("user-email").textContent = user.email;
 
@@ -38,13 +40,8 @@ async function fetchCurrentUser() {
         method: "GET",
         credentials: "include"
     });
-
     const data = await response.json();
-
-    if (!response.ok) {
-        throw new Error(data.error || "Not logged in");
-    }
-
+    if (!response.ok) throw new Error(data.error || "Not logged in");
     return data.user;
 }
 
@@ -53,13 +50,8 @@ async function fetchMyEvents() {
         method: "GET",
         credentials: "include"
     });
-
     const data = await response.json();
-
-    if (!response.ok) {
-        throw new Error(data.error || "Could not load events");
-    }
-
+    if (!response.ok) throw new Error(data.error || "Could not load events");
     return data;
 }
 
@@ -68,13 +60,8 @@ async function fetchMyTasks() {
         method: "GET",
         credentials: "include"
     });
-
     const data = await response.json();
-
-    if (!response.ok) {
-        throw new Error(data.error || "Could not load tasks");
-    }
-
+    if (!response.ok) throw new Error(data.error || "Could not load tasks");
     return data;
 }
 
@@ -103,6 +90,7 @@ function renderEvents(events, tasks) {
 
     container.innerHTML = events.map((event) => {
         const eventTasks = tasks.filter(task => Number(task.event_id) === Number(event.id));
+        const completedCount = eventTasks.filter(task => Number(task.completed) === 1).length;
 
         return `
             <div class="event-card">
@@ -112,45 +100,15 @@ function renderEvents(events, tasks) {
                         <p><strong>When:</strong> ${formatDateTimeRange(event.start_datetime, event.end_datetime, event.date)}</p>
                         <p><strong>Location:</strong> ${escapeHtml(event.location || "Not set")}</p>
                         <p><strong>Budget:</strong> ${formatCurrency(Number(event.budget_total || 0))}</p>
+                        <p><strong>Task Progress:</strong> ${completedCount} / ${eventTasks.length} complete</p>
                     </div>
-                    <button class="small-danger-btn" onclick="deleteEvent(${event.id})">Delete</button>
+                    <div class="event-card-actions">
+                        <button class="secondary-btn small-action-btn" onclick="openPlanner(${event.id})">Open Planner</button>
+                        <button class="small-danger-btn" onclick="deleteEvent(${event.id})">Delete</button>
+                    </div>
                 </div>
 
                 <p class="event-description">${escapeHtml(event.description)}</p>
-
-                <div class="task-section">
-                    <h4>Tasks</h4>
-                    ${
-                        eventTasks.length
-                            ? `<ul class="task-list">
-                                ${eventTasks.map(task => `
-                                    <li class="task-item">
-                                        <label>
-                                            <input
-                                                type="checkbox"
-                                                ${Number(task.completed) === 1 ? "checked" : ""}
-                                                onchange="toggleTask(${task.id}, '${escapeJs(task.title)}', '${task.due_date || ""}', '${task.start_datetime || ""}', '${task.end_datetime || ""}', this.checked)"
-                                            >
-                                            <span class="${Number(task.completed) === 1 ? "completed-task" : ""}">
-                                                ${escapeHtml(task.title)}
-                                            </span>
-                                        </label>
-                                        <span class="task-date">${formatDateTimeRange(task.start_datetime, task.end_datetime, task.due_date)}</span>
-                                    </li>
-                                `).join("")}
-                              </ul>`
-                            : `<p class="muted-text">No tasks for this event yet.</p>`
-                    }
-
-                    <form class="task-form" onsubmit="addTask(event, ${event.id})">
-                        <input type="text" name="title" placeholder="New task title" required>
-                        <label>Task start</label>
-                        <input type="datetime-local" name="start_datetime">
-                        <label>Task end</label>
-                        <input type="datetime-local" name="end_datetime">
-                        <button type="submit">Add Task</button>
-                    </form>
-                </div>
             </div>
         `;
     }).join("");
@@ -173,15 +131,12 @@ async function createEvent(event) {
     try {
         const response = await fetch(`${API_BASE}/api/events/`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify(payload)
         });
 
         const data = await response.json();
-
         if (!response.ok) {
             messageEl.textContent = data.error || "Could not create event.";
             return;
@@ -196,78 +151,12 @@ async function createEvent(event) {
     }
 }
 
-async function addTask(event, eventId) {
-    event.preventDefault();
-
-    const form = event.target;
-    const title = form.title.value.trim();
-    const start_datetime = form.start_datetime.value;
-    const end_datetime = form.end_datetime.value;
-
-    try {
-        const response = await fetch(`${API_BASE}/api/tasks/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                title,
-                start_datetime,
-                end_datetime,
-                event_id: eventId,
-                completed: 0
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            alert(data.error || "Could not create task.");
-            return;
-        }
-
-        form.reset();
-        await initializeDashboard();
-    } catch (error) {
-        console.error("Add task error:", error);
-        alert("Server error while adding task.");
-    }
-}
-
-async function toggleTask(taskId, title, dueDate, startDateTime, endDateTime, checked) {
-    try {
-        const response = await fetch(`${API_BASE}/api/tasks/${taskId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                title: title,
-                due_date: dueDate,
-                start_datetime: startDateTime,
-                end_datetime: endDateTime,
-                completed: checked ? 1 : 0
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            alert(data.error || "Could not update task.");
-            return;
-        }
-
-        await initializeDashboard();
-    } catch (error) {
-        console.error("Toggle task error:", error);
-        alert("Server error while updating task.");
-    }
+function openPlanner(eventId) {
+    window.location.href = `planner.html?event_id=${eventId}`;
 }
 
 async function deleteEvent(eventId) {
-    const confirmed = confirm("Delete this event and its tasks?");
+    const confirmed = confirm("Delete this event and all its tasks?");
     if (!confirmed) return;
 
     try {
@@ -275,9 +164,7 @@ async function deleteEvent(eventId) {
             method: "DELETE",
             credentials: "include"
         });
-
         const data = await response.json();
-
         if (!response.ok) {
             alert(data.error || "Could not delete event.");
             return;
@@ -317,15 +204,9 @@ function formatDateTime(dateTimeString) {
 }
 
 function formatDateTimeRange(startDateTime, endDateTime, fallbackDate) {
-    if (startDateTime && endDateTime) {
-        return `${formatDateTime(startDateTime)} - ${formatDateTime(endDateTime)}`;
-    }
-    if (startDateTime) {
-        return formatDateTime(startDateTime);
-    }
-    if (fallbackDate) {
-        return formatDate(fallbackDate);
-    }
+    if (startDateTime && endDateTime) return `${formatDateTime(startDateTime)} - ${formatDateTime(endDateTime)}`;
+    if (startDateTime) return formatDateTime(startDateTime);
+    if (fallbackDate) return formatDate(fallbackDate);
     return "No date";
 }
 
@@ -342,29 +223,16 @@ function escapeHtml(value) {
         .replaceAll("'", "&#039;");
 }
 
-function escapeJs(value) {
-    return String(value)
-        .replaceAll("\\", "\\\\")
-        .replaceAll("'", "\\'")
-        .replaceAll('"', '\\"');
-}
-
 async function sendMessage(message) {
     const response = await fetch(`${API_BASE}/api/ai/chat`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ message })
     });
 
     const data = await response.json();
-
-    if (!response.ok) {
-        throw new Error(data.error || "Chat request failed");
-    }
-
+    if (!response.ok) throw new Error(data.error || "Chat request failed");
     return data;
 }
 
@@ -373,7 +241,6 @@ async function handleChatSubmit(event) {
 
     const input = document.getElementById("chat-input");
     const message = input.value.trim();
-
     if (!message) return;
 
     appendChatMessage("user", message);
@@ -382,7 +249,6 @@ async function handleChatSubmit(event) {
     try {
         const result = await sendMessage(message);
         appendChatMessage("bot", result.reply || "I couldn't generate a reply.");
-
         if (result.action === "task_created" || result.action === "task_completed") {
             await initializeDashboard();
         }
@@ -395,12 +261,13 @@ async function handleChatSubmit(event) {
 function appendChatMessage(sender, text) {
     const container = document.getElementById("chat-messages");
     const bubble = document.createElement("div");
-
     bubble.className = `chat-bubble ${sender}`;
     bubble.textContent = text;
-
     container.appendChild(bubble);
     container.scrollTop = container.scrollHeight;
 }
+
+window.openPlanner = openPlanner;
+window.deleteEvent = deleteEvent;
 
 initializeDashboard();

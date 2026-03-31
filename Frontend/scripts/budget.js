@@ -1,5 +1,6 @@
 const API_BASE = "http://127.0.0.1:5000";
 let myEvents = [];
+let myTasks = [];
 
 function getNumberValue(id) {
   const value = parseFloat(document.getElementById(id).value);
@@ -8,6 +9,32 @@ function getNumberValue(id) {
 
 function formatCurrency(amount) {
   return `$${Number(amount || 0).toFixed(2)}`;
+}
+
+function formatDate(dateString) {
+  if (!dateString) return "No date";
+  const date = new Date(`${dateString}T00:00:00`);
+  return date.toLocaleDateString();
+}
+
+function formatDateTime(dateTimeString) {
+  if (!dateTimeString) return "";
+  const date = new Date(dateTimeString);
+  if (Number.isNaN(date.getTime())) return dateTimeString;
+  return date.toLocaleString();
+}
+
+function formatDateTimeRange(startDateTime, endDateTime, fallbackDate) {
+  if (startDateTime && endDateTime) {
+    return `${formatDateTime(startDateTime)} - ${formatDateTime(endDateTime)}`;
+  }
+  if (startDateTime) {
+    return formatDateTime(startDateTime);
+  }
+  if (fallbackDate) {
+    return formatDate(fallbackDate);
+  }
+  return "No date";
 }
 
 function getBudgetTip(total, guests) {
@@ -104,11 +131,31 @@ async function fetchMyEvents() {
   return data;
 }
 
+async function fetchMyTasks() {
+  const response = await fetch(`${API_BASE}/api/tasks/mine`, {
+    method: "GET",
+    credentials: "include"
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "Could not load tasks");
+  }
+
+  return data;
+}
+
+function getRequestedEventId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("event_id");
+}
+
 function populateEventSelector(events) {
   const select = document.getElementById("event-select");
 
   if (!events.length) {
     select.innerHTML = `<option value="">No events available</option>`;
+    renderSelectedEventSnapshot(null);
     return;
   }
 
@@ -116,12 +163,21 @@ function populateEventSelector(events) {
     <option value="${event.id}">${escapeHtml(event.title)}</option>
   `).join("");
 
+  const requestedId = getRequestedEventId();
+  const hasRequested = requestedId && events.some(event => String(event.id) === String(requestedId));
+  if (hasRequested) {
+    select.value = requestedId;
+  }
+
   loadEventIntoForm(select.value);
 }
 
 function loadEventIntoForm(eventId) {
   const selectedEvent = myEvents.find(event => Number(event.id) === Number(eventId));
-  if (!selectedEvent) return;
+  if (!selectedEvent) {
+    renderSelectedEventSnapshot(null);
+    return;
+  }
 
   document.getElementById("event-name").value = selectedEvent.title || "";
   document.getElementById("guest-count").value = Number(selectedEvent.guest_count || 0);
@@ -134,7 +190,33 @@ function loadEventIntoForm(eventId) {
   document.getElementById("misc-cost").value = Number(selectedEvent.misc_cost || 0);
   document.getElementById("contingency-percent").value = Number(selectedEvent.contingency_percent || 0);
 
+  document.getElementById("back-to-planner-link").href = `planner.html?event_id=${selectedEvent.id}`;
+
+  renderSelectedEventSnapshot(selectedEvent);
   calculateBudget();
+}
+
+function renderSelectedEventSnapshot(selectedEvent) {
+  const scheduleEl = document.getElementById("budget-snapshot-schedule");
+  const locationEl = document.getElementById("budget-snapshot-location");
+  const descriptionEl = document.getElementById("budget-snapshot-description");
+  const progressEl = document.getElementById("budget-snapshot-progress");
+
+  if (!selectedEvent) {
+    scheduleEl.textContent = "—";
+    locationEl.textContent = "—";
+    descriptionEl.textContent = "—";
+    progressEl.textContent = "0 / 0 complete";
+    return;
+  }
+
+  const eventTasks = myTasks.filter(task => Number(task.event_id) === Number(selectedEvent.id));
+  const completed = eventTasks.filter(task => Number(task.completed) === 1).length;
+
+  scheduleEl.textContent = formatDateTimeRange(selectedEvent.start_datetime, selectedEvent.end_datetime, selectedEvent.date);
+  locationEl.textContent = selectedEvent.location || "Not set";
+  descriptionEl.textContent = selectedEvent.description || "No description";
+  progressEl.textContent = `${completed} / ${eventTasks.length} complete`;
 }
 
 async function saveBudgetToEvent() {
@@ -183,6 +265,7 @@ async function saveBudgetToEvent() {
     myEvents = await fetchMyEvents();
     populateEventSelector(myEvents);
     document.getElementById("event-select").value = String(eventId);
+    loadEventIntoForm(eventId);
   } catch (error) {
     console.error("Save budget error:", error);
     statusEl.textContent = "Server error while saving budget.";
@@ -277,7 +360,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   calculateBudget();
 
   try {
-    myEvents = await fetchMyEvents();
+    [myEvents, myTasks] = await Promise.all([fetchMyEvents(), fetchMyTasks()]);
     populateEventSelector(myEvents);
   } catch (error) {
     console.error("Failed to load events for budget page:", error);
