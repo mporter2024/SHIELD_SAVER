@@ -25,9 +25,7 @@
             </div>
             <nav class="sidebar-nav">
                 <h3>Navigation</h3>
-                <a href="dashboard.html" class="active">Dashboard</a>
-                <a href="budget.html">Budget Calculator</a>
-                <a href="planner.html" id="planner-nav-link">Planning</a>
+                <aside class="sidebar" id="sidebar"></aside>
             </nav>
             <div class="sidebar-actions">
                 <button id="refresh-btn" class="secondary-btn">Refresh Dashboard</button>
@@ -129,7 +127,10 @@
             </section>
         </main>
     </div>
-
+<script src="../scripts/sidebar.js"></script>
+<script>
+    loadSidebar("dashboard", "Welcome", "Your event overview");
+</script>
     <script src="../scripts/dashboard.js"></script>
 </body>
 </html>

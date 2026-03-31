@@ -11,8 +11,7 @@
     <aside class="sidebar">
       <h1>Spartan Shield Saver</h1>
       <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="budget.html" class="active">Budget Calculator</a>
+        <aside class="sidebar" id="sidebar"></aside>
       </nav>
     </aside>
 
@@ -143,7 +142,10 @@
       </section>
     </main>
   </div>
-
+<script src="../scripts/sidebar.js"></script>
+<script>
+    loadSidebar("budget", "Budget", "Track event expenses");
+</script>
   <script src="../scripts/budget.js"></script>
 </body>
 </html>
