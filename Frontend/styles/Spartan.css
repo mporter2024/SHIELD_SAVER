@@ -621,3 +621,128 @@ a:hover {
   background: rgba(255, 255, 255, 0.2);
   font-weight: 600;
 }
+.hidden {
+  display: none;
+}
+
+.planner-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.planner-lower-grid {
+  align-items: start;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.snapshot-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.task-list,
+.lineup-list {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.selected-task-list {
+  padding-left: 0;
+}
+
+.task-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.agenda-card {
+  border: 1px solid #dfe8df;
+  border-radius: 16px;
+  padding: 18px;
+  background: #fafcf9;
+  margin-bottom: 16px;
+}
+
+.agenda-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.agenda-description {
+  margin-bottom: 14px;
+  color: #385043;
+}
+
+.lineup-block {
+  border-top: 1px solid #e4ece5;
+  padding-top: 14px;
+}
+
+.lineup-block h4 {
+  margin-bottom: 10px;
+  color: #0f5132;
+}
+
+.lineup-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border: 1px solid #e3ebe4;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.inline-lineup-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.inline-lineup-form button,
+.planner-link,
+.small-action-btn {
+  width: auto;
+}
+
+.compact-empty-state {
+  min-height: 160px;
+  display: grid;
+  place-items: center;
+}
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background: #f4f7f3;
+}
+
+.main-content {
+  padding: 28px;
+}
+
+@media (max-width: 960px) {
+  .planner-grid,
+  .inline-lineup-form,
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+}

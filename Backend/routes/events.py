@@ -1,12 +1,21 @@
-from flask import Blueprint, request, jsonify, session
-from models.database import get_db
-import sqlite3
+"""Routes for creating, reading, updating, and deleting events."""
 
+import sqlite3
+from flask import Blueprint, jsonify, request, session
+
+from models.database import get_db
 
 events_bp = Blueprint("events", __name__)
 
 
+def require_login():
+    if "user_id" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+    return None
+
+
 def clean_number(value, default=0):
+    """Convert numeric input safely for forms and JSON payloads."""
     if value in (None, ""):
         return default
     try:
@@ -15,48 +24,51 @@ def clean_number(value, default=0):
         return default
 
 
+def get_owned_event(event_id: int):
+    db = get_db()
+    return db.execute(
+        "SELECT * FROM events WHERE id = ? AND user_id = ?",
+        (event_id, session["user_id"]),
+    ).fetchone()
+
+
 @events_bp.get("/")
 def get_events():
     db = get_db()
-    events = db.execute(
-        "SELECT * FROM events ORDER BY COALESCE(start_datetime, date) DESC, id DESC"
-    ).fetchall()
+    events = db.execute("SELECT * FROM events ORDER BY COALESCE(start_datetime, date) DESC, id DESC").fetchall()
     return jsonify([dict(row) for row in events]), 200
 
 
 @events_bp.get("/mine")
 def get_my_events():
-    if "user_id" not in session:
-        return jsonify({"error": "Not logged in"}), 401
+    login_error = require_login()
+    if login_error:
+        return login_error
 
     db = get_db()
     events = db.execute(
         """
-        SELECT * FROM events
+        SELECT *
+        FROM events
         WHERE user_id = ?
         ORDER BY COALESCE(start_datetime, date) ASC, id DESC
         """,
-        (session["user_id"],)
+        (session["user_id"],),
     ).fetchall()
-
     return jsonify([dict(row) for row in events]), 200
 
 
 @events_bp.get("/<int:event_id>")
-def get_event(event_id):
-    if "user_id" not in session:
-        return jsonify({"error": "Not logged in"}), 401
+def get_event(event_id: int):
+    login_error = require_login()
+    if login_error:
+        return login_error
 
-    db = get_db()
-
-    event = db.execute(
-        "SELECT * FROM events WHERE id = ? AND user_id = ?",
-        (event_id, session["user_id"])
-    ).fetchone()
-
+    event = get_owned_event(event_id)
     if event is None:
         return jsonify({"error": "Event not found"}), 404
 
+    db = get_db()
     tasks = db.execute(
         """
         SELECT *
@@ -64,37 +76,33 @@ def get_event(event_id):
         WHERE event_id = ?
         ORDER BY COALESCE(start_datetime, due_date) ASC, id DESC
         """,
-        (event_id,)
+        (event_id,),
     ).fetchall()
 
-    return jsonify({
-        "event": dict(event),
-        "tasks": [dict(task) for task in tasks]
-    }), 200
+    return jsonify({"event": dict(event), "tasks": [dict(task) for task in tasks]}), 200
 
 
 @events_bp.get("/user/<int:user_id>")
-def get_events_by_user(user_id):
+def get_events_by_user(user_id: int):
     db = get_db()
     events = db.execute(
         "SELECT * FROM events WHERE user_id = ? ORDER BY COALESCE(start_datetime, date) ASC",
         (user_id,),
     ).fetchall()
-
     return jsonify([dict(row) for row in events]), 200
 
 
 @events_bp.post("/")
 def create_event():
+    login_error = require_login()
+    if login_error:
+        return login_error
+
     data = request.get_json(silent=True) or {}
-
-    if "user_id" not in session:
-        return jsonify({"error": "Not logged in"}), 401
-
-    required = ["title", "location", "description"]
-    missing = [k for k in required if not data.get(k)]
-    if missing:
-        return jsonify({"error": "Missing required fields", "missing": missing}), 400
+    required_fields = ["title", "location", "description"]
+    missing_fields = [field for field in required_fields if not data.get(field)]
+    if missing_fields:
+        return jsonify({"error": "Missing required fields", "missing": missing_fields}), 400
 
     start_datetime = data.get("start_datetime") or None
     end_datetime = data.get("end_datetime") or None
@@ -126,7 +134,6 @@ def create_event():
     }
 
     db = get_db()
-
     try:
         cursor = db.execute(
             """
@@ -144,24 +151,25 @@ def create_event():
                 payload["guest_count"], payload["venue_cost"], payload["food_cost_per_person"],
                 payload["decorations_cost"], payload["equipment_cost"], payload["staff_cost"],
                 payload["marketing_cost"], payload["misc_cost"], payload["contingency_percent"],
-                payload["budget_subtotal"], payload["budget_contingency"], payload["budget_total"]
+                payload["budget_subtotal"], payload["budget_contingency"], payload["budget_total"],
             ),
         )
         db.commit()
-    except sqlite3.IntegrityError as e:
-        return jsonify({"error": "Database constraint failed", "details": str(e)}), 400
+    except sqlite3.IntegrityError as error:
+        return jsonify({"error": "Database constraint failed", "details": str(error)}), 400
 
     payload["id"] = cursor.lastrowid
     return jsonify(payload), 201
 
 
 @events_bp.put("/<int:event_id>")
-def update_event(event_id):
+def update_event(event_id: int):
+    login_error = require_login()
+    if login_error:
+        return login_error
+
     data = request.get_json(silent=True) or {}
-
-    db = get_db()
-
-    existing = db.execute("SELECT * FROM events WHERE id = ?", (event_id,)).fetchone()
+    existing = get_owned_event(event_id)
     if existing is None:
         return jsonify({"error": "Event not found"}), 404
 
@@ -175,7 +183,7 @@ def update_event(event_id):
     if "start_datetime" in data and start_datetime:
         date = start_datetime[:10]
 
-    values = {
+    numeric_values = {
         "guest_count": int(clean_number(data.get("guest_count"), existing["guest_count"] or 0)) if "guest_count" in data else None,
         "venue_cost": clean_number(data.get("venue_cost"), existing["venue_cost"] or 0) if "venue_cost" in data else None,
         "food_cost_per_person": clean_number(data.get("food_cost_per_person"), existing["food_cost_per_person"] or 0) if "food_cost_per_person" in data else None,
@@ -190,8 +198,9 @@ def update_event(event_id):
         "budget_total": clean_number(data.get("budget_total"), existing["budget_total"] or 0) if "budget_total" in data else None,
     }
 
+    db = get_db()
     try:
-        result = db.execute(
+        db.execute(
             """
             UPDATE events
             SET title = COALESCE(?, title),
@@ -216,33 +225,35 @@ def update_event(event_id):
             """,
             (
                 title, date, start_datetime, end_datetime, location, description,
-                values["guest_count"], values["venue_cost"], values["food_cost_per_person"],
-                values["decorations_cost"], values["equipment_cost"], values["staff_cost"],
-                values["marketing_cost"], values["misc_cost"], values["contingency_percent"],
-                values["budget_subtotal"], values["budget_contingency"], values["budget_total"],
+                numeric_values["guest_count"], numeric_values["venue_cost"], numeric_values["food_cost_per_person"],
+                numeric_values["decorations_cost"], numeric_values["equipment_cost"], numeric_values["staff_cost"],
+                numeric_values["marketing_cost"], numeric_values["misc_cost"], numeric_values["contingency_percent"],
+                numeric_values["budget_subtotal"], numeric_values["budget_contingency"], numeric_values["budget_total"],
                 event_id,
             ),
         )
         db.commit()
-    except sqlite3.IntegrityError as e:
-        return jsonify({"error": "Database constraint failed", "details": str(e)}), 400
+    except sqlite3.IntegrityError as error:
+        return jsonify({"error": "Database constraint failed", "details": str(error)}), 400
 
-    if result.rowcount == 0:
-        return jsonify({"error": "Event not found"}), 404
-
-    updated = db.execute("SELECT * FROM events WHERE id = ?", (event_id,)).fetchone()
+    updated = get_owned_event(event_id)
     return jsonify({"message": "Event updated successfully", "event": dict(updated)}), 200
 
 
 @events_bp.delete("/<int:event_id>")
-def delete_event(event_id):
-    db = get_db()
+def delete_event(event_id: int):
+    login_error = require_login()
+    if login_error:
+        return login_error
 
-    db.execute("DELETE FROM tasks WHERE event_id = ?", (event_id,))
-    cursor = db.execute("DELETE FROM events WHERE id = ?", (event_id,))
-    db.commit()
-
-    if cursor.rowcount == 0:
+    existing = get_owned_event(event_id)
+    if existing is None:
         return jsonify({"error": "Event not found"}), 404
 
+    db = get_db()
+    db.execute("DELETE FROM lineup_items WHERE agenda_item_id IN (SELECT id FROM agenda_items WHERE event_id = ?)", (event_id,))
+    db.execute("DELETE FROM agenda_items WHERE event_id = ?", (event_id,))
+    db.execute("DELETE FROM tasks WHERE event_id = ?", (event_id,))
+    db.execute("DELETE FROM events WHERE id = ?", (event_id,))
+    db.commit()
     return jsonify({"message": "Event deleted successfully"}), 200

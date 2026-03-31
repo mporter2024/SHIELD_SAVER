@@ -1,22 +1,19 @@
 const API_BASE = "http://127.0.0.1:5000";
 
-const eventId = getEventIdFromUrl();
-
-if (eventId) {
-    localStorage.setItem("selectedEventId", eventId);
-}
-
 let selectedEventId = null;
 let currentEvent = null;
 let currentTasks = [];
+let currentAgenda = [];
 
 const editForm = document.getElementById("event-edit-form");
 const selectedTaskForm = document.getElementById("selected-task-form");
+const agendaForm = document.getElementById("agenda-form");
 const backDashboardBtn = document.getElementById("back-dashboard-btn");
 
-editForm.addEventListener("submit", saveSelectedEvent);
-selectedTaskForm.addEventListener("submit", addTaskToSelectedEvent);
-backDashboardBtn.addEventListener("click", () => {
+editForm?.addEventListener("submit", saveSelectedEvent);
+selectedTaskForm?.addEventListener("submit", addTaskToSelectedEvent);
+agendaForm?.addEventListener("submit", addAgendaItem);
+backDashboardBtn?.addEventListener("click", () => {
     window.location.href = "dashboard.html";
 });
 
@@ -26,26 +23,41 @@ function getEventIdFromUrl() {
 }
 
 async function initializePlanner() {
-    selectedEventId = getEventIdFromUrl();
+    selectedEventId = getEventIdFromUrl() || localStorage.getItem("selectedEventId");
 
     if (!selectedEventId) {
         showError("No event was selected. Go back to the dashboard and open a planner from one of your events.");
         return;
     }
 
-    try {
-        const response = await fetch(`${API_BASE}/api/events/${selectedEventId}`, {
-            method: "GET",
-            credentials: "include"
-        });
-        const data = await response.json();
+    localStorage.setItem("selectedEventId", selectedEventId);
 
-        if (!response.ok) {
-            throw new Error(data.error || "Could not load event planner.");
+    try {
+        const [eventResponse, agendaResponse] = await Promise.all([
+            fetch(`${API_BASE}/api/events/${selectedEventId}`, {
+                method: "GET",
+                credentials: "include"
+            }),
+            fetch(`${API_BASE}/api/agenda/event/${selectedEventId}`, {
+                method: "GET",
+                credentials: "include"
+            })
+        ]);
+
+        const eventData = await eventResponse.json();
+        const agendaData = await agendaResponse.json();
+
+        if (!eventResponse.ok) {
+            throw new Error(eventData.error || "Could not load event planner.");
         }
 
-        currentEvent = data.event;
-        currentTasks = data.tasks || [];
+        if (!agendaResponse.ok) {
+            throw new Error(agendaData.error || "Could not load agenda.");
+        }
+
+        currentEvent = eventData.event;
+        currentTasks = eventData.tasks || [];
+        currentAgenda = agendaData || [];
         renderPlanner();
     } catch (error) {
         console.error("Planner initialization failed:", error);
@@ -69,7 +81,7 @@ function renderPlanner() {
     content.classList.remove("hidden");
 
     document.getElementById("planner-title").textContent = currentEvent.title || "Event Planner";
-    document.getElementById("planner-subtitle").textContent = "Manage this event's details, tasks, and budget in one place.";
+    document.getElementById("planner-subtitle").textContent = "Manage this event's details, tasks, agenda, lineup, and budget in one place.";
     document.getElementById("planner-sidebar-title").textContent = currentEvent.title || "Planner";
     document.getElementById("planner-sidebar-subtitle").textContent = formatDateTimeRange(currentEvent.start_datetime, currentEvent.end_datetime, currentEvent.date);
 
@@ -82,13 +94,14 @@ function renderPlanner() {
     document.getElementById("edit-event-location").value = currentEvent.location || "";
     document.getElementById("edit-event-description").value = currentEvent.description || "";
 
-    const completedCount = currentTasks.filter(task => Number(task.completed) === 1).length;
+    const completedCount = currentTasks.filter((task) => Number(task.completed) === 1).length;
     document.getElementById("snapshot-schedule").textContent = formatDateTimeRange(currentEvent.start_datetime, currentEvent.end_datetime, currentEvent.date);
     document.getElementById("snapshot-location").textContent = currentEvent.location || "Not set";
     document.getElementById("snapshot-progress").textContent = `${completedCount} / ${currentTasks.length} complete`;
     document.getElementById("snapshot-budget").textContent = formatCurrency(Number(currentEvent.budget_total || 0));
 
     renderTasks();
+    renderAgenda();
 }
 
 function renderTasks() {
@@ -111,7 +124,7 @@ function renderTasks() {
 
     taskContainer.innerHTML = `
         <ul class="task-list selected-task-list">
-            ${sortedTasks.map(task => `
+            ${sortedTasks.map((task) => `
                 <li class="task-item">
                     <div class="task-main">
                         <label>
@@ -127,6 +140,63 @@ function renderTasks() {
                         <span class="task-date">${formatDateTimeRange(task.start_datetime, task.end_datetime, task.due_date)}</span>
                     </div>
                     <button class="small-danger-btn task-delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+                </li>
+            `).join("")}
+        </ul>
+    `;
+}
+
+function renderAgenda() {
+    const agendaList = document.getElementById("agenda-list");
+
+    if (!currentAgenda.length) {
+        agendaList.innerHTML = `
+            <div class="empty-state compact-empty-state">
+                <h3>No agenda items yet</h3>
+                <p>Add the first time block for this event using the form on the right.</p>
+            </div>
+        `;
+        return;
+    }
+
+    agendaList.innerHTML = currentAgenda.map((item) => `
+        <div class="agenda-card">
+            <div class="agenda-card-header">
+                <div>
+                    <h3>${escapeHtml(item.title)}</h3>
+                    <p class="muted-text">${formatDateTimeRange(item.start_datetime, item.end_datetime, currentEvent?.date)}</p>
+                </div>
+                <button class="small-danger-btn" onclick="deleteAgendaItem(${item.id})">Delete</button>
+            </div>
+
+            <p class="agenda-description">${escapeHtml(item.description || "No description yet.")}</p>
+
+            <div class="lineup-block">
+                <h4>Lineup</h4>
+                ${renderLineupList(item)}
+                <form class="inline-lineup-form" onsubmit="addLineupItem(event, ${item.id})">
+                    <input type="text" id="lineup-name-${item.id}" placeholder="Person or act name" required>
+                    <input type="text" id="lineup-role-${item.id}" placeholder="Role (speaker, host, performer)">
+                    <button type="submit">Add Lineup Entry</button>
+                </form>
+            </div>
+        </div>
+    `).join("");
+}
+
+function renderLineupList(agendaItem) {
+    const lineup = agendaItem.lineup || [];
+
+    if (!lineup.length) {
+        return `<p class="muted-text">No lineup entries yet.</p>`;
+    }
+
+    return `
+        <ul class="lineup-list">
+            ${lineup.map((entry) => `
+                <li class="lineup-item">
+                    <span><strong>${escapeHtml(entry.name)}</strong>${entry.role ? ` — ${escapeHtml(entry.role)}` : ""}</span>
+                    <button class="small-danger-btn" onclick="deleteLineupItem(${entry.id})">Remove</button>
                 </li>
             `).join("")}
         </ul>
@@ -206,6 +276,73 @@ async function addTaskToSelectedEvent(event) {
     }
 }
 
+async function addAgendaItem(event) {
+    event.preventDefault();
+
+    const messageEl = document.getElementById("agenda-message");
+    messageEl.textContent = "Adding agenda item...";
+
+    const payload = {
+        event_id: selectedEventId,
+        title: document.getElementById("agenda-title").value.trim(),
+        start_datetime: document.getElementById("agenda-start").value,
+        end_datetime: document.getElementById("agenda-end").value,
+        description: document.getElementById("agenda-description").value.trim()
+    };
+
+    try {
+        const response = await fetch(`${API_BASE}/api/agenda/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            messageEl.textContent = data.error || "Could not create agenda item.";
+            return;
+        }
+
+        agendaForm.reset();
+        messageEl.textContent = "Agenda item added.";
+        await initializePlanner();
+    } catch (error) {
+        console.error("Add agenda error:", error);
+        messageEl.textContent = "Server error while adding agenda item.";
+    }
+}
+
+async function addLineupItem(event, agendaItemId) {
+    event.preventDefault();
+
+    const nameInput = document.getElementById(`lineup-name-${agendaItemId}`);
+    const roleInput = document.getElementById(`lineup-role-${agendaItemId}`);
+
+    try {
+        const response = await fetch(`${API_BASE}/api/agenda/${agendaItemId}/lineup`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+                name: nameInput.value.trim(),
+                role: roleInput.value.trim()
+            })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            alert(data.error || "Could not add lineup entry.");
+            return;
+        }
+
+        await initializePlanner();
+    } catch (error) {
+        console.error("Add lineup error:", error);
+        alert("Server error while adding lineup entry.");
+    }
+}
+
 async function toggleTask(taskId, title, dueDate, startDateTime, endDateTime, checked) {
     try {
         const response = await fetch(`${API_BASE}/api/tasks/${taskId}`, {
@@ -213,7 +350,7 @@ async function toggleTask(taskId, title, dueDate, startDateTime, endDateTime, ch
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify({
-                title: title,
+                title,
                 due_date: dueDate,
                 start_datetime: startDateTime,
                 end_datetime: endDateTime,
@@ -254,6 +391,49 @@ async function deleteTask(taskId) {
     } catch (error) {
         console.error("Delete task error:", error);
         alert("Server error while deleting task.");
+    }
+}
+
+async function deleteAgendaItem(agendaItemId) {
+    const confirmed = confirm("Delete this agenda item and all of its lineup entries?");
+    if (!confirmed) return;
+
+    try {
+        const response = await fetch(`${API_BASE}/api/agenda/${agendaItemId}`, {
+            method: "DELETE",
+            credentials: "include"
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            alert(data.error || "Could not delete agenda item.");
+            return;
+        }
+
+        await initializePlanner();
+    } catch (error) {
+        console.error("Delete agenda error:", error);
+        alert("Server error while deleting agenda item.");
+    }
+}
+
+async function deleteLineupItem(lineupItemId) {
+    try {
+        const response = await fetch(`${API_BASE}/api/agenda/lineup/${lineupItemId}`, {
+            method: "DELETE",
+            credentials: "include"
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            alert(data.error || "Could not delete lineup entry.");
+            return;
+        }
+
+        await initializePlanner();
+    } catch (error) {
+        console.error("Delete lineup error:", error);
+        alert("Server error while deleting lineup entry.");
     }
 }
 
@@ -299,26 +479,10 @@ function thisAsJson(value) {
     return JSON.stringify(String(value ?? ""));
 }
 
-async function addAgenda() {
-    const title = document.getElementById("title").value;
-    const start = document.getElementById("start").value;
-    const end = document.getElementById("end").value;
-
-    await fetch("/api/agenda/", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            event_id: currentEventId,
-            title: title,
-            start_time: start,
-            end_time: end
-        })
-    });
-
-    loadAgenda();
-}
-
 window.toggleTask = toggleTask;
 window.deleteTask = deleteTask;
+window.addLineupItem = addLineupItem;
+window.deleteAgendaItem = deleteAgendaItem;
+window.deleteLineupItem = deleteLineupItem;
 
 initializePlanner();
