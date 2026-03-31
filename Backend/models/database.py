@@ -1,6 +1,7 @@
 import sqlite3
 from flask import g, current_app
 
+
 def get_db():
     if "db" not in g:
         db_path = current_app.config.get("DATABASE", "event_planner.db")
@@ -15,6 +16,13 @@ def close_db(e=None):
     db = g.pop("db", None)
     if db is not None:
         db.close()
+
+
+def ensure_column(db, table_name, column_name, column_type):
+    columns = db.execute(f"PRAGMA table_info({table_name})").fetchall()
+    existing = {column[1] for column in columns}
+    if column_name not in existing:
+        db.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}")
 
 
 def init_db(app):
@@ -35,8 +43,22 @@ def init_db(app):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             date TEXT,
+            start_datetime TEXT,
+            end_datetime TEXT,
             location TEXT,
             description TEXT,
+            guest_count INTEGER DEFAULT 0,
+            venue_cost REAL DEFAULT 0,
+            food_cost_per_person REAL DEFAULT 0,
+            decorations_cost REAL DEFAULT 0,
+            equipment_cost REAL DEFAULT 0,
+            staff_cost REAL DEFAULT 0,
+            marketing_cost REAL DEFAULT 0,
+            misc_cost REAL DEFAULT 0,
+            contingency_percent REAL DEFAULT 0,
+            budget_subtotal REAL DEFAULT 0,
+            budget_contingency REAL DEFAULT 0,
+            budget_total REAL DEFAULT 0,
             user_id INTEGER,
             FOREIGN KEY (user_id) REFERENCES users (id)
         );
@@ -47,7 +69,28 @@ def init_db(app):
             title TEXT NOT NULL,
             completed INTEGER DEFAULT 0,
             due_date TEXT,
+            start_datetime TEXT,
+            end_datetime TEXT,
             FOREIGN KEY (event_id) REFERENCES events(id)
         );
         """)
+
+        ensure_column(db, "events", "start_datetime", "TEXT")
+        ensure_column(db, "events", "end_datetime", "TEXT")
+        ensure_column(db, "events", "guest_count", "INTEGER DEFAULT 0")
+        ensure_column(db, "events", "venue_cost", "REAL DEFAULT 0")
+        ensure_column(db, "events", "food_cost_per_person", "REAL DEFAULT 0")
+        ensure_column(db, "events", "decorations_cost", "REAL DEFAULT 0")
+        ensure_column(db, "events", "equipment_cost", "REAL DEFAULT 0")
+        ensure_column(db, "events", "staff_cost", "REAL DEFAULT 0")
+        ensure_column(db, "events", "marketing_cost", "REAL DEFAULT 0")
+        ensure_column(db, "events", "misc_cost", "REAL DEFAULT 0")
+        ensure_column(db, "events", "contingency_percent", "REAL DEFAULT 0")
+        ensure_column(db, "events", "budget_subtotal", "REAL DEFAULT 0")
+        ensure_column(db, "events", "budget_contingency", "REAL DEFAULT 0")
+        ensure_column(db, "events", "budget_total", "REAL DEFAULT 0")
+
+        ensure_column(db, "tasks", "start_datetime", "TEXT")
+        ensure_column(db, "tasks", "end_datetime", "TEXT")
+
         db.commit()

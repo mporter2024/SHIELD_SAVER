@@ -109,8 +109,9 @@ function renderEvents(events, tasks) {
                 <div class="event-card-top">
                     <div>
                         <h3>${escapeHtml(event.title)}</h3>
-                        <p><strong>Date:</strong> ${formatDate(event.date)}</p>
-                        <p><strong>Location:</strong> ${escapeHtml(event.location)}</p>
+                        <p><strong>When:</strong> ${formatDateTimeRange(event.start_datetime, event.end_datetime, event.date)}</p>
+                        <p><strong>Location:</strong> ${escapeHtml(event.location || "Not set")}</p>
+                        <p><strong>Budget:</strong> ${formatCurrency(Number(event.budget_total || 0))}</p>
                     </div>
                     <button class="small-danger-btn" onclick="deleteEvent(${event.id})">Delete</button>
                 </div>
@@ -128,13 +129,13 @@ function renderEvents(events, tasks) {
                                             <input
                                                 type="checkbox"
                                                 ${Number(task.completed) === 1 ? "checked" : ""}
-                                                onchange="toggleTask(${task.id}, '${escapeJs(task.title)}', '${task.due_date || ""}', this.checked)"
+                                                onchange="toggleTask(${task.id}, '${escapeJs(task.title)}', '${task.due_date || ""}', '${task.start_datetime || ""}', '${task.end_datetime || ""}', this.checked)"
                                             >
                                             <span class="${Number(task.completed) === 1 ? "completed-task" : ""}">
                                                 ${escapeHtml(task.title)}
                                             </span>
                                         </label>
-                                        <span class="task-date">${task.due_date ? formatDate(task.due_date) : "No due date"}</span>
+                                        <span class="task-date">${formatDateTimeRange(task.start_datetime, task.end_datetime, task.due_date)}</span>
                                     </li>
                                 `).join("")}
                               </ul>`
@@ -143,7 +144,10 @@ function renderEvents(events, tasks) {
 
                     <form class="task-form" onsubmit="addTask(event, ${event.id})">
                         <input type="text" name="title" placeholder="New task title" required>
-                        <input type="date" name="due_date">
+                        <label>Task start</label>
+                        <input type="datetime-local" name="start_datetime">
+                        <label>Task end</label>
+                        <input type="datetime-local" name="end_datetime">
                         <button type="submit">Add Task</button>
                     </form>
                 </div>
@@ -160,7 +164,8 @@ async function createEvent(event) {
 
     const payload = {
         title: document.getElementById("event-title").value.trim(),
-        date: document.getElementById("event-date").value,
+        start_datetime: document.getElementById("event-start").value,
+        end_datetime: document.getElementById("event-end").value,
         location: document.getElementById("event-location").value.trim(),
         description: document.getElementById("event-description").value.trim()
     };
@@ -196,7 +201,8 @@ async function addTask(event, eventId) {
 
     const form = event.target;
     const title = form.title.value.trim();
-    const due_date = form.due_date.value;
+    const start_datetime = form.start_datetime.value;
+    const end_datetime = form.end_datetime.value;
 
     try {
         const response = await fetch(`${API_BASE}/api/tasks/`, {
@@ -207,7 +213,8 @@ async function addTask(event, eventId) {
             credentials: "include",
             body: JSON.stringify({
                 title,
-                due_date,
+                start_datetime,
+                end_datetime,
                 event_id: eventId,
                 completed: 0
             })
@@ -228,7 +235,7 @@ async function addTask(event, eventId) {
     }
 }
 
-async function toggleTask(taskId, title, dueDate, checked) {
+async function toggleTask(taskId, title, dueDate, startDateTime, endDateTime, checked) {
     try {
         const response = await fetch(`${API_BASE}/api/tasks/${taskId}`, {
             method: "PUT",
@@ -239,6 +246,8 @@ async function toggleTask(taskId, title, dueDate, checked) {
             body: JSON.stringify({
                 title: title,
                 due_date: dueDate,
+                start_datetime: startDateTime,
+                end_datetime: endDateTime,
                 completed: checked ? 1 : 0
             })
         });
@@ -300,6 +309,30 @@ function formatDate(dateString) {
     return date.toLocaleDateString();
 }
 
+function formatDateTime(dateTimeString) {
+    if (!dateTimeString) return "";
+    const date = new Date(dateTimeString);
+    if (Number.isNaN(date.getTime())) return dateTimeString;
+    return date.toLocaleString();
+}
+
+function formatDateTimeRange(startDateTime, endDateTime, fallbackDate) {
+    if (startDateTime && endDateTime) {
+        return `${formatDateTime(startDateTime)} - ${formatDateTime(endDateTime)}`;
+    }
+    if (startDateTime) {
+        return formatDateTime(startDateTime);
+    }
+    if (fallbackDate) {
+        return formatDate(fallbackDate);
+    }
+    return "No date";
+}
+
+function formatCurrency(amount) {
+    return `$${Number(amount || 0).toFixed(2)}`;
+}
+
 function escapeHtml(value) {
     return String(value)
         .replaceAll("&", "&amp;")
@@ -351,8 +384,8 @@ async function handleChatSubmit(event) {
         appendChatMessage("bot", result.reply || "I couldn't generate a reply.");
 
         if (result.action === "task_created" || result.action === "task_completed") {
-    await initializeDashboard();
-}
+            await initializeDashboard();
+        }
     } catch (error) {
         console.error("Chat error:", error);
         appendChatMessage("bot", "There was a problem reaching the chatbot.");

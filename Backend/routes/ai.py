@@ -12,21 +12,23 @@ def load_user_context(user_id):
 
     events = db.execute(
         """
-        SELECT id, title, date, location, description
+        SELECT id, title, date, start_datetime, end_datetime, location, description,
+               guest_count, budget_total
         FROM events
         WHERE user_id = ?
-        ORDER BY date ASC, id DESC
+        ORDER BY COALESCE(start_datetime, date) ASC, id DESC
         """,
         (user_id,)
     ).fetchall()
 
     tasks = db.execute(
         """
-        SELECT tasks.id, tasks.event_id, tasks.title, tasks.completed, tasks.due_date
+        SELECT tasks.id, tasks.event_id, tasks.title, tasks.completed,
+               tasks.due_date, tasks.start_datetime, tasks.end_datetime
         FROM tasks
         INNER JOIN events ON tasks.event_id = events.id
         WHERE events.user_id = ?
-        ORDER BY tasks.due_date ASC, tasks.id DESC
+        ORDER BY COALESCE(tasks.start_datetime, tasks.due_date) ASC, tasks.id DESC
         """,
         (user_id,)
     ).fetchall()
@@ -49,17 +51,23 @@ def create_task_for_user(user_id, task_data):
     if owned_event is None:
         return None, "That event does not belong to the current user."
 
+    due_date = task_data.get("due_date")
+    start_datetime = task_data.get("start_datetime")
+    end_datetime = task_data.get("end_datetime")
+
     try:
         cursor = db.execute(
             """
-            INSERT INTO tasks (event_id, title, completed, due_date)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO tasks (event_id, title, completed, due_date, start_datetime, end_datetime)
+            VALUES (?, ?, ?, ?, ?, ?)
             """,
             (
                 task_data["event_id"],
                 task_data["title"],
                 0,
-                task_data.get("due_date")
+                due_date or (start_datetime[:10] if start_datetime else None),
+                start_datetime,
+                end_datetime,
             )
         )
         db.commit()
@@ -71,7 +79,9 @@ def create_task_for_user(user_id, task_data):
         "event_id": task_data["event_id"],
         "title": task_data["title"],
         "completed": 0,
-        "due_date": task_data.get("due_date"),
+        "due_date": due_date or (start_datetime[:10] if start_datetime else None),
+        "start_datetime": start_datetime,
+        "end_datetime": end_datetime,
         "event_title": owned_event["title"]
     }, None
 
@@ -144,7 +154,7 @@ def chat():
                 "reply": (
                     f"Task '{created_task['title']}' was added to "
                     f"'{created_task['event_title']}'"
-                    + (f" with due date {created_task['due_date']}." if created_task["due_date"] else ".")
+                    + (f" with timing starting {created_task['start_datetime']}." if created_task["start_datetime"] else (f" with due date {created_task['due_date']}." if created_task["due_date"] else "."))
                 ),
                 "action": "task_created",
                 "task": created_task

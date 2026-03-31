@@ -23,11 +23,11 @@
                 <p id="welcome-message">Loading...</p>
                 <p id="user-email" class="muted-text"></p>
             </div>
-<nav class="sidebar-nav">
-    <h3>Navigation</h3>
-    <a href="dashboard.html" class="active">Dashboard</a>
-    <a href="budget.html">Budget Calculator</a>
-</nav>
+            <nav class="sidebar-nav">
+                <h3>Navigation</h3>
+                <a href="dashboard.html" class="active">Dashboard</a>
+                <a href="budget.html">Budget Calculator</a>
+            </nav>
             <div class="sidebar-actions">
                 <button id="refresh-btn" class="secondary-btn">Refresh Dashboard</button>
                 <button id="logout-btn" class="danger-btn">Logout</button>
@@ -68,7 +68,10 @@
                     <h2>Create Event</h2>
                     <form id="event-form" class="event-form">
                         <input type="text" id="event-title" placeholder="Event title" required>
-                        <input type="date" id="event-date" required>
+                        <label for="event-start">Event start</label>
+                        <input type="datetime-local" id="event-start" required>
+                        <label for="event-end">Event end</label>
+                        <input type="datetime-local" id="event-end">
                         <input type="text" id="event-location" placeholder="Location" required>
                         <textarea id="event-description" placeholder="Event description" rows="4" required></textarea>
                         <button type="submit">Create Event</button>
@@ -80,38 +83,38 @@
                     <h2>Planner Notes</h2>
                     <div class="info-list">
                         <div class="info-item">
-                            <strong></strong>
-                            <span></span>
+                            <strong>Time ranges</strong>
+                            <span>Events and tasks can now use start and end times instead of a single date.</span>
                         </div>
                         <div class="info-item">
-                            <strong></strong>
-                            <span></span>
+                            <strong>Budget linking</strong>
+                            <span>Each event can now store its own budget details from the calculator page.</span>
                         </div>
                         <div class="info-item">
-                            <strong></strong>
-                            <span></span>
+                            <strong>Chat access</strong>
+                            <span>The AI assistant is available on both the dashboard and budget calculator.</span>
                         </div>
                     </div>
                 </div>
             </section>
-<section class="panel chatbot-panel">
-    <h2>AI Event Assistant</h2>
-    <div id="chat-messages" class="chat-messages">
-        <div class="chat-bubble bot">
-            Hi! I’m your event planning assistant. Ask me about budgeting, venues, catering, or timelines.
-        </div>
-    </div>
+            <section class="panel chatbot-panel">
+                <h2>AI Event Assistant</h2>
+                <div id="chat-messages" class="chat-messages">
+                    <div class="chat-bubble bot">
+                        Hi! I’m your event planning assistant. Ask me about budgeting, venues, catering, or timelines.
+                    </div>
+                </div>
 
-    <form id="chat-form" class="chat-form">
-        <input
-            type="text"
-            id="chat-input"
-            placeholder="Ask about your event..."
-            required
-        >
-        <button type="submit">Send</button>
-    </form>
-</section>
+                <form id="chat-form" class="chat-form">
+                    <input
+                        type="text"
+                        id="chat-input"
+                        placeholder="Ask about your event..."
+                        required
+                    >
+                    <button type="submit">Send</button>
+                </form>
+            </section>
             <section class="panel">
                 <div class="section-header">
                     <h2>Your Events</h2>
