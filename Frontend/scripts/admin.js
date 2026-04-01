@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             window.location.href = "dashboard.html";
             return;
         }
-
         loadSidebar("admin", "Admin", `${user.name} • system overview`);
         await loadAdminStats();
         await loadUsers();
