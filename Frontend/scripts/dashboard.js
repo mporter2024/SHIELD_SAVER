@@ -18,6 +18,9 @@ async function initializeDashboard() {
         const user = await fetchCurrentUser();
         document.getElementById("welcome-message").textContent = user.name;
         document.getElementById("user-email").textContent = user.email;
+        localStorage.setItem("user", JSON.stringify(user));
+        const adminLink = document.getElementById("admin-nav-link");
+        if (adminLink) adminLink.style.display = user.role === "admin" ? "block" : "none";
 
         const [events, tasks] = await Promise.all([
             fetchMyEvents(),
@@ -188,6 +191,8 @@ async function logout() {
         console.error("Logout error:", error);
     }
 
+    localStorage.removeItem("user");
+    localStorage.removeItem("selectedEventId");
     window.location.href = "index.html";
 }
 

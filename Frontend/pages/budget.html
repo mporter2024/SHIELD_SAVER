@@ -13,6 +13,7 @@
       <nav>
         <a href="dashboard.html">Dashboard</a>
         <a href="budget.html" class="active">Budget Calculator</a>
+        <a href="admin.html" id="admin-nav-link" style="display:none;">Admin</a>
       </nav>
     </aside>
 
@@ -20,7 +21,30 @@
       <header class="page-header">
         <h2>Event Budget Calculator</h2>
         <p>Estimate event costs by category, attach them to an event, and ask the chatbot for help from this page.</p>
+        <p><a id="back-to-planner-link" href="planner.html" class="secondary-btn">Back to Planner</a></p>
       </header>
+
+      <section class="panel">
+        <h3>Selected Event Snapshot</h3>
+        <div class="snapshot-grid">
+          <div class="info-item">
+            <strong>Schedule</strong>
+            <span id="budget-snapshot-schedule">—</span>
+          </div>
+          <div class="info-item">
+            <strong>Location</strong>
+            <span id="budget-snapshot-location">—</span>
+          </div>
+          <div class="info-item">
+            <strong>Description</strong>
+            <span id="budget-snapshot-description">—</span>
+          </div>
+          <div class="info-item">
+            <strong>Tasks Progress</strong>
+            <span id="budget-snapshot-progress">0 / 0 complete</span>
+          </div>
+        </div>
+      </section>
 
       <section class="panel budget-panel">
         <div class="budget-grid">

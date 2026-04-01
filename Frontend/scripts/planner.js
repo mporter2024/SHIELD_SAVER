@@ -35,6 +35,12 @@ async function initializePlanner() {
     localStorage.setItem("selectedEventId", selectedEventId);
 
     try {
+        const currentUser = JSON.parse(localStorage.getItem("user") || "null");
+        const adminLink = document.getElementById("admin-nav-link");
+        if (adminLink && currentUser) {
+            adminLink.style.display = currentUser.role === "admin" ? "block" : "none";
+        }
+
         const [eventResponse, agendaResponse] = await Promise.all([
             fetch(`${API_BASE}/api/events/${selectedEventId}`, {
                 method: "GET",
