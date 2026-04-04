@@ -405,7 +405,7 @@ async function handleQuickAddEvent(e) {
     }
 
     const title = document.getElementById("quick-event-title").value.trim();
-    const location = document.getElementById("quick-event-location").value.trim();
+    const locationInput = document.getElementById("quick-event-location").value.trim();
     const startTime = document.getElementById("quick-event-start-time").value;
     const endTime = document.getElementById("quick-event-end-time").value;
 
@@ -414,7 +414,7 @@ async function handleQuickAddEvent(e) {
         return;
     }
 
-     const payload = {
+    const payload = {
         title,
         location: locationInput || "TBD",
         description: "Created from calendar quick add.",
@@ -423,7 +423,7 @@ async function handleQuickAddEvent(e) {
     };
 
     try {
-        const response = await fetch(`${API_BASE}/api/events`, {
+        const response = await fetch(`${API_BASE}/api/events/`, {
             method: "POST",
             credentials: "include",
             headers: {
