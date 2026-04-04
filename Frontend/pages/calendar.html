@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar - Spartan Shield Saver</title>
+    <link rel="stylesheet" href="../styles/Spartan.css">
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <img src="../logo.png" alt="Shield Saver Logo" class="brand-logo">
+                <div>
+                    <h2>Spartan Shield Saver</h2>
+                    <p>Event Calendar</p>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <h3 id="calendar-sidebar-title">Calendar</h3>
+                <p id="calendar-sidebar-subtitle" class="muted-text">View events, tasks, and agenda items by date</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <h3>Navigation</h3>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="planner.html">Planning</a>
+                <a href="calendar.html" class="active">Calendar</a>
+                <a href="budget.html">Budget Calculator</a>
+                <a href="admin.html" id="admin-nav-link" style="display:none;">Admin</a>
+            </nav>
+
+            <div class="sidebar-actions">
+                <button id="calendar-refresh-btn" class="secondary-btn">Refresh Calendar</button>
+                <button id="calendar-back-btn" class="secondary-btn">Back to Dashboard</button>
+                <button id="calendar-logout-btn" class="danger-btn">Logout</button>
+            </div>
+        </aside>
+
+        <main class="dashboard-main">
+            <section class="hero-panel">
+                <div>
+                    <h1>Calendar</h1>
+                    <p class="muted-text">
+                        See your events, tasks, and agenda items in one monthly view.
+                    </p>
+                </div>
+            </section>
+
+            
+
+               <section class="panel">
+    <div class="calendar-toolbar">
+        <button id="prev-month-btn" class="secondary-btn calendar-nav-btn" type="button">← Previous</button>
+        <h2 id="calendar-month-label">Month Year</h2>
+        <button id="next-month-btn" class="secondary-btn calendar-nav-btn" type="button">Next →</button>
+    </div>
+
+    <div class="calendar-controls">
+        <div class="calendar-filter-group">
+            <label class="calendar-filter-pill">
+                <input type="checkbox" id="filter-events" checked>
+                <span>Events</span>
+            </label>
+
+            <label class="calendar-filter-pill">
+                <input type="checkbox" id="filter-tasks" checked>
+                <span>Tasks</span>
+            </label>
+
+            <label class="calendar-filter-pill">
+                <input type="checkbox" id="filter-agendas" checked>
+                <span>Agenda</span>
+            </label>
+        </div>
+
+        <div class="calendar-search-group">
+            <input
+                type="text"
+                id="calendar-search"
+                class="calendar-search-input"
+                placeholder="Search events, tasks, agenda..."
+            >
+            <button id="today-btn" class="secondary-btn" type="button">Today</button>
+            <button id="clear-filters-btn" class="secondary-btn" type="button">Clear Search</button>
+        </div>
+    </div>
+
+    <div class="calendar-legend">
+        <span class="legend-pill legend-event">Event</span>
+        <span class="legend-pill legend-task">Task</span>
+        <span class="legend-pill legend-agenda">Agenda</span>
+    </div>
+
+    <div class="calendar-weekdays">
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+    </div>
+
+    <div id="calendar-grid" class="calendar-grid">
+        <p class="muted-text">Loading calendar...</p>
+    </div>
+</section> 
+
+        <section class="panel">
+    <div class="calendar-day-header">
+        <div>
+            <h2>Selected Day</h2>
+            <div id="selected-day-label" class="muted-text">Click a date to view details.</div>
+        </div>
+        <button id="toggle-quick-add-btn" class="secondary-btn" type="button">Quick Add</button>
+    </div>
+
+    <div id="quick-add-panel" class="calendar-quick-add hidden">
+        <h3>Add something to this day</h3>
+
+        <div class="calendar-quick-add-type-row">
+            <button id="quick-add-event-tab" class="quick-add-tab active" type="button">Event</button>
+            <button id="quick-add-task-tab" class="quick-add-tab" type="button">Task</button>
+        </div>
+
+        <form id="quick-add-event-form" class="quick-add-form">
+            <div class="quick-add-grid">
+                <div>
+                    <label for="quick-event-title">Title</label>
+                    <input id="quick-event-title" type="text" required>
+                </div>
+
+                <div>
+                    <label for="quick-event-location">Location</label>
+                    <input id="quick-event-location" type="text">
+                </div>
+
+                <div>
+                    <label for="quick-event-start-time">Start Time</label>
+                    <input id="quick-event-start-time" type="time">
+                </div>
+
+                <div>
+                    <label for="quick-event-end-time">End Time</label>
+                    <input id="quick-event-end-time" type="time">
+                </div>
+            </div>
+
+            <div class="quick-add-actions">
+                <button type="submit" class="primary-btn">Save Event</button>
+            </div>
+        </form>
+
+        <form id="quick-add-task-form" class="quick-add-form hidden">
+            <div class="quick-add-grid">
+                <div>
+                    <label for="quick-task-title">Title</label>
+                    <input id="quick-task-title" type="text" required>
+                </div>
+
+                <div>
+                    <label for="quick-task-status">Status</label>
+                    <select id="quick-task-status">
+                        <option value="0">Pending</option>
+                        <option value="1">Completed</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="quick-task-start-time">Start Time</label>
+                    <input id="quick-task-start-time" type="time">
+                </div>
+
+                <div>
+                    <label for="quick-task-end-time">End Time</label>
+                    <input id="quick-task-end-time" type="time">
+                </div>
+            </div>
+
+            <div class="quick-add-actions">
+                <button type="submit" class="primary-btn">Save Task</button>
+            </div>
+        </form>
+
+        <div id="quick-add-message" class="muted-text"></div>
+    </div>
+
+    <div id="selected-day-items" class="calendar-day-detail">
+        <div class="empty-state compact-empty-state">
+            <h3>No day selected</h3>
+            <p>Choose a date on the calendar to see its scheduled items.</p>
+        </div>
+    </div>
+</section>    
+        </main>
+    </div>
+
+    <script src="../scripts/calendar.js"></script>
+</body>
+</html>

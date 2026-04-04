@@ -670,3 +670,367 @@ a:hover {
   gap: 10px;
   margin-top: 12px;
 }
+
+/* =========================================================
+   CALENDAR PAGE
+========================================================= */
+.calendar-toolbar {
+  display: grid;
+  grid-template-columns: 160px 1fr 160px;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.calendar-toolbar h2 {
+  margin: 0;
+  text-align: center;
+}
+
+.calendar-nav-btn {
+  width: 100%;
+}
+
+.calendar-legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.legend-pill,
+.calendar-type-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.legend-event,
+.calendar-type-badge.event {
+  background: rgba(25, 135, 84, 0.16);
+  color: #0f5132;
+}
+
+.legend-task,
+.calendar-type-badge.task {
+  background: rgba(212, 175, 55, 0.22);
+  color: #745200;
+}
+
+.legend-agenda,
+.calendar-type-badge.agenda {
+  background: rgba(13, 110, 253, 0.14);
+  color: #0d4fa6;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+  font-weight: 700;
+  color: #486455;
+}
+
+.calendar-weekdays div {
+  text-align: center;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+}
+
+.calendar-cell {
+  min-height: 145px;
+  background: #f9fbf8;
+  border: 2px solid #e3ece5;
+  border-radius: 16px;
+  padding: 12px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: 0.2s ease;
+}
+
+.calendar-cell:hover {
+  border-color: #198754;
+  transform: translateY(-1px);
+}
+
+.calendar-cell.selected {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
+}
+
+.calendar-cell.empty {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.calendar-date-number {
+  font-weight: 800;
+  color: #0f5132;
+  font-size: 1rem;
+}
+
+.calendar-cell-items {
+  display: grid;
+  gap: 8px;
+}
+
+.calendar-item-chip {
+  padding: 6px 8px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calendar-item-chip.event {
+  background: rgba(25, 135, 84, 0.12);
+  color: #0f5132;
+}
+
+.calendar-item-chip.task {
+  background: rgba(212, 175, 55, 0.2);
+  color: #745200;
+}
+
+.calendar-item-chip.agenda {
+  background: rgba(13, 110, 253, 0.12);
+  color: #0d4fa6;
+}
+
+.calendar-more {
+  font-size: 0.8rem;
+  color: #617466;
+  font-weight: 600;
+}
+
+.calendar-day-detail {
+  margin-top: 16px;
+  display: grid;
+  gap: 14px;
+}
+
+.calendar-detail-card {
+  border: 1px solid #e2e8e3;
+  border-left: 6px solid #198754;
+  border-radius: 16px;
+  padding: 16px;
+  background: #fcfdfc;
+}
+
+.calendar-detail-card.task {
+  border-left-color: #d4af37;
+}
+
+.calendar-detail-card.agenda {
+  border-left-color: #0d6efd;
+}
+
+.calendar-detail-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 1100px) {
+  .calendar-grid,
+  .calendar-weekdays {
+    grid-template-columns: repeat(7, minmax(110px, 1fr));
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .calendar-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-toolbar h2 {
+    text-align: left;
+  }
+}
+
+.calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.calendar-filter-group,
+.calendar-search-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.calendar-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid #d7e3d9;
+  border-radius: 999px;
+  background: #f8fbf8;
+  font-weight: 600;
+  color: #23412f;
+}
+
+.calendar-filter-pill input {
+  margin: 0;
+}
+
+.calendar-search-input {
+  min-width: 260px;
+  padding: 10px 12px;
+  border: 1px solid #d7e3d9;
+  border-radius: 10px;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+.calendar-search-input:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.12);
+}
+
+.calendar-date-number-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.today-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(25, 135, 84, 0.12);
+  color: #0f5132;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .calendar-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .calendar-search-group {
+    width: 100%;
+  }
+
+  .calendar-search-input {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+.calendar-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.calendar-quick-add {
+  border: 1px solid #dfe9e2;
+  border-radius: 16px;
+  padding: 18px;
+  background: #f9fbf9;
+  margin-bottom: 18px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.calendar-quick-add-type-row {
+  display: flex;
+  gap: 10px;
+  margin: 14px 0 18px;
+  flex-wrap: wrap;
+}
+
+.quick-add-tab {
+  border: 1px solid #cad8cc;
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.quick-add-tab.active {
+  background: #198754;
+  color: white;
+  border-color: #198754;
+}
+
+.quick-add-form {
+  display: block;
+}
+
+.quick-add-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.quick-add-grid label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #23412f;
+}
+
+.quick-add-grid input,
+.quick-add-grid select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1ddd3;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.quick-add-grid input:focus,
+.quick-add-grid select:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.12);
+}
+
+.quick-add-actions {
+  margin-top: 16px;
+}
+
+.error-text {
+  color: #b42318;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .quick-add-grid {
+    grid-template-columns: 1fr;
+  }
+}
