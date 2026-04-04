@@ -390,6 +390,12 @@ function setQuickAddMessage(message, isError = false) {
     messageBox.classList.toggle("error-text", isError);
 }
 
+function getSelectedDayEventIds() {
+    return calendarItems
+        .filter(item => item.type === "event" && item.dateKey === selectedDateKey && item.eventId)
+        .map(item => item.eventId);
+}
+
 async function handleQuickAddEvent(e) {
     e.preventDefault();
 
@@ -408,9 +414,10 @@ async function handleQuickAddEvent(e) {
         return;
     }
 
-    const payload = {
+     const payload = {
         title,
-        location,
+        location: locationInput || "TBD",
+        description: "Created from calendar quick add.",
         start_datetime: combineDateAndTime(selectedDateKey, startTime || "09:00"),
         end_datetime: combineDateAndTime(selectedDateKey, endTime || startTime || "10:00")
     };
@@ -449,6 +456,18 @@ async function handleQuickAddTask(e) {
         return;
     }
 
+    const eventIdsForDay = getSelectedDayEventIds();
+
+    if (eventIdsForDay.length === 0) {
+        setQuickAddMessage("Create an event on this date first, then add tasks to it.", true);
+        return;
+    }
+
+    if (eventIdsForDay.length > 1) {
+        setQuickAddMessage("This date has multiple events. Add the task from the Planner page for the correct event.", true);
+        return;
+    }
+
     const title = document.getElementById("quick-task-title").value.trim();
     const completed = Number(document.getElementById("quick-task-status").value);
     const startTime = document.getElementById("quick-task-start-time").value;
@@ -462,13 +481,14 @@ async function handleQuickAddTask(e) {
     const payload = {
         title,
         completed,
+        event_id: eventIdsForDay[0],
         start_datetime: combineDateAndTime(selectedDateKey, startTime || "09:00"),
         end_datetime: combineDateAndTime(selectedDateKey, endTime || startTime || "10:00"),
         due_date: selectedDateKey
     };
 
     try {
-        const response = await fetch(`${API_BASE}/api/tasks`, {
+        const response = await fetch(`${API_BASE}/api/tasks/`, {
             method: "POST",
             credentials: "include",
             headers: {
