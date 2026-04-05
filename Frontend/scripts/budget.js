@@ -54,7 +54,7 @@ function getBudgetTip(total, guests) {
 }
 
 function calculateBudget() {
-  const eventName = document.getElementById("event-name").value.trim() || "Untitled Event";
+  
   const guests = getNumberValue("guest-count");
   const venue = getNumberValue("venue-cost");
   const foodPerPerson = getNumberValue("food-cost");
@@ -103,7 +103,7 @@ function calculateBudget() {
 }
 
 function resetBudgetForm() {
-  document.getElementById("event-name").value = "";
+  
   document.getElementById("guest-count").value = 50;
   document.getElementById("venue-cost").value = 300;
   document.getElementById("food-cost").value = 10;
@@ -179,7 +179,7 @@ function loadEventIntoForm(eventId) {
     return;
   }
 
-  document.getElementById("event-name").value = selectedEvent.title || "";
+  
   document.getElementById("guest-count").value = Number(selectedEvent.guest_count || 0);
   document.getElementById("venue-cost").value = Number(selectedEvent.venue_cost || 0);
   document.getElementById("food-cost").value = Number(selectedEvent.food_cost_per_person || 0);
@@ -344,7 +344,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (adminLink && currentUser) {
     adminLink.style.display = currentUser.role === "admin" ? "block" : "none";
   }
-  document.getElementById("calculate-btn").addEventListener("click", calculateBudget);
+ 
   document.getElementById("save-btn").addEventListener("click", saveBudgetToEvent);
   document.getElementById("reset-btn").addEventListener("click", resetBudgetForm);
   document.getElementById("chat-form").addEventListener("submit", handleChatSubmit);
@@ -353,7 +353,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   const inputIds = [
-    "event-name",
+   
     "guest-count",
     "venue-cost",
     "food-cost",
@@ -369,7 +369,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById(id).addEventListener("input", calculateBudget);
   });
 
-  calculateBudget();
+ 
 
   try {
     [myEvents, myTasks] = await Promise.all([fetchMyEvents(), fetchMyTasks()]);
@@ -379,3 +379,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("budget-status").textContent = "Could not load your events. Make sure you're logged in.";
   }
 });
+ calculateBudget();
