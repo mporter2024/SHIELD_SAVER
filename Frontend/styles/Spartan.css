@@ -799,10 +799,16 @@ body:not(.dashboard-page) {
 .calendar-day-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 16px;
   margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+#toggle-quick-add-btn {
+  width: auto;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .calendar-quick-add {
@@ -1128,4 +1134,32 @@ body:not(.dashboard-page) {
   .task-item {
     flex-direction: column;
   }
+}
+
+
+/* Calendar-specific button fixes */
+.calendar-day-header button,
+.calendar-toolbar button,
+.calendar-controls button,
+.calendar-quick-add button,
+.quick-add-tab,
+.quick-add-actions button {
+  width: auto;
+}
+
+.quick-add-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.quick-add-actions button {
+  min-width: 160px;
+}
+
+.calendar-day-header {
+  align-items: center;
+}
+
+.calendar-quick-add {
+  overflow: visible;
 }
