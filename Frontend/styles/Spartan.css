@@ -73,7 +73,7 @@ button:hover {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .form-message {
@@ -830,18 +830,31 @@ body:not(.dashboard-page) {
 }
 
 .quick-add-tab {
-  padding: 10px 16px;
-  background: #ffffff;
+  width: auto;
   border: 1px solid #cad8cc;
+  background: #ffffff;
+  color: #1e3d2a;
   border-radius: 999px;
+  padding: 10px 16px;
   font-weight: 700;
   cursor: pointer;
 }
 
 .quick-add-tab.active {
   background: #198754;
+  color: white;
   border-color: #198754;
-  color: #ffffff;
+}
+
+.quick-add-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.quick-add-actions button {
+  width: auto;
+  min-width: 160px;
 }
 
 .quick-add-form {
@@ -1162,4 +1175,87 @@ body:not(.dashboard-page) {
 
 .calendar-quick-add {
   overflow: visible;
+}
+
+
+/* ===== Button contrast fixes ===== */
+button {
+  color: white;
+}
+
+.secondary-btn {
+  background: #e8efe9;
+  color: #1e3d2a;
+}
+
+.secondary-btn:hover {
+  color: #123524;
+}
+
+.calendar-nav-btn.secondary-btn,
+#today-btn.secondary-btn,
+#clear-filters-btn.secondary-btn,
+#toggle-quick-add-btn.secondary-btn,
+#calendar-refresh-btn.secondary-btn,
+#calendar-back-btn.secondary-btn,
+a.secondary-btn {
+  color: #1e3d2a;
+  text-decoration: none;
+  display: inline-block;
+}
+
+a.secondary-btn:hover {
+  color: #123524;
+  text-decoration: none;
+}
+
+/* =========================
+   ADMIN PAGE IMPROVEMENTS
+========================= */
+
+.admin-events-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.admin-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-controls input {
+  min-width: 220px;
+}
+
+.admin-controls select {
+  width: auto;
+  min-width: 140px;
+}
+
+.admin-events-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.admin-event-card {
+  padding: 16px;
+  background: #f8fbf8;
+  border: 1px solid #dfe9e2;
+  border-left: 6px solid #198754;
+  border-radius: 14px;
+}
+
+.admin-event-card h3 {
+  margin-bottom: 6px;
+  color: #0f5132;
+}
+
+.admin-event-card p {
+  margin: 4px 0;
 }

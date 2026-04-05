@@ -36,10 +36,33 @@
                 <div id="users-list"></div>
             </section>
 
-            <section class="panel-card">
-                <h2>All Events</h2>
-                <div id="events-list"></div>
-            </section>
+            <section class="panel">
+    <div class="admin-events-header">
+        <div>
+            <h2>All Events</h2>
+            <p class="muted-text">Search, sort, and review all system events.</p>
+        </div>
+
+        <div class="admin-controls">
+            <input
+                type="text"
+                id="event-search"
+                placeholder="Search events, location, owner..."
+            >
+
+            <select id="event-sort">
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="az">A → Z</option>
+                <option value="za">Z → A</option>
+            </select>
+        </div>
+    </div>
+
+    <p id="event-count" class="muted-text"></p>
+
+    <div id="events-list" class="admin-events-grid"></div>
+</section>
         </main>
     </div>
 
