@@ -340,13 +340,19 @@ def extract_event_update_fields(message: str):
 
     guest_patterns = [
         r"\bset\s+the\s+guest\s+count\s+to\s+(\d+)\b",
+        r"\bset\s+guest\s+count\s+to\s+(\d+)\b",
         r"\bchange\s+the\s+guest\s+count\s+to\s+(\d+)\b",
+        r"\bchange\s+guest\s+count\s+to\s+(\d+)\b",
         r"\bupdate\s+the\s+guest\s+count\s+to\s+(\d+)\b",
+        r"\bupdate\s+guest\s+count\s+to\s+(\d+)\b",
         r"\bmake\s+the\s+guest\s+count\s+(\d+)\b",
         r"\bguest\s+count\s+is\s+(\d+)\b",
         r"\bmake\s+it\s+(\d+)\s+people\b",
-        r"\bchange\s+it\s+to\s+(\d+)\s+people\b",
+        r"\bmake\s+it\s+(\d+)\s+guests\b",
         r"\bset\s+it\s+to\s+(\d+)\s+people\b",
+        r"\bset\s+it\s+to\s+(\d+)\s+guests\b",
+        r"\bchange\s+it\s+to\s+(\d+)\s+people\b",
+        r"\bchange\s+it\s+to\s+(\d+)\s+guests\b", 
     ]
     for pattern in guest_patterns:
         match = re.search(pattern, cleaned_message, re.IGNORECASE)

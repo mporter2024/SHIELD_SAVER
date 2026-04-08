@@ -225,18 +225,25 @@ def looks_like_existing_event_edit(message: str):
         "set location",
         "change the location",
         "update the location",
+        "location is",
         "set the guest count",
+        "set guest count",
         "change the guest count",
+        "change guest count",
         "update the guest count",
+        "update guest count",
+        "guest count is",
         "set the description",
         "change the description",
         "update the description",
+        "description is",
         "set the title",
         "change the title",
         "update the title",
         "set the catering",
         "change the catering",
         "update the catering",
+        "catering is",
         "move it",
         "update it",
         "change it",
@@ -245,6 +252,8 @@ def looks_like_existing_event_edit(message: str):
         "move that event",
         "change that event",
         "update that event",
+        "make it ",
+        "call it ",
     ]
 
     return any(phrase in lowered for phrase in edit_phrases)
@@ -384,8 +393,12 @@ def chat():
             target_event = find_event_by_title_reference(user_message, user_events)
 
             if not target_event:
-                target_event = find_event_from_session_reference(session["user_id"], user_message)
-
+                last_event_id = session.get("last_event_id")
+                if last_event_id:
+                    target_event = next(
+                        (event for event in user_events if event["id"] == last_event_id),
+                        None
+                    )
             if target_event:
                 update_data = extract_event_update_fields(user_message)
 
@@ -503,3 +516,16 @@ def chat():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@ai_bp.route("/clear-chat", methods=["POST"])
+def clear_chat():
+    if "user_id" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    session.pop("pending_event_draft", None)
+    session.pop("last_event_id", None)
+
+    return jsonify({
+        "message": "Chat state cleared"
+    }), 200
