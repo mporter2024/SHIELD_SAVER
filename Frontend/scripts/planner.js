@@ -482,5 +482,6 @@ window.deleteTask = deleteTask;
 window.addLineupItem = addLineupItem;
 window.deleteAgendaItem = deleteAgendaItem;
 window.deleteLineupItem = deleteLineupItem;
-
+window.initializePlanner = initializePlanner;
+window.renderPlanner = renderPlanner;
 initializePlanner();

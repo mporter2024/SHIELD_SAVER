@@ -292,5 +292,5 @@ if (plannerLink) {
 
 window.openPlanner = openPlanner;
 window.deleteEvent = deleteEvent;
-
+window.initializeDashboard = initializeDashboard;
 initializeDashboard();

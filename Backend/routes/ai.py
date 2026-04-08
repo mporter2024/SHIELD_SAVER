@@ -1,16 +1,8 @@
 from flask import Blueprint, request, jsonify, session
 from ai.unified_chatbot import UnifiedChatbot
+from ai.action_interpreter import interpret_message, get_default_chat_state
 from models.database import get_db
 import sqlite3
-from ai.entity_parser import (
-    extract_event_fields,
-    extract_event_update_fields,
-    looks_like_event_creation,
-    looks_like_event_update,
-    merge_event_draft,
-    missing_required_event_fields,
-    build_missing_fields_prompt,
-)
 
 ai_bp = Blueprint("ai", __name__)
 chatbot = UnifiedChatbot()
@@ -200,65 +192,6 @@ def get_user_events(user_id):
     return [dict(row) for row in rows]
 
 
-def find_event_by_title_reference(user_message, events):
-    lowered_message = user_message.lower()
-
-    for event in events:
-        title = (event.get("title") or "").strip()
-        if title and title.lower() in lowered_message:
-            return event
-
-    return None
-
-
-def looks_like_existing_event_edit(message: str):
-    lowered = message.lower()
-
-    edit_phrases = [
-        "change ",
-        "update ",
-        "move ",
-        "reschedule ",
-        "rename ",
-        "edit ",
-        "set the location",
-        "set location",
-        "change the location",
-        "update the location",
-        "location is",
-        "set the guest count",
-        "set guest count",
-        "change the guest count",
-        "change guest count",
-        "update the guest count",
-        "update guest count",
-        "guest count is",
-        "set the description",
-        "change the description",
-        "update the description",
-        "description is",
-        "set the title",
-        "change the title",
-        "update the title",
-        "set the catering",
-        "change the catering",
-        "update the catering",
-        "catering is",
-        "move it",
-        "update it",
-        "change it",
-        "rename it",
-        "set it to",
-        "move that event",
-        "change that event",
-        "update that event",
-        "make it ",
-        "call it ",
-    ]
-
-    return any(phrase in lowered for phrase in edit_phrases)
-
-
 def update_event_in_db(event_id, updated_fields):
     db = get_db()
 
@@ -308,32 +241,48 @@ def update_event_in_db(event_id, updated_fields):
     return True
 
 
-def find_event_from_session_reference(user_id, user_message):
-    db = get_db()
-    lowered = user_message.lower()
+def _get_chat_state():
+    state = session.get("chat_state")
+    if not isinstance(state, dict):
+        state = get_default_chat_state()
 
-    referenced_words = ["it", "that event", "this event", "the event", "that one", "this one"]
+    # Keep compatibility with your old single-value memory
+    if session.get("last_event_id") and not state.get("last_event_id"):
+        state["last_event_id"] = session.get("last_event_id")
 
-    if not any(word in lowered for word in referenced_words):
-        return None
+    if session.get("pending_event_draft") and not state.get("pending_event_draft"):
+        state["pending_event_draft"] = session.get("pending_event_draft")
 
-    last_event_id = session.get("last_event_id")
-    if not last_event_id:
-        return None
+    return state
 
-    row = db.execute(
-        """
-        SELECT id, title, date, start_datetime, end_datetime, location, description,
-               guest_count, venue_cost, food_cost_per_person, decorations_cost,
-               equipment_cost, staff_cost, marketing_cost, misc_cost,
-               contingency_percent, budget_subtotal, budget_contingency, budget_total
-        FROM events
-        WHERE id = ? AND user_id = ?
-        """,
-        (last_event_id, user_id)
-    ).fetchone()
 
-    return dict(row) if row else None
+def _save_chat_state(state):
+    session["chat_state"] = state
+    session["last_event_id"] = state.get("last_event_id")
+    session["pending_event_draft"] = state.get("pending_event_draft") or {}
+
+
+def _apply_time_logic(target_event, cleaned_updates):
+    existing_start = target_event.get("start_datetime")
+
+    if "_parsed_time_only" in cleaned_updates:
+        parsed_time_only = cleaned_updates.pop("_parsed_time_only")
+
+        effective_date = cleaned_updates.get("date") or target_event.get("date")
+        if not effective_date and existing_start:
+            effective_date = existing_start[:10]
+
+        if effective_date:
+            cleaned_updates["start_datetime"] = f"{effective_date}T{parsed_time_only}"
+
+    elif "date" in cleaned_updates and "start_datetime" in cleaned_updates:
+        pass
+    elif "date" in cleaned_updates and existing_start:
+        existing_time = existing_start[11:] if len(existing_start) >= 16 else None
+        if existing_time:
+            cleaned_updates["start_datetime"] = f"{cleaned_updates['date']}T{existing_time}"
+
+    return cleaned_updates
 
 
 @ai_bp.route("/chat", methods=["POST"])
@@ -348,114 +297,11 @@ def chat():
         return jsonify({"error": "Not logged in"}), 401
 
     try:
-        context = load_user_context(session["user_id"])
+        user_id = session["user_id"]
+        context = load_user_context(user_id)
+        chat_state = _get_chat_state()
 
-        pending_event_draft = session.get("pending_event_draft")
-        event_creation_triggered = (
-            looks_like_event_creation(user_message)
-            or (pending_event_draft is not None)
-            or looks_like_event_update(user_message)
-        )
-
-        # Handle pending/new event draft first so follow-up answers
-        # do not get mistaken for edits to an already-saved event.
-        if event_creation_triggered:
-            extracted = extract_event_fields(user_message)
-            draft = merge_event_draft(pending_event_draft or {}, extracted)
-
-            missing = missing_required_event_fields(draft)
-
-            if missing:
-                session["pending_event_draft"] = draft
-                return jsonify({
-                    "reply": build_missing_fields_prompt(draft),
-                    "action": "event_create_collecting",
-                    "draft": draft
-                }), 200
-
-            created_event = create_event_for_user(session["user_id"], draft)
-            session.pop("pending_event_draft", None)
-            session["last_event_id"] = created_event["id"]
-
-            return jsonify({
-                "reply": (
-                    f"Event '{created_event['title']}' was created"
-                    f" for {created_event['date'] or created_event['start_datetime']}"
-                    f" at {created_event['location']}."
-                ),
-                "action": "event_created",
-                "event": created_event
-            }), 200
-
-        user_events = get_user_events(session["user_id"])
-
-        if looks_like_existing_event_edit(user_message):
-            target_event = find_event_by_title_reference(user_message, user_events)
-
-            if not target_event:
-                last_event_id = session.get("last_event_id")
-                if last_event_id:
-                    target_event = next(
-                        (event for event in user_events if event["id"] == last_event_id),
-                        None
-                    )
-            if target_event:
-                update_data = extract_event_update_fields(user_message)
-
-                cleaned_updates = {
-                    key: value
-                    for key, value in update_data.items()
-                    if value not in (None, "", [])
-                }
-
-                cleaned_updates.pop("catering", None)
-                cleaned_updates.pop("event_size_hint", None)
-
-                existing_start = target_event.get("start_datetime")
-
-                if "_parsed_time_only" in cleaned_updates:
-                    parsed_time_only = cleaned_updates.pop("_parsed_time_only")
-
-                    effective_date = cleaned_updates.get("date") or target_event.get("date")
-                    if not effective_date and existing_start:
-                        effective_date = existing_start[:10]
-
-                    if effective_date:
-                        cleaned_updates["start_datetime"] = f"{effective_date}T{parsed_time_only}"
-
-                elif "date" in cleaned_updates and "start_datetime" in cleaned_updates:
-                    pass
-                elif "date" in cleaned_updates and existing_start:
-                    existing_time = existing_start[11:] if len(existing_start) >= 16 else None
-                    if existing_time:
-                        cleaned_updates["start_datetime"] = f"{cleaned_updates['date']}T{existing_time}"
-
-                updated = update_event_in_db(target_event["id"], cleaned_updates)
-
-                if updated:
-                    session["last_event_id"] = target_event["id"]
-
-                    new_title = cleaned_updates.get("title", target_event["title"])
-                    new_date = cleaned_updates.get("date", target_event.get("date"))
-                    new_location = cleaned_updates.get("location", target_event.get("location"))
-
-                    return jsonify({
-                        "reply": f"Updated '{new_title}' for {new_date} at {new_location}.",
-                        "action": "event_updated",
-                        "event_id": target_event["id"],
-                        "updated_fields": cleaned_updates
-                    }), 200
-
-                return jsonify({
-                    "reply": "I found the event, but I couldn’t tell what fields to update.",
-                    "action": "event_update_failed"
-                }), 200
-
-            return jsonify({
-                "reply": "I couldn’t tell which event you wanted to update. Please mention the event title.",
-                "action": "event_update_needs_title"
-            }), 200
-
+        # 1. Structured task actions first
         add_action = chatbot.parse_add_task_command(user_message, context=context)
         if add_action:
             if "error" in add_action:
@@ -464,7 +310,7 @@ def chat():
                     "action": "task_create_needs_event"
                 }), 200
 
-            created_task, error = create_task_for_user(session["user_id"], add_action)
+            created_task, error = create_task_for_user(user_id, add_action)
 
             if error:
                 return jsonify({
@@ -472,11 +318,22 @@ def chat():
                     "action": "task_create_failed"
                 }), 200
 
+            chat_state["last_task_id"] = created_task["id"]
+            chat_state["last_intent"] = "task_create"
+            _save_chat_state(chat_state)
+
             return jsonify({
                 "reply": (
                     f"Task '{created_task['title']}' was added to "
                     f"'{created_task['event_title']}'"
-                    + (f" with timing starting {created_task['start_datetime']}." if created_task["start_datetime"] else (f" with due date {created_task['due_date']}." if created_task["due_date"] else "."))
+                    + (
+                        f" with timing starting {created_task['start_datetime']}."
+                        if created_task["start_datetime"]
+                        else (
+                            f" with due date {created_task['due_date']}."
+                            if created_task["due_date"] else "."
+                        )
+                    )
                 ),
                 "action": "task_created",
                 "task": created_task
@@ -490,13 +347,18 @@ def chat():
                     "action": "task_complete_failed"
                 }), 200
 
-            completed_task, error = complete_task_for_user(session["user_id"], complete_action["task_id"])
+            completed_task, error = complete_task_for_user(user_id, complete_action["task_id"])
 
             if error:
                 return jsonify({
                     "reply": error,
                     "action": "task_complete_failed"
                 }), 200
+
+            chat_state["last_task_id"] = completed_task["id"]
+            chat_state["last_event_id"] = completed_task["event_id"]
+            chat_state["last_intent"] = "task_complete"
+            _save_chat_state(chat_state)
 
             return jsonify({
                 "reply": (
@@ -507,7 +369,95 @@ def chat():
                 "task": completed_task
             }), 200
 
+        # 2. Structured event interpreter
+        interpreted = interpret_message(user_message, context=context, state=chat_state)
+        action_type = interpreted["type"]
+
+        if action_type == "event_create_collecting":
+            _save_chat_state(interpreted["state"])
+            return jsonify({
+                "reply": interpreted["reply"],
+                "action": "event_create_collecting",
+                "draft": interpreted["draft"],
+                "missing_fields": interpreted["missing_fields"]
+            }), 200
+
+        if action_type == "event_create":
+            created_event = create_event_for_user(user_id, interpreted["draft"])
+
+            new_state = interpreted["state"]
+            new_state["pending_event_draft"] = {}
+            new_state["last_event_id"] = created_event["id"]
+            new_state["active_flow"] = None
+            new_state["awaiting_field"] = None
+            _save_chat_state(new_state)
+
+            return jsonify({
+                "reply": (
+                    f"Event '{created_event['title']}' was created"
+                    f" for {created_event['date'] or created_event['start_datetime']}"
+                    f" at {created_event['location']}."
+                ),
+                "action": "event_created",
+                "event": created_event
+            }), 200
+
+        if action_type == "event_update_needs_target":
+            _save_chat_state(interpreted["state"])
+            return jsonify({
+                "reply": interpreted["reply"],
+                "action": "event_update_needs_title"
+            }), 200
+
+        if action_type == "event_update_no_changes":
+            _save_chat_state(interpreted["state"])
+            return jsonify({
+                "reply": interpreted["reply"],
+                "action": "event_update_failed"
+            }), 200
+
+        if action_type == "event_update":
+            target_event = interpreted["target_event"]
+            cleaned_updates = dict(interpreted["changes"])
+
+            cleaned_updates = _apply_time_logic(target_event, cleaned_updates)
+
+            updated = update_event_in_db(target_event["id"], cleaned_updates)
+
+            if updated:
+                new_state = interpreted["state"]
+                new_state["last_event_id"] = target_event["id"]
+                _save_chat_state(new_state)
+
+                new_title = cleaned_updates.get("title", target_event["title"])
+                new_date = cleaned_updates.get("date", target_event.get("date"))
+                new_location = cleaned_updates.get("location", target_event.get("location"))
+                guest_count = cleaned_updates.get("guest_count", target_event.get("guest_count"))
+
+                summary_bits = []
+                if new_date:
+                    summary_bits.append(f"for {new_date}")
+                if new_location:
+                    summary_bits.append(f"at {new_location}")
+                if guest_count not in (None, ""):
+                    summary_bits.append(f"with {guest_count} guests")
+
+                return jsonify({
+                    "reply": f"Updated '{new_title}' " + " ".join(summary_bits) + ".",
+                    "action": "event_updated",
+                    "event_id": target_event["id"],
+                    "updated_fields": cleaned_updates
+                }), 200
+
+            return jsonify({
+                "reply": "I found the event, but I couldn’t tell what fields to update.",
+                "action": "event_update_failed"
+            }), 200
+
+        # 3. Regular chatbot fallback
         reply = chatbot.get_response(user_message, context=context)
+
+        _save_chat_state(interpreted["state"])
 
         return jsonify({
             "reply": reply,
@@ -516,16 +466,3 @@ def chat():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-@ai_bp.route("/clear-chat", methods=["POST"])
-def clear_chat():
-    if "user_id" not in session:
-        return jsonify({"error": "Not logged in"}), 401
-
-    session.pop("pending_event_draft", None)
-    session.pop("last_event_id", None)
-
-    return jsonify({
-        "message": "Chat state cleared"
-    }), 200

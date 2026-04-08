@@ -626,3 +626,7 @@ function escapeHtml(value) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
+window.initializeCalendar = initializeCalendar;
+window.refreshCalendarData = refreshCalendarData;
+window.rerenderCalendarViews = rerenderCalendarViews;
