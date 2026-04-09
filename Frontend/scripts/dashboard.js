@@ -6,12 +6,12 @@ let allTasks = [];
 const logoutBtn = document.getElementById("logout-btn");
 const refreshBtn = document.getElementById("refresh-btn");
 const eventForm = document.getElementById("event-form");
-const chatForm = document.getElementById("chat-form");
+
 
 logoutBtn.addEventListener("click", logout);
 refreshBtn.addEventListener("click", initializeDashboard);
 eventForm.addEventListener("submit", createEvent);
-chatForm.addEventListener("submit", handleChatSubmit);
+
 
 async function initializeDashboard() {
     try {
@@ -94,9 +94,13 @@ function renderEvents(events, tasks) {
     container.innerHTML = events.map((event) => {
         const eventTasks = tasks.filter(task => Number(task.event_id) === Number(event.id));
         const completedCount = eventTasks.filter(task => Number(task.completed) === 1).length;
+        const lastEventId = localStorage.getItem("last_ai_event_id");
+        const highlightClass = lastEventId && String(event.id) === String(lastEventId)
+            ? " ai-highlight"
+            : "";
 
         return `
-            <div class="event-card">
+            <div class="event-card${highlightClass}">
                 <div class="event-card-top">
                     <div>
                         <h3>${escapeHtml(event.title)}</h3>
@@ -294,3 +298,14 @@ window.openPlanner = openPlanner;
 window.deleteEvent = deleteEvent;
 window.initializeDashboard = initializeDashboard;
 initializeDashboard();
+
+window.addEventListener("shield-ai-action", async (event) => {
+    const data = event.detail;
+
+    console.log("AI action detected:", data);
+
+    // Refresh dashboard data
+    if (typeof initializeDashboard === "function") {
+        await initializeDashboard();
+    }
+});

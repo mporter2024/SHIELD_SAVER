@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:5000";
+const CHATBOT_API_BASE = "http://127.0.0.1:5000";
 const CHAT_STORAGE_KEY = "shieldSaverChatHistory";
 
 function getChatHistory() {
@@ -14,12 +14,11 @@ function saveChatHistory(history) {
     localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(history));
 }
 
-function addMessageToHistory(sender, text, meta = null) {
+function addMessageToHistory(sender, text) {
     const history = getChatHistory();
     history.push({
         sender,
         text,
-        meta,
         timestamp: Date.now()
     });
     saveChatHistory(history);
@@ -34,20 +33,44 @@ function createMessageElement(sender, text) {
     messageDiv.className = `chat-message ${sender}`;
 
     const bubble = document.createElement("div");
-    bubble.className = "chat-bubble";
+    bubble.className = `chat-bubble ${sender}`;
     bubble.textContent = text;
 
     messageDiv.appendChild(bubble);
     return messageDiv;
 }
 
+function getDefaultGreeting() {
+    const path = window.location.pathname.toLowerCase();
+
+    if (path.includes("budget")) {
+        return "Hi! I can help you think through budget categories, event costs, and next planning steps.";
+    }
+
+    if (path.includes("planner")) {
+        return "Hi! I’m your planning assistant. I can help create events, update details, and manage tasks.";
+    }
+
+    return "Hi! I’m your event planning assistant. Ask me about budgeting, venues, catering, timelines, or creating an event.";
+}
+
 function renderChatHistory() {
     const chatMessages = document.getElementById("chat-messages");
     if (!chatMessages) return;
 
+    const history = getChatHistory();
+
+    if (!history.length) {
+        if (!chatMessages.children.length) {
+            const greetingEl = createMessageElement("bot", getDefaultGreeting());
+            chatMessages.appendChild(greetingEl);
+        }
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return;
+    }
+
     chatMessages.innerHTML = "";
 
-    const history = getChatHistory();
     history.forEach((msg) => {
         const messageEl = createMessageElement(msg.sender, msg.text);
         chatMessages.appendChild(messageEl);
@@ -56,7 +79,7 @@ function renderChatHistory() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-function appendMessage(sender, text, save = true, meta = null) {
+function appendMessage(sender, text, save = true) {
     const chatMessages = document.getElementById("chat-messages");
     if (!chatMessages) return;
 
@@ -65,134 +88,7 @@ function appendMessage(sender, text, save = true, meta = null) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
     if (save) {
-        addMessageToHistory(sender, text, meta);
-    }
-}
-
-function dispatchAIAction(data) {
-    const action = data?.action || "chat_reply";
-
-    window.dispatchEvent(
-        new CustomEvent("shield-ai-action", {
-            detail: data
-        })
-    );
-
-    if (action === "event_created" && data.event) {
-        localStorage.setItem("shield_last_event_id", String(data.event.id));
-        localStorage.setItem("shield_last_action", "event_created");
-    }
-
-    if (action === "event_updated" && data.event_id) {
-        localStorage.setItem("shield_last_event_id", String(data.event_id));
-        localStorage.setItem("shield_last_action", "event_updated");
-    }
-
-    if ((action === "task_created" || action === "task_completed") && data.task) {
-        localStorage.setItem("shield_last_event_id", String(data.task.event_id));
-        localStorage.setItem("shield_last_action", action);
-    }
-}
-
-async function trySmartRefresh(data) {
-    const action = data?.action || "";
-
-    const needsRefresh = [
-        "event_created",
-        "event_updated",
-        "task_created",
-        "task_completed"
-    ].includes(action);
-
-    if (!needsRefresh) return;
-
-    try {
-        if (typeof window.initializeDashboard === "function") {
-            await window.initializeDashboard();
-            return;
-        }
-
-        if (typeof window.initializeCalendar === "function") {
-            await window.initializeCalendar();
-            return;
-        }
-
-        if (typeof window.initializePlanner === "function") {
-            await window.initializePlanner();
-            return;
-        }
-
-        if (typeof window.refreshCalendarData === "function" && typeof window.rerenderCalendarViews === "function") {
-            await window.refreshCalendarData();
-            window.rerenderCalendarViews();
-            return;
-        }
-
-        if (typeof window.renderPlanner === "function") {
-            window.renderPlanner();
-            return;
-        }
-
-        if (typeof window.location !== "undefined") {
-            const path = window.location.pathname.toLowerCase();
-
-            if (
-                path.includes("dashboard") ||
-                path.includes("calendar") ||
-                path.includes("planner") ||
-                path.includes("budget") ||
-                path.includes("admin")
-            ) {
-                window.location.reload();
-            }
-        }
-    } catch (error) {
-        console.error("Smart refresh failed:", error);
-    }
-}
-
-function buildStatusLine(data) {
-    const action = data?.action || "";
-
-    if (action === "event_created" && data.event) {
-        return `Created event: ${data.event.title}`;
-    }
-
-    if (action === "event_updated" && data.event_id) {
-        const updatedFields = Object.keys(data.updated_fields || {});
-        if (updatedFields.length) {
-            return `Updated fields: ${updatedFields.join(", ")}`;
-        }
-        return `Updated event #${data.event_id}`;
-    }
-
-    if (action === "task_created" && data.task) {
-        return `Added task: ${data.task.title}`;
-    }
-
-    if (action === "task_completed" && data.task) {
-        return `Completed task: ${data.task.title}`;
-    }
-
-    return "";
-}
-
-function showInlineAIStatus(data) {
-    const statusEl =
-        document.getElementById("chat-status") ||
-        document.getElementById("event-message") ||
-        document.getElementById("planner-error") ||
-        document.getElementById("budget-status");
-
-    if (!statusEl) return;
-
-    const line = buildStatusLine(data);
-    if (!line) return;
-
-    statusEl.textContent = line;
-
-    if (statusEl.id === "planner-error") {
-        statusEl.style.display = "block";
+        addMessageToHistory(sender, text);
     }
 }
 
@@ -207,7 +103,7 @@ async function sendChatMessage() {
     input.value = "";
 
     try {
-        const response = await fetch(`${API_BASE}/api/ai/chat`, {
+        const response = await fetch(`${CHATBOT_API_BASE}/api/ai/chat`, {
             method: "POST",
             credentials: "include",
             headers: {
@@ -219,14 +115,29 @@ async function sendChatMessage() {
         const data = await response.json();
 
         if (!response.ok) {
-            appendMessage("bot", data.error || "Something went wrong.", true, data);
+            appendMessage("bot", data.error || "Something went wrong.", true);
             return;
         }
 
-        appendMessage("bot", data.reply || "No reply received.", true, data);
-        dispatchAIAction(data);
-        showInlineAIStatus(data);
-        await trySmartRefresh(data);
+        appendMessage("bot", data.reply || "No reply received.", true);
+        if (data.event) {
+            localStorage.setItem("last_ai_event_id", data.event.id);
+        }
+
+        if (data.event_id) {
+            localStorage.setItem("last_ai_event_id", data.event_id);
+        }
+
+        if (
+            data.action === "event_created" ||
+            data.action === "event_updated" ||
+            data.action === "task_created" ||
+            data.action === "task_completed"
+        ) {
+            window.dispatchEvent(
+                new CustomEvent("shield-ai-action", { detail: data })
+            );
+        }
     } catch (error) {
         console.error("Chat request failed:", error);
         appendMessage("bot", "Unable to reach the assistant right now.", true);
@@ -241,11 +152,8 @@ async function clearChatHistory() {
         chatMessages.innerHTML = "";
     }
 
-    localStorage.removeItem("shield_last_event_id");
-    localStorage.removeItem("shield_last_action");
-
     try {
-        await fetch(`${API_BASE}/api/ai/clear-chat`, {
+        await fetch(`${CHATBOT_API_BASE}/api/ai/clear-chat`, {
             method: "POST",
             credentials: "include"
         });
@@ -253,13 +161,14 @@ async function clearChatHistory() {
         console.error("Failed to clear backend chat state:", error);
     }
 
-    appendMessage("bot", "Chat history cleared.", true);
+    renderChatHistory();
 }
 
 function setupChatbot() {
     const sendBtn = document.getElementById("send-chat-btn");
     const clearBtn = document.getElementById("clear-chat-btn");
     const input = document.getElementById("chat-input");
+    const chatForm = document.getElementById("chat-form");
 
     renderChatHistory();
 
@@ -271,9 +180,16 @@ function setupChatbot() {
         clearBtn.addEventListener("click", clearChatHistory);
     }
 
+    if (chatForm) {
+        chatForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            sendChatMessage();
+        });
+    }
+
     if (input) {
         input.addEventListener("keypress", (event) => {
-            if (event.key === "Enter") {
+            if (event.key === "Enter" && !chatForm) {
                 event.preventDefault();
                 sendChatMessage();
             }
@@ -283,6 +199,5 @@ function setupChatbot() {
 
 window.sendChatMessage = sendChatMessage;
 window.clearChatHistory = clearChatHistory;
-
 
 document.addEventListener("DOMContentLoaded", setupChatbot);

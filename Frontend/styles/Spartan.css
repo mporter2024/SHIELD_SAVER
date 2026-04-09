@@ -1346,3 +1346,15 @@ a.secondary-btn:hover {
     border-radius: 8px;
     cursor: pointer;
 }
+
+.ai-highlight {
+    border: 2px solid #00ff88;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+    animation: pulseHighlight 1.5s ease-in-out 2;
+}
+
+@keyframes pulseHighlight {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}

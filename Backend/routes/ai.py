@@ -246,7 +246,6 @@ def _get_chat_state():
     if not isinstance(state, dict):
         state = get_default_chat_state()
 
-    # Keep compatibility with your old single-value memory
     if session.get("last_event_id") and not state.get("last_event_id"):
         state["last_event_id"] = session.get("last_event_id")
 
@@ -285,6 +284,14 @@ def _apply_time_logic(target_event, cleaned_updates):
     return cleaned_updates
 
 
+@ai_bp.route("/clear-chat", methods=["POST"])
+def clear_chat():
+    session.pop("chat_state", None)
+    session.pop("last_event_id", None)
+    session.pop("pending_event_draft", None)
+    return jsonify({"message": "Chat cleared"}), 200
+
+
 @ai_bp.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json(silent=True) or {}
@@ -301,7 +308,6 @@ def chat():
         context = load_user_context(user_id)
         chat_state = _get_chat_state()
 
-        # 1. Structured task actions first
         add_action = chatbot.parse_add_task_command(user_message, context=context)
         if add_action:
             if "error" in add_action:
@@ -334,6 +340,7 @@ def chat():
                             if created_task["due_date"] else "."
                         )
                     )
+                    + " Would you like me to add another task for this event?"
                 ),
                 "action": "task_created",
                 "task": created_task
@@ -363,13 +370,13 @@ def chat():
             return jsonify({
                 "reply": (
                     f"Task '{completed_task['title']}' for "
-                    f"'{completed_task['event_title']}' was marked complete."
+                    f"'{completed_task['event_title']}' was marked complete. "
+                    f"Would you like me to help with the next task?"
                 ),
                 "action": "task_completed",
                 "task": completed_task
             }), 200
 
-        # 2. Structured event interpreter
         interpreted = interpret_message(user_message, context=context, state=chat_state)
         action_type = interpreted["type"]
 
@@ -396,7 +403,8 @@ def chat():
                 "reply": (
                     f"Event '{created_event['title']}' was created"
                     f" for {created_event['date'] or created_event['start_datetime']}"
-                    f" at {created_event['location']}."
+                    f" at {created_event['location']}. "
+                    f"Would you like me to add starter tasks like confirming the venue, arranging catering, or sending invites?"
                 ),
                 "action": "event_created",
                 "event": created_event
@@ -442,8 +450,16 @@ def chat():
                 if guest_count not in (None, ""):
                     summary_bits.append(f"with {guest_count} guests")
 
+                suggestion = ""
+                if "guest_count" in cleaned_updates:
+                    suggestion = " You may also want to review catering or budget for the new headcount."
+                elif "date" in cleaned_updates or "start_datetime" in cleaned_updates:
+                    suggestion = " You may want to check task deadlines and vendor availability for the new schedule."
+                elif "location" in cleaned_updates:
+                    suggestion = " You may want to confirm venue logistics, setup, or parking details."
+
                 return jsonify({
-                    "reply": f"Updated '{new_title}' " + " ".join(summary_bits) + ".",
+                    "reply": f"Updated '{new_title}' " + " ".join(summary_bits) + "." + suggestion,
                     "action": "event_updated",
                     "event_id": target_event["id"],
                     "updated_fields": cleaned_updates
@@ -454,7 +470,6 @@ def chat():
                 "action": "event_update_failed"
             }), 200
 
-        # 3. Regular chatbot fallback
         reply = chatbot.get_response(user_message, context=context)
 
         _save_chat_state(interpreted["state"])
