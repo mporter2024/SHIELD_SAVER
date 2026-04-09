@@ -279,3 +279,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   calculateBudget();
 });
+
+window.addEventListener("shield-ai-action", async (event) => {
+  const data = event.detail || {};
+  const relatedEventId = data.event?.id || data.event_id || data.task?.event_id;
+  if (!relatedEventId) return;
+
+  try {
+    myEvents = await fetchMyEvents();
+    populateEventSelector(myEvents);
+    const eventSelect = document.getElementById("event-select");
+    if (eventSelect) {
+      eventSelect.value = String(relatedEventId);
+      loadEventIntoForm(relatedEventId);
+    }
+  } catch (error) {
+    console.error("Budget refresh from AI action failed:", error);
+  }
+});

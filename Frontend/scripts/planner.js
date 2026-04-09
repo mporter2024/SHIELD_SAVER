@@ -109,6 +109,20 @@ function renderPlanner() {
 
     renderTasks();
     renderAgenda();
+    highlightPlannerFromAI();
+}
+
+
+function highlightPlannerFromAI() {
+    if (!currentEvent) return;
+    const lastEventId = localStorage.getItem("last_ai_event_id");
+    const shell = document.querySelector(".planner-shell");
+    if (!shell) return;
+
+    shell.classList.remove("ai-highlight");
+    if (lastEventId && String(currentEvent.id) === String(lastEventId)) {
+        shell.classList.add("ai-highlight");
+    }
 }
 
 function renderTasks() {
@@ -485,3 +499,13 @@ window.deleteLineupItem = deleteLineupItem;
 window.initializePlanner = initializePlanner;
 window.renderPlanner = renderPlanner;
 initializePlanner();
+
+
+window.addEventListener("shield-ai-action", async (event) => {
+    const data = event.detail || {};
+    const relatedEventId = data.event?.id || data.event_id || data.task?.event_id;
+
+    if (relatedEventId && String(selectedEventId) === String(relatedEventId)) {
+        await initializePlanner();
+    }
+});

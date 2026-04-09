@@ -128,12 +128,20 @@ async function sendChatMessage() {
             localStorage.setItem("last_ai_event_id", data.event_id);
         }
 
-        if (
-            data.action === "event_created" ||
-            data.action === "event_updated" ||
-            data.action === "task_created" ||
-            data.action === "task_completed"
-        ) {
+        if (data.task && data.task.event_id) {
+            localStorage.setItem("last_ai_event_id", data.task.event_id);
+        }
+
+        const reactiveActions = new Set([
+            "event_created",
+            "event_updated",
+            "task_created",
+            "task_completed",
+            "starter_tasks_created",
+            "starter_tasks_already_exist"
+        ]);
+
+        if (reactiveActions.has(data.action)) {
             window.dispatchEvent(
                 new CustomEvent("shield-ai-action", { detail: data })
             );

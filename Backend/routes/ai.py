@@ -9,13 +9,40 @@ chatbot = UnifiedChatbot()
 
 
 YES_WORDS = {
-    "yes", "yeah", "yep", "sure", "ok", "okay",
-    "do that", "go ahead", "please do", "add them",
-    "sounds good", "absolutely", "definitely"
+    "yes", "yeah", "yep", "sure", "ok", "okay", "do that", "go ahead",
+    "please do", "add them", "sounds good", "absolutely", "definitely"
 }
 
 NO_WORDS = {
     "no", "nope", "not now", "maybe later", "don't", "do not"
+}
+
+
+FOLLOWUP_TASK_KEYWORDS = {
+    "venue": ["Confirm venue"],
+    "catering": ["Arrange catering"],
+    "cater": ["Arrange catering"],
+    "invite": ["Send invitations"],
+    "invitations": ["Send invitations"],
+    "guest": ["Prepare guest check-in list"],
+    "check-in": ["Prepare guest check-in list"],
+    "check in": ["Prepare guest check-in list"],
+    "name tag": ["Arrange name tags"],
+    "name tags": ["Arrange name tags"],
+    "donation": ["Set up donation process"],
+    "promo": ["Prepare promotional materials"],
+    "promotional": ["Prepare promotional materials"],
+    "sponsor": ["Reach out to sponsors"],
+    "speaker": ["Confirm speaker or facilitator"],
+    "materials": ["Prepare presentation materials"],
+    "equipment": ["Test room equipment"],
+    "decorations": ["Plan decorations"],
+    "music": ["Prepare music or entertainment"],
+    "entertainment": ["Prepare music or entertainment"],
+    "staff": ["Assign event staff or volunteers"],
+    "volunteer": ["Assign event staff or volunteers"],
+    "seating": ["Review crowd flow and seating"],
+    "security": ["Review security needs"],
 }
 
 
@@ -289,6 +316,10 @@ def _normalize_reply_choice(message: str) -> str:
     return "other"
 
 
+def _normalize_text(value):
+    return (value or "").strip().lower()
+
+
 def _get_event_for_user(user_id, event_id):
     db = get_db()
     row = db.execute(
@@ -315,10 +346,6 @@ def _task_exists_for_event(event_id, title: str):
         (event_id, title)
     ).fetchone()
     return row is not None
-
-
-def _normalize_text(value):
-    return (value or "").strip().lower()
 
 
 def _build_starter_task_titles(event):
@@ -383,12 +410,30 @@ def _build_starter_task_titles(event):
     return deduped
 
 
-def _add_starter_tasks(user_id, event_id):
+def _resolve_requested_starter_tasks(message, available_titles):
+    lowered = _normalize_text(message)
+    selected = []
+
+    for keyword, mapped_titles in FOLLOWUP_TASK_KEYWORDS.items():
+        if keyword in lowered:
+            for title in mapped_titles:
+                if title in available_titles and title not in selected:
+                    selected.append(title)
+
+    if "all" in lowered or "starter" in lowered or "them" in lowered:
+        return available_titles
+
+    return selected or None
+
+
+def _add_starter_tasks(user_id, event_id, requested_titles=None):
     event = _get_event_for_user(user_id, event_id)
     if not event:
         return None, "I couldn’t find that event anymore."
 
     starter_titles = _build_starter_task_titles(event)
+    if requested_titles:
+        starter_titles = [title for title in starter_titles if title in requested_titles]
 
     created = []
     for title in starter_titles:
@@ -405,7 +450,8 @@ def _add_starter_tasks(user_id, event_id):
 
     return {
         "event": event,
-        "tasks": created
+        "tasks": created,
+        "available_titles": starter_titles,
     }, None
 
 
@@ -415,6 +461,7 @@ def _handle_pending_followup(user_id, user_message, chat_state):
         return None
 
     choice = _normalize_reply_choice(user_message)
+    followup_type = pending.get("type")
 
     if choice == "no":
         chat_state["pending_followup"] = None
@@ -424,15 +471,25 @@ def _handle_pending_followup(user_id, user_message, chat_state):
             "action": "followup_declined"
         }), 200
 
-    if choice != "yes":
-        return None
-
-    followup_type = pending.get("type")
-
     if followup_type == "add_starter_tasks":
         event_id = pending.get("event_id")
-        result, error = _add_starter_tasks(user_id, event_id)
+        event = _get_event_for_user(user_id, event_id)
+        if not event:
+            chat_state["pending_followup"] = None
+            _save_chat_state(chat_state)
+            return jsonify({
+                "reply": "I couldn’t find that event anymore.",
+                "action": "starter_tasks_failed"
+            }), 200
 
+        available_titles = _build_starter_task_titles(event)
+        requested_titles = None
+        if choice != "yes":
+            requested_titles = _resolve_requested_starter_tasks(user_message, available_titles)
+            if requested_titles is None:
+                return None
+
+        result, error = _add_starter_tasks(user_id, event_id, requested_titles=requested_titles)
         chat_state["pending_followup"] = None
 
         if error:
@@ -442,8 +499,8 @@ def _handle_pending_followup(user_id, user_message, chat_state):
                 "action": "starter_tasks_failed"
             }), 200
 
-        event = result["event"]
         created_tasks = result["tasks"]
+        event = result["event"]
 
         if created_tasks:
             chat_state["last_event_id"] = event["id"]
@@ -467,6 +524,9 @@ def _handle_pending_followup(user_id, user_message, chat_state):
             "event_id": event["id"]
         }), 200
 
+    if choice != "yes":
+        return None
+
     if followup_type == "add_another_task":
         event_id = pending.get("event_id")
         event = _get_event_for_user(user_id, event_id)
@@ -487,6 +547,16 @@ def _handle_pending_followup(user_id, user_message, chat_state):
         }), 200
 
     return None
+
+
+def _build_update_suggestion(cleaned_updates):
+    if "guest_count" in cleaned_updates:
+        return " You may also want to review catering or budget for the new headcount."
+    if "date" in cleaned_updates or "start_datetime" in cleaned_updates:
+        return " You may want to check task deadlines and vendor availability for the new schedule."
+    if "location" in cleaned_updates:
+        return " You may want to confirm venue logistics, setup, or parking details."
+    return ""
 
 
 @ai_bp.route("/clear-chat", methods=["POST"])
@@ -526,7 +596,6 @@ def chat():
                 }), 200
 
             created_task, error = create_task_for_user(user_id, add_action)
-
             if error:
                 return jsonify({
                     "reply": error,
@@ -534,6 +603,7 @@ def chat():
                 }), 200
 
             chat_state["last_task_id"] = created_task["id"]
+            chat_state["last_event_id"] = created_task["event_id"]
             chat_state["last_intent"] = "task_create"
             chat_state["pending_followup"] = {
                 "type": "add_another_task",
@@ -541,18 +611,19 @@ def chat():
             }
             _save_chat_state(chat_state)
 
+            timing_suffix = (
+                f" with timing starting {created_task['start_datetime']}."
+                if created_task["start_datetime"]
+                else (
+                    f" with due date {created_task['due_date']}."
+                    if created_task["due_date"] else "."
+                )
+            )
+
             return jsonify({
                 "reply": (
-                    f"Task '{created_task['title']}' was added to "
-                    f"'{created_task['event_title']}'"
-                    + (
-                        f" with timing starting {created_task['start_datetime']}."
-                        if created_task["start_datetime"]
-                        else (
-                            f" with due date {created_task['due_date']}."
-                            if created_task["due_date"] else "."
-                        )
-                    )
+                    f"Task '{created_task['title']}' was added to '{created_task['event_title']}'"
+                    + timing_suffix
                     + " Would you like me to add another task for this event?"
                 ),
                 "action": "task_created",
@@ -568,7 +639,6 @@ def chat():
                 }), 200
 
             completed_task, error = complete_task_for_user(user_id, complete_action["task_id"])
-
             if error:
                 return jsonify({
                     "reply": error,
@@ -583,8 +653,7 @@ def chat():
 
             return jsonify({
                 "reply": (
-                    f"Task '{completed_task['title']}' for "
-                    f"'{completed_task['event_title']}' was marked complete. "
+                    f"Task '{completed_task['title']}' for '{completed_task['event_title']}' was marked complete. "
                     f"Would you like me to help with the next task?"
                 ),
                 "action": "task_completed",
@@ -645,11 +714,9 @@ def chat():
         if action_type == "event_update":
             target_event = interpreted["target_event"]
             cleaned_updates = dict(interpreted["changes"])
-
             cleaned_updates = _apply_time_logic(target_event, cleaned_updates)
 
             updated = update_event_in_db(target_event["id"], cleaned_updates)
-
             if updated:
                 new_state = interpreted["state"]
                 new_state["last_event_id"] = target_event["id"]
@@ -669,16 +736,8 @@ def chat():
                 if guest_count not in (None, ""):
                     summary_bits.append(f"with {guest_count} guests")
 
-                suggestion = ""
-                if "guest_count" in cleaned_updates:
-                    suggestion = " You may also want to review catering or budget for the new headcount."
-                elif "date" in cleaned_updates or "start_datetime" in cleaned_updates:
-                    suggestion = " You may want to check task deadlines and vendor availability for the new schedule."
-                elif "location" in cleaned_updates:
-                    suggestion = " You may want to confirm venue logistics, setup, or parking details."
-
                 return jsonify({
-                    "reply": f"Updated '{new_title}' " + " ".join(summary_bits) + "." + suggestion,
+                    "reply": f"Updated '{new_title}' " + " ".join(summary_bits) + "." + _build_update_suggestion(cleaned_updates),
                     "action": "event_updated",
                     "event_id": target_event["id"],
                     "updated_fields": cleaned_updates

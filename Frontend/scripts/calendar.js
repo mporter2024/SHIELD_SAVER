@@ -630,3 +630,23 @@ function escapeHtml(value) {
 window.initializeCalendar = initializeCalendar;
 window.refreshCalendarData = refreshCalendarData;
 window.rerenderCalendarViews = rerenderCalendarViews;
+
+function syncCalendarToAiAction(data) {
+    const relatedEventId = data?.event?.id || data?.event_id || data?.task?.event_id;
+    if (!relatedEventId) return;
+
+    const matchingItem = calendarItems.find((item) => Number(item.event_id) === Number(relatedEventId) || (item.type === "event" && Number(item.id) === Number(relatedEventId)));
+    if (matchingItem && matchingItem.dateKey) {
+        selectedDateKey = matchingItem.dateKey;
+        const [year, month, day] = matchingItem.dateKey.split("-").map(Number);
+        currentMonthDate = new Date(year, month - 1, 1);
+    }
+}
+
+window.addEventListener("shield-ai-action", async (event) => {
+    const data = event.detail || {};
+    await refreshCalendarData();
+    syncCalendarToAiAction(data);
+    rerenderCalendarViews();
+    syncQuickAddDateMessage();
+});
