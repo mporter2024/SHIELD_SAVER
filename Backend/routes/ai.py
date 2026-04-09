@@ -8,6 +8,17 @@ ai_bp = Blueprint("ai", __name__)
 chatbot = UnifiedChatbot()
 
 
+YES_WORDS = {
+    "yes", "yeah", "yep", "sure", "ok", "okay",
+    "do that", "go ahead", "please do", "add them",
+    "sounds good", "absolutely", "definitely"
+}
+
+NO_WORDS = {
+    "no", "nope", "not now", "maybe later", "don't", "do not"
+}
+
+
 def load_user_context(user_id):
     db = get_db()
 
@@ -174,24 +185,6 @@ def create_event_for_user(user_id, event_data):
     }
 
 
-def get_user_events(user_id):
-    db = get_db()
-    rows = db.execute(
-        """
-        SELECT id, title, date, start_datetime, end_datetime, location, description,
-               guest_count, venue_cost, food_cost_per_person, decorations_cost,
-               equipment_cost, staff_cost, marketing_cost, misc_cost,
-               contingency_percent, budget_subtotal, budget_contingency, budget_total
-        FROM events
-        WHERE user_id = ?
-        ORDER BY id DESC
-        """,
-        (user_id,)
-    ).fetchall()
-
-    return [dict(row) for row in rows]
-
-
 def update_event_in_db(event_id, updated_fields):
     db = get_db()
 
@@ -252,6 +245,9 @@ def _get_chat_state():
     if session.get("pending_event_draft") and not state.get("pending_event_draft"):
         state["pending_event_draft"] = session.get("pending_event_draft")
 
+    if "pending_followup" not in state:
+        state["pending_followup"] = None
+
     return state
 
 
@@ -284,6 +280,153 @@ def _apply_time_logic(target_event, cleaned_updates):
     return cleaned_updates
 
 
+def _normalize_reply_choice(message: str) -> str:
+    lowered = (message or "").strip().lower()
+    if lowered in YES_WORDS:
+        return "yes"
+    if lowered in NO_WORDS:
+        return "no"
+    return "other"
+
+
+def _get_event_for_user(user_id, event_id):
+    db = get_db()
+    row = db.execute(
+        """
+        SELECT id, title, date, start_datetime, end_datetime, location, description,
+               guest_count, budget_total
+        FROM events
+        WHERE id = ? AND user_id = ?
+        """,
+        (event_id, user_id)
+    ).fetchone()
+    return dict(row) if row else None
+
+
+def _task_exists_for_event(event_id, title: str):
+    db = get_db()
+    row = db.execute(
+        """
+        SELECT id
+        FROM tasks
+        WHERE event_id = ? AND LOWER(title) = LOWER(?)
+        LIMIT 1
+        """,
+        (event_id, title)
+    ).fetchone()
+    return row is not None
+
+
+def _add_starter_tasks(user_id, event_id):
+    event = _get_event_for_user(user_id, event_id)
+    if not event:
+        return None, "I couldn’t find that event anymore."
+
+    starter_titles = [
+        "Confirm venue",
+        "Arrange catering",
+        "Send invitations",
+    ]
+
+    created = []
+    for title in starter_titles:
+        if _task_exists_for_event(event_id, title):
+            continue
+
+        task, error = create_task_for_user(user_id, {
+            "event_id": event_id,
+            "title": title
+        })
+        if error:
+            return None, error
+        created.append(task)
+
+    return {
+        "event": event,
+        "tasks": created
+    }, None
+
+
+def _handle_pending_followup(user_id, user_message, chat_state):
+    pending = chat_state.get("pending_followup")
+    if not pending:
+        return None
+
+    choice = _normalize_reply_choice(user_message)
+
+    if choice == "no":
+        chat_state["pending_followup"] = None
+        _save_chat_state(chat_state)
+        return jsonify({
+            "reply": "No problem.",
+            "action": "followup_declined"
+        }), 200
+
+    if choice != "yes":
+        return None
+
+    followup_type = pending.get("type")
+
+    if followup_type == "add_starter_tasks":
+        event_id = pending.get("event_id")
+        result, error = _add_starter_tasks(user_id, event_id)
+
+        chat_state["pending_followup"] = None
+
+        if error:
+            _save_chat_state(chat_state)
+            return jsonify({
+                "reply": error,
+                "action": "starter_tasks_failed"
+            }), 200
+
+        event = result["event"]
+        created_tasks = result["tasks"]
+
+        if created_tasks:
+            chat_state["last_event_id"] = event["id"]
+            chat_state["last_task_id"] = created_tasks[-1]["id"]
+            _save_chat_state(chat_state)
+            return jsonify({
+                "reply": (
+                    f"Added {len(created_tasks)} starter task(s) to '{event['title']}': "
+                    + ", ".join(task["title"] for task in created_tasks)
+                    + "."
+                ),
+                "action": "starter_tasks_created",
+                "event_id": event["id"],
+                "tasks": created_tasks
+            }), 200
+
+        _save_chat_state(chat_state)
+        return jsonify({
+            "reply": f"Those starter tasks already exist for '{event['title']}'.",
+            "action": "starter_tasks_already_exist",
+            "event_id": event["id"]
+        }), 200
+
+    if followup_type == "add_another_task":
+        event_id = pending.get("event_id")
+        event = _get_event_for_user(user_id, event_id)
+
+        chat_state["pending_followup"] = None
+        _save_chat_state(chat_state)
+
+        if not event:
+            return jsonify({
+                "reply": "I couldn’t find that event anymore.",
+                "action": "followup_failed"
+            }), 200
+
+        return jsonify({
+            "reply": f"Sure — what task would you like me to add to '{event['title']}'?",
+            "action": "task_create_collecting",
+            "event_id": event["id"]
+        }), 200
+
+    return None
+
+
 @ai_bp.route("/clear-chat", methods=["POST"])
 def clear_chat():
     session.pop("chat_state", None)
@@ -308,6 +451,10 @@ def chat():
         context = load_user_context(user_id)
         chat_state = _get_chat_state()
 
+        followup_response = _handle_pending_followup(user_id, user_message, chat_state)
+        if followup_response:
+            return followup_response
+
         add_action = chatbot.parse_add_task_command(user_message, context=context)
         if add_action:
             if "error" in add_action:
@@ -326,6 +473,10 @@ def chat():
 
             chat_state["last_task_id"] = created_task["id"]
             chat_state["last_intent"] = "task_create"
+            chat_state["pending_followup"] = {
+                "type": "add_another_task",
+                "event_id": created_task["event_id"]
+            }
             _save_chat_state(chat_state)
 
             return jsonify({
@@ -365,6 +516,7 @@ def chat():
             chat_state["last_task_id"] = completed_task["id"]
             chat_state["last_event_id"] = completed_task["event_id"]
             chat_state["last_intent"] = "task_complete"
+            chat_state["pending_followup"] = None
             _save_chat_state(chat_state)
 
             return jsonify({
@@ -397,6 +549,10 @@ def chat():
             new_state["last_event_id"] = created_event["id"]
             new_state["active_flow"] = None
             new_state["awaiting_field"] = None
+            new_state["pending_followup"] = {
+                "type": "add_starter_tasks",
+                "event_id": created_event["id"]
+            }
             _save_chat_state(new_state)
 
             return jsonify({
@@ -435,6 +591,7 @@ def chat():
             if updated:
                 new_state = interpreted["state"]
                 new_state["last_event_id"] = target_event["id"]
+                new_state["pending_followup"] = None
                 _save_chat_state(new_state)
 
                 new_title = cleaned_updates.get("title", target_event["title"])
@@ -471,8 +628,8 @@ def chat():
             }), 200
 
         reply = chatbot.get_response(user_message, context=context)
-
-        _save_chat_state(interpreted["state"])
+        chat_state["pending_followup"] = None
+        _save_chat_state(chat_state)
 
         return jsonify({
             "reply": reply,
