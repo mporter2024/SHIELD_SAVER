@@ -31,6 +31,7 @@ def get_default_chat_state():
         "pending_event_draft": {},
         "last_intent": None,
         "last_changes": {},
+        "pending_followup": None,
     }
 
 
@@ -173,9 +174,6 @@ def resolve_target_event(message, context, state):
 
 
 def interpret_message(message, context, state):
-    """
-    Returns a structured action object.
-    """
     state = deepcopy(state or get_default_chat_state())
     context = context or {"events": [], "tasks": []}
 
@@ -195,8 +193,7 @@ def interpret_message(message, context, state):
     create_triggered = looks_like_event_creation(message) or has_pending_create
     update_triggered = looks_like_existing_event_edit(message) or looks_like_event_update(message)
 
-    # Prefer continuing event creation only when we already have a draft.
-    if has_pending_create or looks_like_event_creation(message):
+    if create_triggered:
         draft = merge_event_draft(pending_event_draft, extracted_create)
         missing = missing_required_event_fields(draft)
 
@@ -222,8 +219,7 @@ def interpret_message(message, context, state):
             "state": state,
         }
 
-    # Event update flow
-    if update_triggered or update_changes:
+    if update_triggered:
         target_event = resolve_target_event(message, context, state)
 
         if not target_event:

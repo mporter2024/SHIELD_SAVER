@@ -317,16 +317,78 @@ def _task_exists_for_event(event_id, title: str):
     return row is not None
 
 
+def _normalize_text(value):
+    return (value or "").strip().lower()
+
+
+def _build_starter_task_titles(event):
+    title = _normalize_text(event.get("title"))
+    description = _normalize_text(event.get("description"))
+    location = _normalize_text(event.get("location"))
+    guest_count = int(event.get("guest_count") or 0)
+
+    combined = f"{title} {description} {location}"
+
+    tasks = [
+        "Confirm venue",
+        "Send invitations",
+    ]
+
+    if "network" in combined or "mixer" in combined:
+        tasks.extend([
+            "Prepare guest check-in list",
+            "Arrange name tags",
+        ])
+
+    if "fundrais" in combined or "donation" in combined or "charity" in combined:
+        tasks.extend([
+            "Set up donation process",
+            "Prepare promotional materials",
+            "Reach out to sponsors",
+        ])
+
+    if "workshop" in combined or "training" in combined or "seminar" in combined:
+        tasks.extend([
+            "Prepare presentation materials",
+            "Confirm speaker or facilitator",
+            "Test room equipment",
+        ])
+
+    if "party" in combined or "celebration" in combined:
+        tasks.extend([
+            "Plan decorations",
+            "Prepare music or entertainment",
+        ])
+
+    if "cater" in combined or "food" in combined:
+        tasks.append("Arrange catering")
+
+    if guest_count >= 75:
+        tasks.extend([
+            "Assign event staff or volunteers",
+            "Review crowd flow and seating",
+        ])
+
+    if guest_count >= 150:
+        tasks.append("Review security needs")
+
+    deduped = []
+    seen = set()
+    for task in tasks:
+        key = task.lower()
+        if key not in seen:
+            seen.add(key)
+            deduped.append(task)
+
+    return deduped
+
+
 def _add_starter_tasks(user_id, event_id):
     event = _get_event_for_user(user_id, event_id)
     if not event:
         return None, "I couldn’t find that event anymore."
 
-    starter_titles = [
-        "Confirm venue",
-        "Arrange catering",
-        "Send invitations",
-    ]
+    starter_titles = _build_starter_task_titles(event)
 
     created = []
     for title in starter_titles:
@@ -391,7 +453,7 @@ def _handle_pending_followup(user_id, user_message, chat_state):
                 "reply": (
                     f"Added {len(created_tasks)} starter task(s) to '{event['title']}': "
                     + ", ".join(task["title"] for task in created_tasks)
-                    + "."
+                    + ". You can ask me to add more tasks, mark one complete, or update the event details."
                 ),
                 "action": "starter_tasks_created",
                 "event_id": event["id"],

@@ -324,17 +324,26 @@ def looks_like_event_creation(message: str):
     trigger_phrases = [
         "create an event",
         "create a event",
+        "create an",
+        "create a",
         "make an event",
+        "make a new event",
+        "make an",
+        "make a",
         "plan an event",
         "plan a event",
+        "plan an",
+        "plan a",
         "organize an event",
+        "organize a",
         "set up an event",
+        "set up a",
         "i want to create",
         "i want to plan",
         "help me plan",
         "help me create an event",
         "create event",
-        "make a new event",
+        "new event",
     ]
 
     return any(phrase in lowered for phrase in trigger_phrases)
@@ -381,7 +390,7 @@ def merge_event_draft(existing: dict, new_data: dict):
 
 
 def missing_required_event_fields(draft: dict):
-    required = ["title", "location", "description"]
+    required = ["title", "location"]
     missing = [field for field in required if not draft.get(field)]
 
     if not draft.get("date") and not draft.get("start_datetime"):
@@ -508,7 +517,6 @@ def extract_event_update_fields(message: str):
     if parsed_date:
         data["date"] = parsed_date
 
-    # Only treat "move it to X" as time if X looks like a time.
     time_only_patterns = [
         r"\bset\s+(?:the\s+start\s+time|start\s+time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
         r"\bchange\s+(?:the\s+start\s+time|start\s+time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
