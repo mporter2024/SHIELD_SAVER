@@ -32,6 +32,7 @@ def get_default_chat_state():
         "last_intent": None,
         "last_changes": {},
         "pending_followup": None,
+        "planning_context": {},
     }
 
 

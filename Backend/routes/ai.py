@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify, session
 from ai.unified_chatbot import UnifiedChatbot
-from ai.action_interpreter import interpret_message, get_default_chat_state
+from ai.action_interpreter import interpret_message, get_default_chat_state, resolve_target_event
+from ai.entity_parser import extract_planning_preferences
+from ai.planning_engine import search_venues, search_caterers
 from models.database import get_db
 import sqlite3
 
@@ -275,13 +277,155 @@ def _get_chat_state():
     if "pending_followup" not in state:
         state["pending_followup"] = None
 
+    if "planning_context" not in state or not isinstance(state.get("planning_context"), dict):
+        state["planning_context"] = _default_planning_context()
+    else:
+        state["planning_context"] = _merge_planning_context(state.get("planning_context"), {})
+
     return state
 
 
 def _save_chat_state(state):
+    state = dict(state or {})
+    state["planning_context"] = _merge_planning_context(state.get("planning_context"), {})
     session["chat_state"] = state
     session["last_event_id"] = state.get("last_event_id")
     session["pending_event_draft"] = state.get("pending_event_draft") or {}
+
+
+def _default_planning_context():
+    return {
+        "event_type": None,
+        "guest_count": None,
+        "date": None,
+        "location_area": None,
+        "budget_level": None,
+        "max_budget_total": None,
+        "budget_per_person": None,
+        "indoor_outdoor": None,
+        "venue_type": None,
+        "style": None,
+        "parking": None,
+        "accessibility": None,
+        "cuisine": None,
+        "service_type": None,
+        "dietary_needs": [],
+        "last_recommendations": {"venues": [], "caterers": []},
+    }
+
+
+def _merge_planning_context(existing, updates):
+    merged = _default_planning_context()
+    if isinstance(existing, dict):
+        for key, value in existing.items():
+            if key == "last_recommendations" and isinstance(value, dict):
+                merged[key] = {
+                    "venues": list(value.get("venues", [])),
+                    "caterers": list(value.get("caterers", [])),
+                }
+            elif value not in (None, "", []):
+                merged[key] = value
+
+    for key, value in (updates or {}).items():
+        if value in (None, "", []):
+            continue
+        if key == "dietary_needs":
+            prior = list(merged.get("dietary_needs", []))
+            merged[key] = sorted({*(prior or []), *value})
+        else:
+            merged[key] = value
+    return merged
+
+
+def _seed_planning_context_from_event(planning_context, event):
+    if not event:
+        return planning_context
+
+    seeded = dict(planning_context or _default_planning_context())
+    if not seeded.get("guest_count") and event.get("guest_count"):
+        seeded["guest_count"] = int(event.get("guest_count") or 0)
+    if not seeded.get("date"):
+        seeded["date"] = event.get("date") or (event.get("start_datetime") or "")[:10] or None
+    if not seeded.get("location_area") and event.get("location"):
+        seeded["location_area"] = event.get("location")
+    return seeded
+
+
+def _is_venue_request(message):
+    lowered = (message or "").lower()
+    return "venue" in lowered or "venues" in lowered or "place to host" in lowered
+
+
+def _is_catering_request(message):
+    lowered = (message or "").lower()
+    return any(word in lowered for word in ["catering", "caterer", "food", "buffet", "plated", "food truck"])
+
+
+def _format_venue_reply(results, planning_context):
+    if not results:
+        area = planning_context.get("location_area") or "your area"
+        return f"I couldn't find a strong venue match in {area} with the current filters. Try loosening the budget, guest count, or venue style."
+
+    intro_bits = []
+    if planning_context.get("guest_count"):
+        intro_bits.append(f"for about {planning_context['guest_count']} guests")
+    if planning_context.get("location_area"):
+        intro_bits.append(f"near {planning_context['location_area']}")
+    if planning_context.get("indoor_outdoor"):
+        intro_bits.append(planning_context["indoor_outdoor"])
+    if planning_context.get("budget_level"):
+        intro_bits.append(f"{planning_context['budget_level']} budget")
+
+    intro = " ".join(intro_bits).strip()
+    if intro:
+        intro = f"Based on your preferences {intro}, here are the best venue options\n\n"
+    else:
+        intro = "Here are the best venue options I found\n\n"
+
+    lines = []
+    for idx, item in enumerate(results, start=1):
+        reasons = "; ".join(item.get("reasons") or [])
+        lines.append(
+            f"{idx}. {item['name']} — {item.get('venue_type') or item.get('type')} in {item.get('city') or item.get('location')}\n"
+            f"   Capacity: {item.get('capacity')} | Estimated cost: ${int(float(item.get('estimated_cost') or item.get('cost') or 0))} | Rating: {item.get('rating')}\n"
+            + (f"   Why it fits: {reasons}\n" if reasons else "")
+            + (f"   {item.get('description')}" if item.get('description') else "")
+        )
+    return intro + "\n\n".join(lines)
+
+
+def _format_catering_reply(results, planning_context):
+    if not results:
+        area = planning_context.get("location_area") or "your area"
+        return f"I couldn't find a strong catering match in {area} with the current filters. Try loosening cuisine, service type, or budget."
+
+    intro_bits = []
+    if planning_context.get("cuisine"):
+        intro_bits.append(planning_context["cuisine"])
+    if planning_context.get("service_type"):
+        intro_bits.append(planning_context["service_type"])
+    if planning_context.get("budget_per_person"):
+        intro_bits.append(f"under ${int(planning_context['budget_per_person'])} per person")
+    if planning_context.get("location_area"):
+        intro_bits.append(f"near {planning_context['location_area']}")
+
+    intro = " ".join(intro_bits).strip()
+    if intro:
+        intro = f"Based on your catering preferences {intro}, here are the best options\n\n"
+    else:
+        intro = "Here are the best catering options I found\n\n"
+
+    lines = []
+    for idx, item in enumerate(results, start=1):
+        reasons = "; ".join(item.get("reasons") or [])
+        dietary = item.get("dietary_options") or "not listed"
+        lines.append(
+            f"{idx}. {item['name']} — {item.get('cuisine')} | {item.get('service_type')}\n"
+            f"   Cost: ${float(item.get('cost_per_person') or 0):.0f} per person | Rating: {item.get('rating')} | Dietary: {dietary}\n"
+            + (f"   Why it fits: {reasons}\n" if reasons else "")
+            + (f"   {item.get('description')}" if item.get('description') else "")
+        )
+    return intro + "\n\n".join(lines)
 
 
 def _apply_time_logic(target_event, cleaned_updates):
@@ -564,6 +708,7 @@ def clear_chat():
     session.pop("chat_state", None)
     session.pop("last_event_id", None)
     session.pop("pending_event_draft", None)
+    session.pop("planning_context", None)
     return jsonify({"message": "Chat cleared"}), 200
 
 
@@ -586,6 +731,40 @@ def chat():
         followup_response = _handle_pending_followup(user_id, user_message, chat_state)
         if followup_response:
             return followup_response
+
+        planning_updates = extract_planning_preferences(user_message)
+        target_for_planning = resolve_target_event(user_message, context, chat_state)
+        planning_context = _merge_planning_context(chat_state.get("planning_context"), planning_updates)
+        planning_context = _seed_planning_context_from_event(planning_context, target_for_planning)
+        chat_state["planning_context"] = planning_context
+
+        if _is_venue_request(user_message):
+            venue_results = search_venues(planning_context, limit=5)
+            planning_context["last_recommendations"]["venues"] = [item.get("id") for item in venue_results]
+            chat_state["planning_context"] = planning_context
+            if target_for_planning:
+                chat_state["last_event_id"] = target_for_planning["id"]
+            _save_chat_state(chat_state)
+            return jsonify({
+                "reply": _format_venue_reply(venue_results, planning_context),
+                "action": "venue_recommendations",
+                "planning_context": planning_context,
+                "results": venue_results
+            }), 200
+
+        if _is_catering_request(user_message):
+            catering_results = search_caterers(planning_context, limit=5)
+            planning_context["last_recommendations"]["caterers"] = [item.get("id") for item in catering_results]
+            chat_state["planning_context"] = planning_context
+            if target_for_planning:
+                chat_state["last_event_id"] = target_for_planning["id"]
+            _save_chat_state(chat_state)
+            return jsonify({
+                "reply": _format_catering_reply(catering_results, planning_context),
+                "action": "catering_recommendations",
+                "planning_context": planning_context,
+                "results": catering_results
+            }), 200
 
         add_action = chatbot.parse_add_task_command(user_message, context=context)
         if add_action:
@@ -684,6 +863,7 @@ def chat():
                 "type": "add_starter_tasks",
                 "event_id": created_event["id"]
             }
+            new_state["planning_context"] = _seed_planning_context_from_event(new_state.get("planning_context"), created_event)
             _save_chat_state(new_state)
 
             return jsonify({
@@ -721,6 +901,9 @@ def chat():
                 new_state = interpreted["state"]
                 new_state["last_event_id"] = target_event["id"]
                 new_state["pending_followup"] = None
+                refreshed_event = dict(target_event)
+                refreshed_event.update(cleaned_updates)
+                new_state["planning_context"] = _seed_planning_context_from_event(new_state.get("planning_context"), refreshed_event)
                 _save_chat_state(new_state)
 
                 new_title = cleaned_updates.get("title", target_event["title"])

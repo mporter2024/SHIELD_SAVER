@@ -546,3 +546,126 @@ def extract_event_update_fields(message: str):
         data["_parsed_time_only"] = parsed_time
 
     return data
+
+
+PLANNING_DIETARY_KEYWORDS = [
+    'vegetarian', 'vegan', 'gluten-free', 'gluten free', 'dairy-free', 'dairy free',
+    'halal', 'kosher', 'nut-free', 'nut free'
+]
+
+
+CUISINE_KEYWORDS = [
+    'italian', 'bbq', 'barbecue', 'mexican', 'pizza', 'american', 'seafood',
+    'mediterranean', 'asian', 'soul food', 'new american'
+]
+
+
+SERVICE_TYPE_KEYWORDS = [
+    'buffet', 'plated', 'drop-off', 'drop off', 'food truck', 'family style'
+]
+
+
+VENUE_TYPE_KEYWORDS = [
+    'ballroom', 'theater', 'theatre', 'arena', 'banquet hall', 'pavilion',
+    'park', 'waterfront', 'conference center', 'opera house', 'music venue'
+]
+
+
+STYLE_KEYWORDS = [
+    'casual', 'modern', 'upscale', 'elegant', 'formal', 'historic', 'rustic'
+]
+
+
+def _extract_budget_level(message: str):
+    lowered = message.lower()
+    if any(phrase in lowered for phrase in ['affordable', 'budget-friendly', 'budget friendly', 'cheap', 'low cost']):
+        return 'budget'
+    if any(phrase in lowered for phrase in ['mid-range', 'mid range', 'moderate']):
+        return 'mid'
+    if any(phrase in lowered for phrase in ['upscale', 'premium', 'luxury', 'high-end', 'high end', 'formal']):
+        return 'premium'
+    return None
+
+
+def _extract_money_amount(message: str, labels):
+    label_pattern = '|'.join(re.escape(label) for label in labels)
+    patterns = [
+        rf'(?:under|below|less than|max(?:imum)? of)\s*\$?(\d+(?:\.\d+)?)',
+        rf'(?:{label_pattern})\s+(?:under|below|of|around|about)?\s*\$?(\d+(?:\.\d+)?)',
+        rf'\$\s*(\d+(?:\.\d+)?)\s*(?:max|budget)?',
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, message, re.IGNORECASE)
+        if match:
+            return float(match.group(1))
+    return None
+
+
+def extract_planning_preferences(message: str):
+    lowered = (message or '').lower()
+    preferences = {
+        'event_type': None,
+        'guest_count': _extract_guest_count(message),
+        'date': _extract_date(message),
+        'location_area': _extract_location(message),
+        'budget_level': _extract_budget_level(message),
+        'max_budget_total': _extract_money_amount(message, ['venue budget', 'venue', 'space', 'location']),
+        'budget_per_person': _extract_money_amount(message, ['per person', 'head', 'catering budget', 'food budget', 'catering']),
+        'indoor_outdoor': None,
+        'venue_type': None,
+        'style': None,
+        'parking': None,
+        'accessibility': None,
+        'cuisine': None,
+        'service_type': None,
+        'dietary_needs': [],
+    }
+
+    if 'graduation' in lowered:
+        preferences['event_type'] = 'graduation'
+    elif 'wedding' in lowered:
+        preferences['event_type'] = 'wedding'
+    elif 'birthday' in lowered:
+        preferences['event_type'] = 'birthday'
+    elif 'conference' in lowered or 'corporate' in lowered:
+        preferences['event_type'] = 'corporate'
+    elif 'party' in lowered:
+        preferences['event_type'] = 'party'
+
+    if 'indoor' in lowered:
+        preferences['indoor_outdoor'] = 'indoor'
+    elif 'outdoor' in lowered:
+        preferences['indoor_outdoor'] = 'outdoor'
+
+    for keyword in VENUE_TYPE_KEYWORDS:
+        if keyword in lowered:
+            preferences['venue_type'] = keyword
+            break
+
+    for keyword in STYLE_KEYWORDS:
+        if keyword in lowered:
+            preferences['style'] = keyword
+            break
+
+    for keyword in CUISINE_KEYWORDS:
+        if keyword in lowered:
+            preferences['cuisine'] = 'bbq' if keyword == 'barbecue' else keyword
+            break
+
+    for keyword in SERVICE_TYPE_KEYWORDS:
+        if keyword in lowered:
+            preferences['service_type'] = keyword.replace('drop off', 'drop-off')
+            break
+
+    dietary = []
+    for keyword in PLANNING_DIETARY_KEYWORDS:
+        if keyword in lowered:
+            dietary.append(keyword.replace('gluten free', 'gluten-free').replace('dairy free', 'dairy-free').replace('nut free', 'nut-free'))
+    preferences['dietary_needs'] = sorted(set(dietary))
+
+    if 'parking' in lowered:
+        preferences['parking'] = True
+    if 'accessible' in lowered or 'accessibility' in lowered or 'wheelchair' in lowered:
+        preferences['accessibility'] = True
+
+    return preferences
