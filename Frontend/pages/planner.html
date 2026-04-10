@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../styles/Spartan.css">
 </head>
 <body class="dashboard-page">
-    <div class="dashboard-shell">
+    <div class="dashboard-shell planner-shell">
         <aside class="sidebar">
             <div class="brand">
                 <img src="../logo.png" alt="Shield Saver Logo" class="brand-logo">
@@ -25,6 +25,7 @@
             <nav class="sidebar-nav">
                 <h3>Navigation</h3>
                 <a href="dashboard.html">Dashboard</a>
+                <a href="overview.html" id="planner-overview-link">Event Overview</a>
                 <a href="planner.html" class="active">Planning</a>
                 <a id="planner-budget-link" href="budget.html">Budget Calculator</a>
                 <a href="admin.html" id="admin-nav-link" style="display:none;">Admin</a>
@@ -50,9 +51,12 @@
                 <div class="section-header planner-header">
                     <div>
                         <h2>Planner Workspace</h2>
-                        <p class="muted-text">Edit details, track tasks, build an agenda, and manage lineup entries.</p>
+                        <p class="muted-text">Edit details, manage tasks, and build a dated agenda without cramming the dashboard.</p>
                     </div>
-                    <a id="open-budget-page-link" class="secondary-btn planner-link" href="budget.html">Open Budget Page</a>
+                    <div class="planner-header-actions">
+                        <a id="open-overview-page-link" class="secondary-btn planner-link" href="overview.html">Open Overview</a>
+                        <a id="open-budget-page-link" class="secondary-btn planner-link" href="budget.html">Open Budget Page</a>
+                    </div>
                 </div>
 
                 <div class="planner-grid">
@@ -124,6 +128,8 @@
                         <h3>Add Agenda Item</h3>
                         <form id="agenda-form" class="task-form">
                             <input type="text" id="agenda-title" placeholder="Agenda title" required>
+                            <label for="agenda-date">Agenda date</label>
+                            <input type="date" id="agenda-date">
                             <label for="agenda-start">Start time</label>
                             <input type="time" id="agenda-start">
                             <label for="agenda-end">End time</label>
@@ -135,10 +141,11 @@
                     </div>
                 </div>
             </section>
+
             <section class="panel chatbot-panel compact-chat planner-chat-panel">
                 <div class="chatbot-header">
                     <h3>AI Planning Assistant</h3>
-                    <button id="clear-chat-btn" type="button">Clear Chat</button>
+                    <button id="clear-chat-btn" type="button" class="secondary-btn">Clear Chat</button>
                 </div>
 
                 <div id="chat-messages" class="chat-messages"></div>
@@ -152,12 +159,9 @@
                     <button id="send-chat-btn" type="button">Send</button>
                 </div>
             </section>
-
-
         </main>
     </div>
 
-   
     <script src="../scripts/planner.js"></script>
     <script src="../scripts/chatbot.js"></script>
 </body>

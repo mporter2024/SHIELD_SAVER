@@ -37,7 +37,7 @@ def get_event_agenda(event_id):
         SELECT *
         FROM agenda_items
         WHERE event_id = ?
-        ORDER BY COALESCE(start_time, end_time, title) ASC, id ASC
+        ORDER BY COALESCE(agenda_date, ''), COALESCE(start_time, end_time, title), id ASC
         """,
         (event_id,),
     ).fetchall()
@@ -65,6 +65,7 @@ def create_agenda_item():
     event_id = data.get('event_id')
     title = (data.get('title') or '').strip()
     description = (data.get('description') or '').strip() or None
+    agenda_date = data.get('agenda_date') or None
     start_time = data.get('start_time') or None
     end_time = data.get('end_time') or None
 
@@ -82,10 +83,10 @@ def create_agenda_item():
     try:
         cursor = db.execute(
             """
-            INSERT INTO agenda_items (event_id, title, description, start_time, end_time)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO agenda_items (event_id, title, description, agenda_date, start_time, end_time)
+            VALUES (?, ?, ?, ?, ?, ?)
             """,
-            (event_id, title, description, start_time, end_time),
+            (event_id, title, description, agenda_date, start_time, end_time),
         )
         db.commit()
     except sqlite3.IntegrityError as e:
@@ -109,6 +110,7 @@ def update_agenda_item(agenda_item_id):
     data = request.get_json(silent=True) or {}
     title = (data.get('title') or '').strip() if 'title' in data else None
     description = data.get('description') if 'description' in data else None
+    agenda_date = data.get('agenda_date') if 'agenda_date' in data else None
     start_time = data.get('start_time') if 'start_time' in data else None
     end_time = data.get('end_time') if 'end_time' in data else None
 
@@ -117,11 +119,12 @@ def update_agenda_item(agenda_item_id):
         UPDATE agenda_items
         SET title = COALESCE(?, title),
             description = COALESCE(?, description),
+            agenda_date = COALESCE(?, agenda_date),
             start_time = COALESCE(?, start_time),
             end_time = COALESCE(?, end_time)
         WHERE id = ?
         """,
-        (title, description, start_time, end_time, agenda_item_id),
+        (title, description, agenda_date, start_time, end_time, agenda_item_id),
     )
     db.commit()
 

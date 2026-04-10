@@ -1442,3 +1442,107 @@ a.secondary-btn:hover {
   flex: 0 0 auto;
   margin: 0;
 }
+
+/* =========================================================
+   15) OVERVIEW + INLINE EDITING POLISH
+========================================================= */
+.planner-header-actions,
+.inline-action-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.planner-editable-item.editing {
+  background: #fbfdfb;
+  border-color: #cfe0d2;
+}
+
+.task-main-stack {
+  display: grid;
+  gap: 8px;
+  flex: 1;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.inline-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.inline-edit-grid label,
+.planner-editable-item label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.top-gap {
+  margin-top: 12px;
+}
+
+.overview-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.overview-hero-card p {
+  margin-top: 8px;
+}
+
+.overview-list-item {
+  align-items: flex-start;
+}
+
+.overview-agenda-card {
+  margin-bottom: 10px;
+}
+
+.planner-chat-panel {
+  width: 100%;
+}
+
+.planner-chat-panel .chatbot-header button,
+.planner-chat-panel #send-chat-btn,
+.planner-chat-panel #chat-input {
+  align-self: auto;
+}
+
+.planner-chat-panel .chatbot-input-row {
+  grid-template-columns: unset;
+}
+
+.planner-chat-panel .chatbot-input-row button,
+.planner-chat-panel #send-chat-btn {
+  max-width: 160px;
+}
+
+@media (max-width: 768px) {
+  .planner-header-actions,
+  .inline-action-group,
+  .agenda-card-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .planner-chat-panel .chatbot-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .planner-chat-panel .chatbot-header button,
+  .planner-chat-panel .chatbot-input-row button,
+  .planner-chat-panel #send-chat-btn {
+    max-width: none;
+    width: 100%;
+  }
+}

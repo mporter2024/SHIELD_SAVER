@@ -110,6 +110,7 @@ function renderEvents(events, tasks) {
                         <p><strong>Task Progress:</strong> ${completedCount} / ${eventTasks.length} complete</p>
                     </div>
                     <div class="event-card-actions">
+                        <button class="secondary-btn small-action-btn" onclick="openOverview(${event.id})">Open Overview</button>
                         <button class="secondary-btn small-action-btn" onclick="openPlanner(${event.id})">Open Planner</button>
                         <button class="small-danger-btn" onclick="deleteEvent(${event.id})">Delete</button>
                     </div>
@@ -156,6 +157,11 @@ async function createEvent(event) {
         console.error("Create event error:", error);
         messageEl.textContent = "Server error while creating event.";
     }
+}
+
+function openOverview(eventId) {
+    localStorage.setItem("selectedEventId", eventId);
+    window.location.href = `overview.html?event_id=${eventId}`;
 }
 
 function openPlanner(eventId) {
@@ -278,22 +284,32 @@ function appendChatMessage(sender, text) {
 }
 
 const plannerLink = document.getElementById("planner-nav-link");
+const overviewLink = document.getElementById("overview-nav-link");
+
+function handleEventScopedNav(targetPage) {
+    const eventId = localStorage.getItem("selectedEventId");
+    if (eventId) {
+        window.location.href = `${targetPage}?event_id=${eventId}`;
+    } else {
+        alert("Please select an event first.");
+    }
+}
 
 if (plannerLink) {
     plannerLink.addEventListener("click", (e) => {
         e.preventDefault();
-
-        const eventId = localStorage.getItem("selectedEventId");
-
-        if (eventId) {
-            window.location.href = `planner.html?event_id=${eventId}`;
-        } else {
-            alert("Please select an event first.");
-        }
+        handleEventScopedNav("planner.html");
     });
 }
 
+if (overviewLink) {
+    overviewLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        handleEventScopedNav("overview.html");
+    });
+}
 
+window.openOverview = openOverview;
 window.openPlanner = openPlanner;
 window.deleteEvent = deleteEvent;
 window.initializeDashboard = initializeDashboard;

@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS agenda_items (
     event_id INTEGER NOT NULL,
     title TEXT NOT NULL,
     description TEXT,
+    agenda_date TEXT,
     start_time TEXT,
     end_time TEXT,
     FOREIGN KEY (event_id) REFERENCES events(id)
@@ -152,6 +153,8 @@ def init_db(app):
 
         ensure_column(db, "tasks", "start_datetime", "TEXT")
         ensure_column(db, "tasks", "end_datetime", "TEXT")
+
+        ensure_column(db, "agenda_items", "agenda_date", "TEXT")
 
         ensure_column(db, "venues", "city", "TEXT")
         ensure_column(db, "venues", "capacity", "INTEGER DEFAULT 0")
