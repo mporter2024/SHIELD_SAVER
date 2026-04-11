@@ -17,10 +17,6 @@ async function initializeOverview() {
     localStorage.setItem("selectedEventId", selectedEventId);
 
     try {
-        const currentUser = JSON.parse(localStorage.getItem("user") || "null");
-        const adminLink = document.getElementById("admin-nav-link");
-        if (adminLink && currentUser) adminLink.style.display = currentUser.role === "admin" ? "block" : "none";
-
         const [eventResponse, agendaResponse] = await Promise.all([
             fetch(`${API_BASE}/api/events/${selectedEventId}`, { method: "GET", credentials: "include" }),
             fetch(`${API_BASE}/api/agenda/event/${selectedEventId}`, { method: "GET", credentials: "include" })
@@ -48,8 +44,8 @@ function renderOverview(event, tasks, agenda) {
 
     document.getElementById("overview-title").textContent = event.title || "Event Overview";
     document.getElementById("overview-subtitle").textContent = "Use this page for a clean summary before diving back into planning.";
-    document.getElementById("overview-sidebar-title").textContent = event.title || "Overview";
-    document.getElementById("overview-sidebar-subtitle").textContent = formatDateTimeRange(event.start_datetime, event.end_datetime, event.date);
+    document.getElementById("sidebar-title").textContent = event.title || "Overview";
+    document.getElementById("sidebar-subtitle").textContent = formatDateTimeRange(event.start_datetime, event.end_datetime, event.date);
     document.getElementById("overview-event-name").textContent = event.title || "Event";
     document.getElementById("overview-event-when").textContent = formatDateTimeRange(event.start_datetime, event.end_datetime, event.date);
     document.getElementById("overview-event-description").textContent = event.description || "No description yet.";
@@ -163,4 +159,13 @@ document.getElementById("overview-back-btn")?.addEventListener("click", () => {
     window.location.href = "dashboard.html";
 });
 
-initializeOverview();
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadSidebar("overview", "Overview", "Loading event...", {
+        brandSubtitle: "Event Overview",
+        actions: [
+            { id: "overview-back-btn", label: "Back to Dashboard", className: "secondary-btn", action: "go", href: "dashboard.html" },
+            { id: "logout-btn", label: "Logout", className: "danger-btn", action: "logout" }
+        ]
+    });
+    initializeOverview();
+});

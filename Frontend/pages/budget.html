@@ -6,47 +6,25 @@
   <title>Budget Calculator - Spartan Shield Saver</title>
   <link rel="stylesheet" href="../styles/Spartan.css" />
 </head>
-<body>
+<body class="dashboard-page">
   <div class="dashboard-shell">
-  <aside class="sidebar">
-  <div class="brand">
-    <img src="../logo.png" alt="Shield Saver Logo" class="brand-logo">
-    <div>
-      <h2>Spartan Shield Saver</h2>
-      <p>Budget Planning</p>
-    </div>
-  </div>
-
-  <div class="profile-card">
-    <h3>Budget Calculator</h3>
-    <p class="muted-text">Estimate event costs and review your plan in one place.</p>
-  </div>
-
-  <nav class="sidebar-nav">
-    <h3>Navigation</h3>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="planner.html">Planning</a>
-    <a href="calendar.html">Calendar</a>
-    <a href="budget.html" class="active">Budget Calculator</a>
-    <a href="admin.html" id="admin-nav-link" style="display:none;">Admin</a>
-  </nav>
-</aside> 
+    <aside class="sidebar" id="sidebar"></aside>
 
     <main class="dashboard-main">
-     <section class="hero-panel budget-hero">
-  <div class="budget-hero-content">
-    <div>
-      <h1>Budget Calculator</h1>
-      <p class="muted-text">
-        Estimate event costs, review totals, and get planning help in one place.
-      </p>
-    </div>
+      <section class="hero-panel budget-hero">
+        <div class="budget-hero-content">
+          <div>
+            <h1>Budget Calculator</h1>
+            <p class="muted-text">
+              Estimate event costs, review totals, and get planning help in one place.
+            </p>
+          </div>
 
-    <div class="budget-hero-actions">
-      <a id="back-to-planner-link" href="planner.html" class="secondary-btn">Back to Planner</a>
-    </div>
-  </div>
-</section> 
+          <div class="budget-hero-actions">
+            <a id="back-to-planner-link" href="planner.html" class="secondary-btn">Back to Planner</a>
+          </div>
+        </div>
+      </section>
 
       <section class="panel">
         <h3>Selected Event Snapshot</h3>
@@ -71,131 +49,121 @@
       </section>
 
       <section class="panel budget-panel">
-  <div class="budget-layout">
+        <div class="budget-layout">
+          <div class="budget-left">
+            <div class="budget-form">
+              <h3>Budget Inputs</h3>
 
-    <!-- LEFT SIDE -->
-    <div class="budget-left">
+              <label for="event-select">Select Existing Event</label>
+              <select id="event-select"></select>
+              <p id="budget-status" class="form-message"></p>
 
-      <div class="budget-form">
-        <h3>Budget Inputs</h3>
+              <div class="budget-input-grid">
+                <div>
+                  <label for="guest-count">Expected Guests</label>
+                  <input type="number" id="guest-count" min="0" value="50" />
+                </div>
 
-        <label for="event-select">Select Existing Event</label>
-        <select id="event-select"></select>
-        <p id="budget-status" class="form-message"></p>
+                <div>
+                  <label for="venue-cost">Venue Cost ($)</label>
+                  <input type="number" id="venue-cost" min="0" value="300" />
+                </div>
 
-        <div class="budget-input-grid">
+                <div>
+                  <label for="food-cost">Food Per Person ($)</label>
+                  <input type="number" id="food-cost" min="0" value="10" />
+                </div>
 
-          
+                <div>
+                  <label for="decorations-cost">Decorations ($)</label>
+                  <input type="number" id="decorations-cost" min="0" value="100" />
+                </div>
 
-          <div>
-            <label for="guest-count">Expected Guests</label>
-            <input type="number" id="guest-count" min="0" value="50" />
+                <div>
+                  <label for="equipment-cost">Equipment ($)</label>
+                  <input type="number" id="equipment-cost" min="0" value="150" />
+                </div>
+
+                <div>
+                  <label for="staff-cost">Staff / Labor ($)</label>
+                  <input type="number" id="staff-cost" min="0" value="100" />
+                </div>
+
+                <div>
+                  <label for="marketing-cost">Marketing ($)</label>
+                  <input type="number" id="marketing-cost" min="0" value="75" />
+                </div>
+
+                <div>
+                  <label for="misc-cost">Miscellaneous ($)</label>
+                  <input type="number" id="misc-cost" min="0" value="50" />
+                </div>
+
+                <div>
+                  <label for="contingency-percent">Contingency (%)</label>
+                  <input type="number" id="contingency-percent" min="0" value="10" />
+                </div>
+              </div>
+
+              <div class="budget-buttons">
+                <button id="save-btn" type="button">Save To Event</button>
+                <button id="reset-btn" type="button" class="secondary-btn">Reset</button>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label for="venue-cost">Venue Cost ($)</label>
-            <input type="number" id="venue-cost" min="0" value="300" />
-          </div>
+          <div class="budget-right">
+            <div class="budget-results">
+              <h3>Budget Summary</h3>
 
-          <div>
-            <label for="food-cost">Food Per Person ($)</label>
-            <input type="number" id="food-cost" min="0" value="10" />
-          </div>
+              <div class="summary-card">
+                <p><strong>Event:</strong> <span id="summary-event">Not set</span></p>
+                <p><strong>Guest Count:</strong> <span id="summary-guests">0</span></p>
+              </div>
 
-          <div>
-            <label for="decorations-cost">Decorations ($)</label>
-            <input type="number" id="decorations-cost" min="0" value="100" />
-          </div>
+              <div class="budget-breakdown">
+                <div class="budget-row"><span>Venue</span><span id="summary-venue">$0.00</span></div>
+                <div class="budget-row"><span>Food Total</span><span id="summary-food">$0.00</span></div>
+                <div class="budget-row"><span>Decorations</span><span id="summary-decorations">$0.00</span></div>
+                <div class="budget-row"><span>Equipment</span><span id="summary-equipment">$0.00</span></div>
+                <div class="budget-row"><span>Staff / Labor</span><span id="summary-staff">$0.00</span></div>
+                <div class="budget-row"><span>Marketing</span><span id="summary-marketing">$0.00</span></div>
+                <div class="budget-row"><span>Miscellaneous</span><span id="summary-misc">$0.00</span></div>
+                <div class="budget-row"><span>Subtotal</span><span id="summary-subtotal">$0.00</span></div>
+                <div class="budget-row"><span>Contingency</span><span id="summary-contingency">$0.00</span></div>
+                <div class="budget-row total-row"><span>Final Total</span><span id="summary-total">$0.00</span></div>
+              </div>
 
-          <div>
-            <label for="equipment-cost">Equipment ($)</label>
-            <input type="number" id="equipment-cost" min="0" value="150" />
-          </div>
+              <div class="budget-tip-box">
+                <h4>Planning Tip</h4>
+                <p id="budget-tip">
+                  Add a contingency amount to protect against last-minute cost changes.
+                </p>
+              </div>
+            </div>
 
-          <div>
-            <label for="staff-cost">Staff / Labor ($)</label>
-            <input type="number" id="staff-cost" min="0" value="100" />
+            <div class="panel chatbot-panel compact-chat standard-chat-panel">
+              <div class="chatbot-header">
+                <h3>AI Budget Assistant</h3>
+                <button id="clear-chat-btn" type="button" class="secondary-btn">Clear Chat</button>
+              </div>
+              <div id="chat-messages" class="chat-messages">
+                <div class="chat-bubble bot">
+                  Hi! I can help you think through budget categories, event costs, and next planning steps.
+                </div>
+              </div>
+              <form id="chat-form" class="chat-form chat-form-actions">
+                <input type="text" id="chat-input" placeholder="Ask about budget or planning..." required>
+                <button type="submit">Send</button>
+              </form>
+            </div>
           </div>
-
-          <div>
-            <label for="marketing-cost">Marketing ($)</label>
-            <input type="number" id="marketing-cost" min="0" value="75" />
-          </div>
-
-          <div>
-            <label for="misc-cost">Miscellaneous ($)</label>
-            <input type="number" id="misc-cost" min="0" value="50" />
-          </div>
-
-          <div>
-            <label for="contingency-percent">Contingency (%)</label>
-            <input type="number" id="contingency-percent" min="0" value="10" />
-          </div>
-
         </div>
-
-        <div class="budget-buttons">
-  <button id="save-btn" type="button">Save To Event</button>
-  <button id="reset-btn" type="button" class="secondary-btn">Reset</button>
-</div>
-      </div>
-
-    </div>
-
-    <!-- RIGHT SIDE -->
-    <div class="budget-right">
-
-      <div class="budget-results">
-        <h3>Budget Summary</h3>
-
-        <div class="summary-card">
-          <p><strong>Event:</strong> <span id="summary-event">Not set</span></p>
-          <p><strong>Guest Count:</strong> <span id="summary-guests">0</span></p>
-        </div>
-
-        <div class="budget-breakdown">
-          <div class="budget-row"><span>Venue</span><span id="summary-venue">$0.00</span></div>
-          <div class="budget-row"><span>Food Total</span><span id="summary-food">$0.00</span></div>
-          <div class="budget-row"><span>Decorations</span><span id="summary-decorations">$0.00</span></div>
-          <div class="budget-row"><span>Equipment</span><span id="summary-equipment">$0.00</span></div>
-          <div class="budget-row"><span>Staff / Labor</span><span id="summary-staff">$0.00</span></div>
-          <div class="budget-row"><span>Marketing</span><span id="summary-marketing">$0.00</span></div>
-          <div class="budget-row"><span>Miscellaneous</span><span id="summary-misc">$0.00</span></div>
-          <div class="budget-row"><span>Subtotal</span><span id="summary-subtotal">$0.00</span></div>
-          <div class="budget-row"><span>Contingency</span><span id="summary-contingency">$0.00</span></div>
-          <div class="budget-row total-row"><span>Final Total</span><span id="summary-total">$0.00</span></div>
-        </div>
-
-        <div class="budget-tip-box">
-          <h4>Planning Tip</h4>
-          <p id="budget-tip">
-            Add a contingency amount to protect against last-minute cost changes.
-          </p>
-        </div>
-      </div>
-
-      <div class="panel chatbot-panel compact-chat">
-        <h3>AI Budget Assistant</h3>
-        <div id="chat-messages" class="chat-messages">
-          <div class="chat-bubble bot">
-            Hi! I can help you think through budget categories, event costs, and next planning steps.
-          </div>
-        </div>
-        <form id="chat-form" class="chat-form">
-          <input type="text" id="chat-input" placeholder="Ask about budget or planning..." required>
-          <button type="submit">Send</button>
-        </form>
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-     
+      </section>
     </main>
   </div>
 
+  <script src="../scripts/sidebar.js"></script>
   <script src="../scripts/budget.js"></script>
   <script src="../scripts/chatbot.js"></script>
 </body>

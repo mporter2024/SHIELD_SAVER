@@ -9,35 +9,7 @@
 <body class="dashboard-page">
 
     <div class="dashboard-shell">
-        <aside class="sidebar">
-            <div class="brand">
-                <img src="../logo.png" alt="Shield Saver Logo" class="brand-logo">
-                <div>
-                    <h2>Spartan Shield Saver</h2>
-                    <p>Event Planning Dashboard</p>
-                </div>
-            </div>
-
-            <div class="profile-card">
-                <h3>Welcome</h3>
-                <p id="welcome-message">Loading...</p>
-                <p id="user-email" class="muted-text"></p>
-            </div>
-            <nav class="sidebar-nav">
-                <h3>Navigation</h3>
-                <a href="dashboard.html" class="active">Dashboard</a>
-                <a href="overview.html" id="overview-nav-link">Event Overview</a>
-                <a href="budget.html">Budget Calculator</a>
-                <a href="planner.html" id="planner-nav-link">Planning</a>
-                <a href="admin.html" id="admin-nav-link" style="display:none;">Admin</a>
-                <a href="calendar.html">Calendar</a>
-            </nav>
-            <div class="sidebar-actions">
-                <button id="refresh-btn" class="secondary-btn">Refresh Dashboard</button>
-                <button id="logout-btn" class="danger-btn">Logout</button>
-                
-            </div>
-        </aside>
+        <aside class="sidebar" id="sidebar"></aside>
 
         <main class="dashboard-main">
             <section class="hero-panel">
@@ -69,8 +41,11 @@
             </section>
 
             <section class="dashboard-grid">
-                <div class="panel">
-                    <h2>Create Event</h2>
+                <section class="panel">
+                    <div class="section-header">
+                        <h2>Create a New Event</h2>
+                        <p class="muted-text">Add a title, date, location, and description to start planning.</p>
+                    </div>
                     <form id="event-form" class="event-form">
                         <input type="text" id="event-title" placeholder="Event title" required>
                         <label for="event-start">Event start</label>
@@ -82,25 +57,27 @@
                         <button type="submit">Create Event</button>
                     </form>
                     <p id="event-message" class="form-message"></p>
-                </div>
+                </section>
 
-                <div class="panel">
-                    <h2>How to Use It</h2>
+                <section class="panel">
+                    <div class="section-header">
+                        <h2>Quick Planning Tips</h2>
+                    </div>
                     <div class="info-list">
                         <div class="info-item">
-                            <strong>1. Create an event</strong>
-                            <span>Add a title, time range, location, and description.</span>
+                            <strong>Keep your dashboard clear</strong>
+                            <span>Open a specific event in the planner when you are ready to work on details.</span>
                         </div>
                         <div class="info-item">
-                            <strong>2. Open the planner page</strong>
-                            <span>Each event gets its own workspace for editing details, tasks, and budget.</span>
+                            <strong>Use the AI assistant</strong>
+                            <span>Ask it to create an event, update details, or add planning tasks for you.</span>
                         </div>
                         <div class="info-item">
-                            <strong>3. Build the plan</strong>
+                            <strong>Budget later</strong>
                             <span>Use the budget page from the planner when you are ready to estimate costs.</span>
                         </div>
                     </div>
-                </div>
+                </section>
             </section>
 
             <section class="panel">
@@ -112,15 +89,18 @@
                 </div>
             </section>
 
-            <section class="panel chatbot-panel">
-                <h2>AI Event Assistant</h2>
+            <section class="panel chatbot-panel standard-chat-panel">
+                <div class="chatbot-header">
+                    <h2>AI Event Assistant</h2>
+                    <button id="clear-chat-btn" type="button" class="secondary-btn">Clear Chat</button>
+                </div>
                 <div id="chat-messages" class="chat-messages">
                     <div class="chat-bubble bot">
                         Hi! I’m your event planning assistant. Ask me about budgeting, venues, catering, or timelines.
                     </div>
                 </div>
 
-                <form id="chat-form" class="chat-form">
+                <form id="chat-form" class="chat-form chat-form-actions">
                     <input
                         type="text"
                         id="chat-input"
@@ -128,12 +108,12 @@
                         required
                     >
                     <button type="submit">Send</button>
-                    <button id="clear-chat-btn" type="button">Clear Chat</button>
                 </form>
             </section>
         </main>
     </div>
-<script src="../scripts/chatbot.js"></script>
+    <script src="../scripts/sidebar.js"></script>
+    <script src="../scripts/chatbot.js"></script>
     <script src="../scripts/dashboard.js"></script>
 </body>
 </html>

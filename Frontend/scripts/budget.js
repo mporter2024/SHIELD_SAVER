@@ -244,6 +244,13 @@ async function saveBudgetToEvent() {
 ========================= */
 
 document.addEventListener("DOMContentLoaded", async () => {
+  await loadSidebar("budget", "Budget Calculator", "Estimate event costs and review your plan in one place.", {
+    brandSubtitle: "Budget Planning",
+    actions: [
+      { id: "refresh-btn", label: "Refresh Budget", className: "secondary-btn", action: "reload" },
+      { id: "logout-btn", label: "Logout", className: "danger-btn", action: "logout" }
+    ]
+  });
 
   document.getElementById("save-btn").addEventListener("click", saveBudgetToEvent);
   document.getElementById("reset-btn").addEventListener("click", resetBudgetForm);

@@ -10,16 +10,10 @@ let editingAgendaId = null;
 const editForm = document.getElementById("event-edit-form");
 const selectedTaskForm = document.getElementById("selected-task-form");
 const agendaForm = document.getElementById("agenda-form");
-const backDashboardBtn = document.getElementById("back-dashboard-btn");
 
 if (editForm) editForm.addEventListener("submit", saveSelectedEvent);
 if (selectedTaskForm) selectedTaskForm.addEventListener("submit", addTaskToSelectedEvent);
 if (agendaForm) agendaForm.addEventListener("submit", addAgendaItem);
-if (backDashboardBtn) {
-    backDashboardBtn.addEventListener("click", () => {
-        window.location.href = "dashboard.html";
-    });
-}
 
 function getEventIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
@@ -37,12 +31,6 @@ async function initializePlanner() {
     localStorage.setItem("selectedEventId", selectedEventId);
 
     try {
-        const currentUser = JSON.parse(localStorage.getItem("user") || "null");
-        const adminLink = document.getElementById("admin-nav-link");
-        if (adminLink && currentUser) {
-            adminLink.style.display = currentUser.role === "admin" ? "block" : "none";
-        }
-
         const [eventResponse, agendaResponse] = await Promise.all([
             fetch(`${API_BASE}/api/events/${selectedEventId}`, {
                 method: "GET",
@@ -87,13 +75,13 @@ function renderPlanner() {
 
     document.getElementById("planner-title").textContent = currentEvent.title || "Event Planner";
     document.getElementById("planner-subtitle").textContent = "Manage this event's details, tasks, agenda, lineup, and budget in one place.";
-    document.getElementById("planner-sidebar-title").textContent = currentEvent.title || "Planner";
-    document.getElementById("planner-sidebar-subtitle").textContent = formatDateTimeRange(currentEvent.start_datetime, currentEvent.end_datetime, currentEvent.date);
+    document.getElementById("sidebar-title").textContent = currentEvent.title || "Planner";
+    document.getElementById("sidebar-subtitle").textContent = formatDateTimeRange(currentEvent.start_datetime, currentEvent.end_datetime, currentEvent.date);
 
-    document.getElementById("planner-overview-link").href = `overview.html?event_id=${currentEvent.id}`;
-    document.getElementById("planner-budget-link").href = `budget.html?event_id=${currentEvent.id}`;
-    document.getElementById("open-overview-page-link").href = `overview.html?event_id=${currentEvent.id}`;
-    document.getElementById("open-budget-page-link").href = `budget.html?event_id=${currentEvent.id}`;
+    const overviewLink = document.getElementById("open-overview-page-link");
+    const budgetLink = document.getElementById("open-budget-page-link");
+    if (overviewLink) overviewLink.href = `overview.html?event_id=${currentEvent.id}`;
+    if (budgetLink) budgetLink.href = `budget.html?event_id=${currentEvent.id}`;
 
     document.getElementById("edit-event-title").value = currentEvent.title || "";
     document.getElementById("edit-event-start").value = normalizeForDateTimeInput(currentEvent.start_datetime);
@@ -655,7 +643,6 @@ window.deleteAgendaItem = deleteAgendaItem;
 window.deleteLineupItem = deleteLineupItem;
 window.initializePlanner = initializePlanner;
 window.renderPlanner = renderPlanner;
-initializePlanner();
 
 window.addEventListener("shield-ai-action", async (event) => {
     const data = event.detail || {};
@@ -664,4 +651,16 @@ window.addEventListener("shield-ai-action", async (event) => {
     if (relatedEventId && String(selectedEventId) === String(relatedEventId)) {
         await initializePlanner();
     }
+});
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadSidebar("planner", "Planner", "Manage one event in detail", {
+        brandSubtitle: "Event Planner",
+        actions: [
+            { id: "back-dashboard-btn", label: "Back to Dashboard", className: "secondary-btn", action: "go", href: "dashboard.html" },
+            { id: "logout-btn", label: "Logout", className: "danger-btn", action: "logout" }
+        ]
+    });
+    initializePlanner();
 });

@@ -3,24 +3,17 @@ const API_BASE = "http://127.0.0.1:5000";
 let currentEvents = [];
 let allTasks = [];
 
-const logoutBtn = document.getElementById("logout-btn");
-const refreshBtn = document.getElementById("refresh-btn");
-const eventForm = document.getElementById("event-form");
-
-
-logoutBtn.addEventListener("click", logout);
-refreshBtn.addEventListener("click", initializeDashboard);
-eventForm.addEventListener("submit", createEvent);
-
 
 async function initializeDashboard() {
     try {
         const user = await fetchCurrentUser();
-        document.getElementById("welcome-message").textContent = user.name;
-        document.getElementById("user-email").textContent = user.email;
         localStorage.setItem("user", JSON.stringify(user));
-        const adminLink = document.getElementById("admin-nav-link");
-        if (adminLink) adminLink.style.display = user.role === "admin" ? "block" : "none";
+        const sidebarTitle = document.getElementById("sidebar-title");
+        const sidebarSubtitle = document.getElementById("sidebar-subtitle");
+        const sidebarEmail = document.getElementById("sidebar-user-email");
+        if (sidebarTitle) sidebarTitle.textContent = "Welcome";
+        if (sidebarSubtitle) sidebarSubtitle.textContent = user.name;
+        if (sidebarEmail) sidebarEmail.textContent = user.email || "";
 
         const [events, tasks] = await Promise.all([
             fetchMyEvents(),
@@ -313,7 +306,6 @@ window.openOverview = openOverview;
 window.openPlanner = openPlanner;
 window.deleteEvent = deleteEvent;
 window.initializeDashboard = initializeDashboard;
-initializeDashboard();
 
 window.addEventListener("shield-ai-action", async (event) => {
     const data = event.detail;
@@ -324,4 +316,18 @@ window.addEventListener("shield-ai-action", async (event) => {
     if (typeof initializeDashboard === "function") {
         await initializeDashboard();
     }
+});
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadSidebar("dashboard", "Welcome", "Loading profile...", {
+        brandSubtitle: "Event Planning Dashboard",
+        actions: [
+            { id: "refresh-btn", label: "Refresh Dashboard", className: "secondary-btn", action: "reload" },
+            { id: "logout-btn", label: "Logout", className: "danger-btn", action: "logout" }
+        ]
+    });
+
+    document.getElementById("event-form")?.addEventListener("submit", createEvent);
+    initializeDashboard();
 });

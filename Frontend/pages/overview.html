@@ -8,34 +8,7 @@
 </head>
 <body class="dashboard-page">
     <div class="dashboard-shell">
-        <aside class="sidebar">
-            <div class="brand">
-                <img src="../logo.png" alt="Shield Saver Logo" class="brand-logo">
-                <div>
-                    <h2>Spartan Shield Saver</h2>
-                    <p>Event Overview</p>
-                </div>
-            </div>
-
-            <div class="profile-card">
-                <h3 id="overview-sidebar-title">Overview</h3>
-                <p id="overview-sidebar-subtitle" class="muted-text">Loading event...</p>
-            </div>
-
-            <nav class="sidebar-nav">
-                <h3>Navigation</h3>
-                <a href="dashboard.html">Dashboard</a>
-                <a href="overview.html" class="active">Event Overview</a>
-                <a href="planner.html" id="overview-planner-link">Planning</a>
-                <a href="budget.html" id="overview-budget-link">Budget Calculator</a>
-                <a href="admin.html" id="admin-nav-link" style="display:none;">Admin</a>
-                <a href="calendar.html">Calendar</a>
-            </nav>
-
-            <div class="sidebar-actions">
-                <button id="overview-back-btn" class="secondary-btn">Back to Dashboard</button>
-            </div>
-        </aside>
+        <aside class="sidebar" id="sidebar"></aside>
 
         <main class="dashboard-main">
             <section class="hero-panel">
@@ -99,6 +72,7 @@
         </main>
     </div>
 
+    <script src="../scripts/sidebar.js"></script>
     <script src="../scripts/overview.js"></script>
 </body>
 </html>

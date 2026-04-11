@@ -1546,3 +1546,146 @@ a.secondary-btn:hover {
     width: 100%;
   }
 }
+
+
+/* =========================================================
+   16) UI SWEEP NORMALIZATION
+========================================================= */
+.sidebar-user-email {
+  margin-top: 8px;
+}
+
+.standard-chat-panel,
+.planner-chat-panel {
+  width: 100%;
+  margin-top: 24px;
+  padding: 20px;
+}
+
+.chatbot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.chatbot-header h2,
+.chatbot-header h3 {
+  margin: 0;
+  color: #0f5132;
+}
+
+.chatbot-header button,
+.chat-form button,
+.chatbot-input-row button,
+.small-action-btn,
+.planner-link,
+.event-card-actions button {
+  width: auto;
+}
+
+.chat-form-actions {
+  grid-template-columns: 1fr auto;
+}
+
+.chatbot-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+}
+
+.chatbot-input-row input,
+.chat-form input {
+  min-width: 0;
+}
+
+.event-card-actions,
+.planner-header-actions,
+.inline-action-group,
+.budget-hero-actions,
+.sidebar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.event-card-actions {
+  align-items: flex-start;
+}
+
+.sidebar-actions {
+  flex-direction: column;
+}
+
+.sidebar-nav a {
+  margin-bottom: 10px;
+}
+
+.panel + .panel,
+.hero-panel + .panel,
+.panel + .chatbot-panel {
+  margin-top: 22px;
+}
+
+.compact-empty-state {
+  padding: 22px 20px;
+}
+
+@media (max-width: 768px) {
+  .chatbot-header,
+  .chatbot-input-row,
+  .planner-header-actions,
+  .event-card-top,
+  .event-card-actions,
+  .budget-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .chatbot-input-row,
+  .chat-form,
+  .chat-form-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .chatbot-header button,
+  .chatbot-input-row button,
+  .chat-form button,
+  .planner-link,
+  .small-action-btn,
+  .event-card-actions button {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+
+.dashboard-header {
+  margin-bottom: 22px;
+}
+
+.dashboard-header h1 {
+  margin-bottom: 8px;
+  color: #0f5132;
+}
+
+.info-card,
+.panel-card {
+  padding: 22px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.info-card h3,
+.panel-card h2 {
+  margin-bottom: 12px;
+  color: #0f5132;
+}
+
+.info-card p {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0f5132;
+}

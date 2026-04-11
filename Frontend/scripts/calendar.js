@@ -22,12 +22,6 @@ document.getElementById("next-month-btn").addEventListener("click", () => {
     renderCalendar();
 });
 
-document.getElementById("calendar-refresh-btn").addEventListener("click", initializeCalendar);
-document.getElementById("calendar-back-btn").addEventListener("click", () => {
-    window.location.href = "dashboard.html";
-});
-document.getElementById("calendar-logout-btn").addEventListener("click", logout);
-
 document.getElementById("filter-events").addEventListener("change", (e) => {
     filters.events = e.target.checked;
     rerenderCalendarViews();
@@ -87,18 +81,24 @@ document.getElementById("quick-add-task-tab").addEventListener("click", () => {
 document.getElementById("quick-add-event-form").addEventListener("submit", handleQuickAddEvent);
 document.getElementById("quick-add-task-form").addEventListener("submit", handleQuickAddTask);
 
-initializeCalendar();
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadSidebar("calendar", "Calendar", "View events, tasks, and agenda items by date", {
+        brandSubtitle: "Event Calendar",
+        actions: [
+            { id: "calendar-refresh-btn", label: "Refresh Calendar", className: "secondary-btn", action: "reload" },
+            { id: "calendar-back-btn", label: "Back to Dashboard", className: "secondary-btn", action: "go", href: "dashboard.html" },
+            { id: "calendar-logout-btn", label: "Logout", className: "danger-btn", action: "logout" }
+        ]
+    });
+    initializeCalendar();
+});
 
 async function initializeCalendar() {
     try {
         const user = await fetchCurrentUser();
         localStorage.setItem("user", JSON.stringify(user));
-        document.getElementById("calendar-sidebar-title").textContent = user.name || "Calendar";
-
-        const adminLink = document.getElementById("admin-nav-link");
-        if (adminLink) {
-            adminLink.style.display = user.role === "admin" ? "block" : "none";
-        }
+        document.getElementById("sidebar-title").textContent = user.name || "Calendar";
+        document.getElementById("sidebar-subtitle").textContent = "View events, tasks, and agenda items by date";
 
         await refreshCalendarData();
 
