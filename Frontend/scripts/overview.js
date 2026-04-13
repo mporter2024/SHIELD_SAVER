@@ -58,8 +58,6 @@ function renderOverview(event, tasks, agenda) {
     document.getElementById("overview-pending-tasks").textContent = String(pendingTasks);
     document.getElementById("overview-agenda-count").textContent = String(agenda.length);
 
-    document.getElementById("overview-planner-link").href = `planner.html?event_id=${event.id}`;
-    document.getElementById("overview-budget-link").href = `budget.html?event_id=${event.id}`;
     document.getElementById("overview-open-planner").href = `planner.html?event_id=${event.id}`;
     document.getElementById("overview-open-budget").href = `budget.html?event_id=${event.id}`;
 
