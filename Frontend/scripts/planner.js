@@ -103,13 +103,22 @@ function renderPlanner() {
 
 function highlightPlannerFromAI() {
     if (!currentEvent) return;
-    const lastEventId = localStorage.getItem("last_ai_event_id");
-    const shell = document.querySelector(".planner-shell");
-    if (!shell) return;
 
-    shell.classList.remove("ai-highlight");
+    const lastEventId = localStorage.getItem("last_ai_event_id");
+    const panel =
+        document.getElementById("planner-content") ||
+        document.querySelector(".hero-panel");
+
+    if (!panel) return;
+
+    panel.classList.remove("ai-highlight");
+
     if (lastEventId && String(currentEvent.id) === String(lastEventId)) {
-        shell.classList.add("ai-highlight");
+        panel.classList.add("ai-highlight");
+
+        setTimeout(() => {
+            panel.classList.remove("ai-highlight");
+        }, 3000);
     }
 }
 
