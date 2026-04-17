@@ -22,12 +22,6 @@ document.getElementById("next-month-btn").addEventListener("click", () => {
     renderCalendar();
 });
 
-document.getElementById("calendar-refresh-btn").addEventListener("click", initializeCalendar);
-document.getElementById("calendar-back-btn").addEventListener("click", () => {
-    window.location.href = "dashboard.html";
-});
-document.getElementById("calendar-logout-btn").addEventListener("click", logout);
-
 document.getElementById("filter-events").addEventListener("change", (e) => {
     filters.events = e.target.checked;
     rerenderCalendarViews();
@@ -87,18 +81,24 @@ document.getElementById("quick-add-task-tab").addEventListener("click", () => {
 document.getElementById("quick-add-event-form").addEventListener("submit", handleQuickAddEvent);
 document.getElementById("quick-add-task-form").addEventListener("submit", handleQuickAddTask);
 
-initializeCalendar();
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadSidebar("calendar", "Calendar", "View events, tasks, and agenda items by date", {
+        brandSubtitle: "Event Calendar",
+        actions: [
+            { id: "calendar-refresh-btn", label: "Refresh Calendar", className: "secondary-btn", action: "reload" },
+            { id: "calendar-back-btn", label: "Back to Dashboard", className: "secondary-btn", action: "go", href: "dashboard.html" },
+            { id: "calendar-logout-btn", label: "Logout", className: "danger-btn", action: "logout" }
+        ]
+    });
+    initializeCalendar();
+});
 
 async function initializeCalendar() {
     try {
         const user = await fetchCurrentUser();
         localStorage.setItem("user", JSON.stringify(user));
-        document.getElementById("calendar-sidebar-title").textContent = user.name || "Calendar";
-
-        const adminLink = document.getElementById("admin-nav-link");
-        if (adminLink) {
-            adminLink.style.display = user.role === "admin" ? "block" : "none";
-        }
+        document.getElementById("sidebar-title").textContent = user.name || "Calendar";
+        document.getElementById("sidebar-subtitle").textContent = "View events, tasks, and agenda items by date";
 
         await refreshCalendarData();
 
@@ -626,3 +626,27 @@ function escapeHtml(value) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
+window.initializeCalendar = initializeCalendar;
+window.refreshCalendarData = refreshCalendarData;
+window.rerenderCalendarViews = rerenderCalendarViews;
+
+function syncCalendarToAiAction(data) {
+    const relatedEventId = data?.event?.id || data?.event_id || data?.task?.event_id;
+    if (!relatedEventId) return;
+
+    const matchingItem = calendarItems.find((item) => Number(item.event_id) === Number(relatedEventId) || (item.type === "event" && Number(item.id) === Number(relatedEventId)));
+    if (matchingItem && matchingItem.dateKey) {
+        selectedDateKey = matchingItem.dateKey;
+        const [year, month, day] = matchingItem.dateKey.split("-").map(Number);
+        currentMonthDate = new Date(year, month - 1, 1);
+    }
+}
+
+window.addEventListener("shield-ai-action", async (event) => {
+    const data = event.detail || {};
+    await refreshCalendarData();
+    syncCalendarToAiAction(data);
+    rerenderCalendarViews();
+    syncQuickAddDateMessage();
+});

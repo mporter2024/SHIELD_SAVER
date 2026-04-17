@@ -560,6 +560,30 @@ body:not(.dashboard-page) {
   margin-top: 12px;
 }
 
+.planner-chat-panel {
+  margin-top: 24px;
+}
+
+.planner-chat-panel .chatbot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.planner-chat-panel .chatbot-header h3 {
+  margin: 0;
+}
+
+.planner-chat-panel .chatbot-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.planner-chat-panel #chat-input {
+  flex: 1;
+}
+
 /* =========================================================
    8) CALENDAR PAGE
 ========================================================= */
@@ -1258,4 +1282,416 @@ a.secondary-btn:hover {
 
 .admin-event-card p {
   margin: 4px 0;
+}
+
+.chatbot-container {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    border: 1px solid #d8d8d8;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.chatbot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.chatbot-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+#clear-chat-btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.chat-messages {
+    height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e3e3e3;
+    border-radius: 10px;
+    padding: 10px;
+    background: #f9f9f9;
+    margin-bottom: 10px;
+}
+
+.chat-message {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.chat-message.user {
+    justify-content: flex-end;
+}
+
+.chat-message.bot {
+    justify-content: flex-start;
+}
+
+.chat-bubble {
+    max-width: 75%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.chat-message.user .chat-bubble {
+    background: #dff3e3;
+}
+
+.chat-message.bot .chat-bubble {
+    background: #ececec;
+}
+
+.chatbot-input-row {
+    display: flex;
+    gap: 8px;
+}
+
+#chat-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #cfcfcf;
+    border-radius: 8px;
+}
+
+#send-chat-btn {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.ai-highlight {
+    border: 2px solid #00ff88;
+    box-shadow: 0 0 0 rgba(0, 255, 136, 0);
+    animation: pulseHighlight 1.5s ease-in-out 2;
+}
+
+@keyframes pulseHighlight {
+    0% {
+        box-shadow: 0 0 0 rgba(0, 255, 136, 0);
+    }
+    50% {
+        box-shadow: 0 0 18px rgba(0, 255, 136, 0.65);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(0, 255, 136, 0);
+    }
+}
+
+.planner-chat-panel {
+  margin-top: 24px;
+  padding: 20px;
+}
+
+.planner-chat-panel .chatbot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.planner-chat-panel .chatbot-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #0f2f2f;
+  flex: 0 0 auto;
+}
+
+.planner-chat-panel .chatbot-header button {
+  width: auto;
+  min-width: 140px;
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.planner-chat-panel .chat-messages {
+  min-height: 280px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 14px;
+  border: 1px solid #d5d5d5;
+  border-radius: 14px;
+  background: #f8f8f8;
+  margin-bottom: 12px;
+}
+
+.planner-chat-panel .chatbot-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.planner-chat-panel .chatbot-input-row input,
+.planner-chat-panel #chat-input {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+}
+
+.planner-chat-panel .chatbot-input-row button,
+.planner-chat-panel #send-chat-btn {
+  width: auto;
+  min-width: 120px;
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+/* =========================================================
+   15) OVERVIEW + INLINE EDITING POLISH
+========================================================= */
+.planner-header-actions,
+.inline-action-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.planner-editable-item.editing {
+  background: #fbfdfb;
+  border-color: #cfe0d2;
+}
+
+.task-main-stack {
+  display: grid;
+  gap: 8px;
+  flex: 1;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.inline-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.inline-edit-grid label,
+.planner-editable-item label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.top-gap {
+  margin-top: 12px;
+}
+
+.overview-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.overview-hero-card p {
+  margin-top: 8px;
+}
+
+.overview-list-item {
+  align-items: flex-start;
+}
+
+.overview-agenda-card {
+  margin-bottom: 10px;
+}
+
+.planner-chat-panel {
+  width: 100%;
+}
+
+.planner-chat-panel .chatbot-header button,
+.planner-chat-panel #send-chat-btn,
+.planner-chat-panel #chat-input {
+  align-self: auto;
+}
+
+.planner-chat-panel .chatbot-input-row {
+  grid-template-columns: unset;
+}
+
+.planner-chat-panel .chatbot-input-row button,
+.planner-chat-panel #send-chat-btn {
+  max-width: 160px;
+}
+
+@media (max-width: 768px) {
+  .planner-header-actions,
+  .inline-action-group,
+  .agenda-card-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .planner-chat-panel .chatbot-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .planner-chat-panel .chatbot-header button,
+  .planner-chat-panel .chatbot-input-row button,
+  .planner-chat-panel #send-chat-btn {
+    max-width: none;
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   16) UI SWEEP NORMALIZATION
+========================================================= */
+.sidebar-user-email {
+  margin-top: 8px;
+}
+
+.standard-chat-panel,
+.planner-chat-panel {
+  width: 100%;
+  margin-top: 24px;
+  padding: 20px;
+}
+
+.chatbot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.chatbot-header h2,
+.chatbot-header h3 {
+  margin: 0;
+  color: #0f5132;
+}
+
+.chatbot-header button,
+.chat-form button,
+.chatbot-input-row button,
+.small-action-btn,
+.planner-link,
+.event-card-actions button {
+  width: auto;
+}
+
+.chat-form-actions {
+  grid-template-columns: 1fr auto;
+}
+
+.chatbot-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+}
+
+.chatbot-input-row input,
+.chat-form input {
+  min-width: 0;
+}
+
+.event-card-actions,
+.planner-header-actions,
+.inline-action-group,
+.budget-hero-actions,
+.sidebar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.event-card-actions {
+  align-items: flex-start;
+}
+
+.sidebar-actions {
+  flex-direction: column;
+}
+
+.sidebar-nav a {
+  margin-bottom: 10px;
+}
+
+.panel + .panel,
+.hero-panel + .panel,
+.panel + .chatbot-panel {
+  margin-top: 22px;
+}
+
+.compact-empty-state {
+  padding: 22px 20px;
+}
+
+@media (max-width: 768px) {
+  .chatbot-header,
+  .chatbot-input-row,
+  .planner-header-actions,
+  .event-card-top,
+  .event-card-actions,
+  .budget-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .chatbot-input-row,
+  .chat-form,
+  .chat-form-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .chatbot-header button,
+  .chatbot-input-row button,
+  .chat-form button,
+  .planner-link,
+  .small-action-btn,
+  .event-card-actions button {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+
+.dashboard-header {
+  margin-bottom: 22px;
+}
+
+.dashboard-header h1 {
+  margin-bottom: 8px;
+  color: #0f5132;
+}
+
+.info-card,
+.panel-card {
+  padding: 22px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.info-card h3,
+.panel-card h2 {
+  margin-bottom: 12px;
+  color: #0f5132;
+}
+
+.info-card p {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0f5132;
 }

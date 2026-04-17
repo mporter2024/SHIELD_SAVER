@@ -244,6 +244,13 @@ async function saveBudgetToEvent() {
 ========================= */
 
 document.addEventListener("DOMContentLoaded", async () => {
+  await loadSidebar("budget", "Budget Calculator", "Estimate event costs and review your plan in one place.", {
+    brandSubtitle: "Budget Planning",
+    actions: [
+      { id: "refresh-btn", label: "Refresh Budget", className: "secondary-btn", action: "reload" },
+      { id: "logout-btn", label: "Logout", className: "danger-btn", action: "logout" }
+    ]
+  });
 
   document.getElementById("save-btn").addEventListener("click", saveBudgetToEvent);
   document.getElementById("reset-btn").addEventListener("click", resetBudgetForm);
@@ -278,4 +285,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   calculateBudget();
+});
+
+window.addEventListener("shield-ai-action", async (event) => {
+  const data = event.detail || {};
+  const relatedEventId = data.event?.id || data.event_id || data.task?.event_id;
+  if (!relatedEventId) return;
+
+  try {
+    myEvents = await fetchMyEvents();
+    populateEventSelector(myEvents);
+    const eventSelect = document.getElementById("event-select");
+    if (eventSelect) {
+      eventSelect.value = String(relatedEventId);
+      loadEventIntoForm(relatedEventId);
+    }
+  } catch (error) {
+    console.error("Budget refresh from AI action failed:", error);
+  }
 });

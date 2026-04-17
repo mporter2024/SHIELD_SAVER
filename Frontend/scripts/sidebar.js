@@ -1,77 +1,136 @@
-function loadSidebar(activePage, title = "Welcome", subtitle = "Manage your events") {
-    const sidebar = document.getElementById("sidebar");
-    if (!sidebar) return;
+const SIDEBAR_API_BASE = "http://127.0.0.1:5000";
 
-    const user = JSON.parse(localStorage.getItem("user") || "null");
+function getSelectedEventId() {
+    return localStorage.getItem("selectedEventId") || localStorage.getItem("last_ai_event_id");
+}
+
+function buildEventAwareHref(page) {
+    const eventId = getSelectedEventId();
+    if (!eventId) return `${page}.html`;
+    if (["overview", "planner", "budget"].includes(page)) {
+        return `${page}.html?event_id=${eventId}`;
+    }
+    return `${page}.html`;
+}
+
+async function resolveSidebarUser() {
+    const cachedUser = JSON.parse(localStorage.getItem("user") || "null");
+    if (cachedUser) return cachedUser;
+
+    try {
+        const response = await fetch(`${SIDEBAR_API_BASE}/api/users/me`, {
+            method: "GET",
+            credentials: "include"
+        });
+        const data = await response.json();
+        if (!response.ok) return null;
+        if (data.user) {
+            localStorage.setItem("user", JSON.stringify(data.user));
+            return data.user;
+        }
+    } catch (error) {
+        console.error("Sidebar user lookup failed:", error);
+    }
+
+    return null;
+}
+
+async function loadSidebar(activePage, title = "Welcome", subtitle = "Manage your events", options = {}) {
+    const sidebar = document.getElementById("sidebar");
+    if (!sidebar) return null;
+
+    const {
+        brandSubtitle = "Event Planning",
+        links = [
+            { page: "dashboard", label: "Dashboard" },
+            { page: "overview", label: "Event Overview" },
+            { page: "planner", label: "Planning" },
+            { page: "budget", label: "Budget Calculator" },
+            { page: "calendar", label: "Calendar" },
+            { page: "admin", label: "Admin", adminOnly: true }
+        ],
+        actions = [
+            { id: "refresh-btn", label: "Refresh", className: "secondary-btn", action: "reload" },
+            { id: "logout-btn", label: "Logout", className: "danger-btn", action: "logout" }
+        ]
+    } = options;
+
+    const user = await resolveSidebarUser();
+
+    const navHtml = links
+        .filter((link) => !link.adminOnly || user?.role === "admin")
+        .map((link) => {
+            const href = link.href || buildEventAwareHref(link.page);
+            const activeClass = link.page === activePage ? "active" : "";
+            return `<a href="${href}" data-page="${link.page}" class="${activeClass}">${link.label}</a>`;
+        })
+        .join("");
+
+    const actionsHtml = actions
+        .map((button) => `
+            <button id="${button.id}" class="${button.className || "secondary-btn"}" type="button" data-action="${button.action || ""}" ${button.href ? `data-href="${button.href}"` : ""}>${button.label}</button>
+        `)
+        .join("");
 
     sidebar.innerHTML = `
         <div class="brand">
             <img src="../logo.png" alt="Shield Saver Logo" class="brand-logo">
             <div>
                 <h2>Spartan Shield Saver</h2>
-                <p>Event Planning</p>
+                <p>${brandSubtitle}</p>
             </div>
         </div>
 
         <div class="profile-card">
-            <h3 id="sidebar-title">Welcome</h3>
-            <p id="sidebar-subtitle" class="muted-text">Manage your events</p>
+            <h3 id="sidebar-title">${title}</h3>
+            <p id="sidebar-subtitle" class="muted-text">${subtitle}</p>
+            ${user ? `<p id="sidebar-user-email" class="muted-text sidebar-user-email">${user.email || ""}</p>` : ""}
         </div>
 
         <nav class="sidebar-nav">
             <h3>Navigation</h3>
-            <a href="dashboard.html" data-page="dashboard">Dashboard</a>
-            <a href="planner.html" data-page="planner">Planning</a>
-            <a href="budget.html" data-page="budget">Budget Calculator</a>
-            <a href="admin.html" data-page="admin" id="admin-link" style="display:none;">Admin</a>
+            ${navHtml}
         </nav>
 
         <div class="sidebar-actions">
-            <button id="refresh-btn" class="secondary-btn" type="button">Refresh</button>
-            <button id="logout-btn" class="danger-btn" type="button">Logout</button>
+            ${actionsHtml}
         </div>
     `;
 
-    const titleEl = document.getElementById("sidebar-title");
-    const subtitleEl = document.getElementById("sidebar-subtitle");
-    if (titleEl) titleEl.textContent = title;
-    if (subtitleEl) subtitleEl.textContent = subtitle;
+    sidebar.querySelectorAll(".sidebar-actions button").forEach((button) => {
+        button.addEventListener("click", async () => {
+            const action = button.dataset.action;
+            const href = button.dataset.href;
 
-    document.querySelectorAll(".sidebar-nav a").forEach((link) => {
-        if (link.dataset.page === activePage) {
-            link.classList.add("active");
-        }
-    });
-
-    if (user && user.role === "admin") {
-        const adminLink = document.getElementById("admin-link");
-        if (adminLink) {
-            adminLink.style.display = "block";
-        }
-    }
-
-    const refreshBtn = document.getElementById("refresh-btn");
-    if (refreshBtn) {
-        refreshBtn.addEventListener("click", () => {
-            window.location.reload();
-        });
-    }
-
-    const logoutBtn = document.getElementById("logout-btn");
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", async () => {
-            try {
-                await fetch("http://127.0.0.1:5000/api/users/logout", {
-                    method: "POST",
-                    credentials: "include"
-                });
-            } catch (error) {
-                console.error("Logout request failed:", error);
+            if (action === "reload") {
+                window.location.reload();
+                return;
             }
 
-            localStorage.removeItem("user");
-            localStorage.removeItem("selectedEventId");
-            window.location.href = "index.html";
+            if (action === "go" && href) {
+                window.location.href = href;
+                return;
+            }
+
+            if (action === "logout") {
+                try {
+                    await fetch(`${SIDEBAR_API_BASE}/api/users/logout`, {
+                        method: "POST",
+                        credentials: "include"
+                    });
+                } catch (error) {
+                    console.error("Logout request failed:", error);
+                }
+
+                localStorage.removeItem("user");
+                localStorage.removeItem("selectedEventId");
+                window.location.href = "index.html";
+            }
         });
-    }
+    });
+
+    return user;
 }
+
+window.loadSidebar = loadSidebar;
+window.resolveSidebarUser = resolveSidebarUser;

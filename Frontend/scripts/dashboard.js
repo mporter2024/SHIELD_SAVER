@@ -3,24 +3,17 @@ const API_BASE = "http://127.0.0.1:5000";
 let currentEvents = [];
 let allTasks = [];
 
-const logoutBtn = document.getElementById("logout-btn");
-const refreshBtn = document.getElementById("refresh-btn");
-const eventForm = document.getElementById("event-form");
-const chatForm = document.getElementById("chat-form");
-
-logoutBtn.addEventListener("click", logout);
-refreshBtn.addEventListener("click", initializeDashboard);
-eventForm.addEventListener("submit", createEvent);
-chatForm.addEventListener("submit", handleChatSubmit);
 
 async function initializeDashboard() {
     try {
         const user = await fetchCurrentUser();
-        document.getElementById("welcome-message").textContent = user.name;
-        document.getElementById("user-email").textContent = user.email;
         localStorage.setItem("user", JSON.stringify(user));
-        const adminLink = document.getElementById("admin-nav-link");
-        if (adminLink) adminLink.style.display = user.role === "admin" ? "block" : "none";
+        const sidebarTitle = document.getElementById("sidebar-title");
+        const sidebarSubtitle = document.getElementById("sidebar-subtitle");
+        const sidebarEmail = document.getElementById("sidebar-user-email");
+        if (sidebarTitle) sidebarTitle.textContent = "Welcome";
+        if (sidebarSubtitle) sidebarSubtitle.textContent = user.name;
+        if (sidebarEmail) sidebarEmail.textContent = user.email || "";
 
         const [events, tasks] = await Promise.all([
             fetchMyEvents(),
@@ -94,9 +87,13 @@ function renderEvents(events, tasks) {
     container.innerHTML = events.map((event) => {
         const eventTasks = tasks.filter(task => Number(task.event_id) === Number(event.id));
         const completedCount = eventTasks.filter(task => Number(task.completed) === 1).length;
+        const lastEventId = localStorage.getItem("last_ai_event_id");
+        const highlightClass = lastEventId && String(event.id) === String(lastEventId)
+            ? " ai-highlight"
+            : "";
 
         return `
-            <div class="event-card">
+            <div class="event-card${highlightClass}">
                 <div class="event-card-top">
                     <div>
                         <h3>${escapeHtml(event.title)}</h3>
@@ -106,6 +103,7 @@ function renderEvents(events, tasks) {
                         <p><strong>Task Progress:</strong> ${completedCount} / ${eventTasks.length} complete</p>
                     </div>
                     <div class="event-card-actions">
+                        <button class="secondary-btn small-action-btn" onclick="openOverview(${event.id})">Open Overview</button>
                         <button class="secondary-btn small-action-btn" onclick="openPlanner(${event.id})">Open Planner</button>
                         <button class="small-danger-btn" onclick="deleteEvent(${event.id})">Delete</button>
                     </div>
@@ -152,6 +150,11 @@ async function createEvent(event) {
         console.error("Create event error:", error);
         messageEl.textContent = "Server error while creating event.";
     }
+}
+
+function openOverview(eventId) {
+    localStorage.setItem("selectedEventId", eventId);
+    window.location.href = `overview.html?event_id=${eventId}`;
 }
 
 function openPlanner(eventId) {
@@ -274,23 +277,57 @@ function appendChatMessage(sender, text) {
 }
 
 const plannerLink = document.getElementById("planner-nav-link");
+const overviewLink = document.getElementById("overview-nav-link");
+
+function handleEventScopedNav(targetPage) {
+    const eventId = localStorage.getItem("selectedEventId");
+    if (eventId) {
+        window.location.href = `${targetPage}?event_id=${eventId}`;
+    } else {
+        alert("Please select an event first.");
+    }
+}
 
 if (plannerLink) {
     plannerLink.addEventListener("click", (e) => {
         e.preventDefault();
-
-        const eventId = localStorage.getItem("selectedEventId");
-
-        if (eventId) {
-            window.location.href = `planner.html?event_id=${eventId}`;
-        } else {
-            alert("Please select an event first.");
-        }
+        handleEventScopedNav("planner.html");
     });
 }
 
+if (overviewLink) {
+    overviewLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        handleEventScopedNav("overview.html");
+    });
+}
 
+window.openOverview = openOverview;
 window.openPlanner = openPlanner;
 window.deleteEvent = deleteEvent;
+window.initializeDashboard = initializeDashboard;
 
-initializeDashboard();
+window.addEventListener("shield-ai-action", async (event) => {
+    const data = event.detail;
+
+    console.log("AI action detected:", data);
+
+    // Refresh dashboard data
+    if (typeof initializeDashboard === "function") {
+        await initializeDashboard();
+    }
+});
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadSidebar("dashboard", "Welcome", "Loading profile...", {
+        brandSubtitle: "Event Planning Dashboard",
+        actions: [
+            { id: "refresh-btn", label: "Refresh Dashboard", className: "secondary-btn", action: "reload" },
+            { id: "logout-btn", label: "Logout", className: "danger-btn", action: "logout" }
+        ]
+    });
+
+    document.getElementById("event-form")?.addEventListener("submit", createEvent);
+    initializeDashboard();
+});

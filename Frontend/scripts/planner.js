@@ -4,20 +4,16 @@ let selectedEventId = null;
 let currentEvent = null;
 let currentTasks = [];
 let currentAgenda = [];
+let editingTaskId = null;
+let editingAgendaId = null;
 
 const editForm = document.getElementById("event-edit-form");
 const selectedTaskForm = document.getElementById("selected-task-form");
 const agendaForm = document.getElementById("agenda-form");
-const backDashboardBtn = document.getElementById("back-dashboard-btn");
 
 if (editForm) editForm.addEventListener("submit", saveSelectedEvent);
 if (selectedTaskForm) selectedTaskForm.addEventListener("submit", addTaskToSelectedEvent);
 if (agendaForm) agendaForm.addEventListener("submit", addAgendaItem);
-if (backDashboardBtn) {
-    backDashboardBtn.addEventListener("click", () => {
-        window.location.href = "dashboard.html";
-    });
-}
 
 function getEventIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
@@ -35,12 +31,6 @@ async function initializePlanner() {
     localStorage.setItem("selectedEventId", selectedEventId);
 
     try {
-        const currentUser = JSON.parse(localStorage.getItem("user") || "null");
-        const adminLink = document.getElementById("admin-nav-link");
-        if (adminLink && currentUser) {
-            adminLink.style.display = currentUser.role === "admin" ? "block" : "none";
-        }
-
         const [eventResponse, agendaResponse] = await Promise.all([
             fetch(`${API_BASE}/api/events/${selectedEventId}`, {
                 method: "GET",
@@ -55,12 +45,8 @@ async function initializePlanner() {
         const eventData = await eventResponse.json();
         const agendaData = await agendaResponse.json();
 
-        if (!eventResponse.ok) {
-            throw new Error(eventData.error || "Could not load event planner.");
-        }
-        if (!agendaResponse.ok) {
-            throw new Error(agendaData.error || "Could not load agenda.");
-        }
+        if (!eventResponse.ok) throw new Error(eventData.error || "Could not load event planner.");
+        if (!agendaResponse.ok) throw new Error(agendaData.error || "Could not load agenda.");
 
         currentEvent = eventData.event;
         currentTasks = eventData.tasks || [];
@@ -89,17 +75,20 @@ function renderPlanner() {
 
     document.getElementById("planner-title").textContent = currentEvent.title || "Event Planner";
     document.getElementById("planner-subtitle").textContent = "Manage this event's details, tasks, agenda, lineup, and budget in one place.";
-    document.getElementById("planner-sidebar-title").textContent = currentEvent.title || "Planner";
-    document.getElementById("planner-sidebar-subtitle").textContent = formatDateTimeRange(currentEvent.start_datetime, currentEvent.end_datetime, currentEvent.date);
+    document.getElementById("sidebar-title").textContent = currentEvent.title || "Planner";
+    document.getElementById("sidebar-subtitle").textContent = formatDateTimeRange(currentEvent.start_datetime, currentEvent.end_datetime, currentEvent.date);
 
-    document.getElementById("planner-budget-link").href = `budget.html?event_id=${currentEvent.id}`;
-    document.getElementById("open-budget-page-link").href = `budget.html?event_id=${currentEvent.id}`;
+    const overviewLink = document.getElementById("open-overview-page-link");
+    const budgetLink = document.getElementById("open-budget-page-link");
+    if (overviewLink) overviewLink.href = `overview.html?event_id=${currentEvent.id}`;
+    if (budgetLink) budgetLink.href = `budget.html?event_id=${currentEvent.id}`;
 
     document.getElementById("edit-event-title").value = currentEvent.title || "";
     document.getElementById("edit-event-start").value = normalizeForDateTimeInput(currentEvent.start_datetime);
     document.getElementById("edit-event-end").value = normalizeForDateTimeInput(currentEvent.end_datetime);
     document.getElementById("edit-event-location").value = currentEvent.location || "";
     document.getElementById("edit-event-description").value = currentEvent.description || "";
+    document.getElementById("agenda-date").value = document.getElementById("agenda-date").value || (currentEvent.date || "");
 
     const completedCount = currentTasks.filter(task => Number(task.completed) === 1).length;
     document.getElementById("snapshot-schedule").textContent = formatDateTimeRange(currentEvent.start_datetime, currentEvent.end_datetime, currentEvent.date);
@@ -109,6 +98,28 @@ function renderPlanner() {
 
     renderTasks();
     renderAgenda();
+    highlightPlannerFromAI();
+}
+
+function highlightPlannerFromAI() {
+    if (!currentEvent) return;
+
+    const lastEventId = localStorage.getItem("last_ai_event_id");
+    const panel =
+        document.getElementById("planner-content") ||
+        document.querySelector(".hero-panel");
+
+    if (!panel) return;
+
+    panel.classList.remove("ai-highlight");
+
+    if (lastEventId && String(currentEvent.id) === String(lastEventId)) {
+        panel.classList.add("ai-highlight");
+
+        setTimeout(() => {
+            panel.classList.remove("ai-highlight");
+        }, 3000);
+    }
 }
 
 function renderTasks() {
@@ -131,25 +142,56 @@ function renderTasks() {
 
     taskContainer.innerHTML = `
         <ul class="task-list selected-task-list">
-            ${sortedTasks.map(task => `
-                <li class="task-item">
-                    <div class="task-main">
-                        <label>
-                            <input
-                                type="checkbox"
-                                ${Number(task.completed) === 1 ? "checked" : ""}
-                                onchange="toggleTask(${task.id}, ${jsonSafe(task.title)}, ${jsonSafe(task.due_date || "")}, ${jsonSafe(task.start_datetime || "")}, ${jsonSafe(task.end_datetime || "")}, this.checked)"
-                            >
-                            <span class="${Number(task.completed) === 1 ? "completed-task" : ""}">
-                                ${escapeHtml(task.title)}
-                            </span>
-                        </label>
-                        <span class="task-date">${formatDateTimeRange(task.start_datetime, task.end_datetime, task.due_date)}</span>
-                    </div>
-                    <button class="small-danger-btn task-delete-btn" onclick="deleteTask(${task.id})">Delete</button>
-                </li>
-            `).join("")}
+            ${sortedTasks.map(task => editingTaskId === task.id ? renderTaskEditItem(task) : renderTaskReadItem(task)).join("")}
         </ul>
+    `;
+}
+
+function renderTaskReadItem(task) {
+    return `
+        <li class="task-item planner-editable-item">
+            <div class="task-main task-main-stack">
+                <label>
+                    <input
+                        type="checkbox"
+                        ${Number(task.completed) === 1 ? "checked" : ""}
+                        onchange="toggleTask(${task.id}, ${jsonSafe(task.title)}, ${jsonSafe(task.due_date || "")}, ${jsonSafe(task.start_datetime || "")}, ${jsonSafe(task.end_datetime || "")}, this.checked)"
+                    >
+                    <span class="${Number(task.completed) === 1 ? "completed-task" : ""}">
+                        ${escapeHtml(task.title)}
+                    </span>
+                </label>
+                <span class="task-date">${formatDateTimeRange(task.start_datetime, task.end_datetime, task.due_date)}</span>
+            </div>
+            <div class="inline-action-group">
+                <button class="secondary-btn small-action-btn" onclick="startTaskEdit(${task.id})">Edit</button>
+                <button class="small-danger-btn task-delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+            </div>
+        </li>
+    `;
+}
+
+function renderTaskEditItem(task) {
+    return `
+        <li class="task-item planner-editable-item editing">
+            <div class="task-main task-main-stack full-width">
+                <input type="text" id="edit-task-title-${task.id}" value="${escapeHtml(task.title)}" placeholder="Task title">
+                <div class="inline-edit-grid">
+                    <div>
+                        <label for="edit-task-start-${task.id}">Start</label>
+                        <input type="datetime-local" id="edit-task-start-${task.id}" value="${normalizeForDateTimeInput(task.start_datetime)}">
+                    </div>
+                    <div>
+                        <label for="edit-task-end-${task.id}">End</label>
+                        <input type="datetime-local" id="edit-task-end-${task.id}" value="${normalizeForDateTimeInput(task.end_datetime)}">
+                    </div>
+                </div>
+            </div>
+            <div class="inline-action-group">
+                <button class="secondary-btn small-action-btn" onclick="saveTaskEdit(${task.id}, ${Number(task.completed)})">Save</button>
+                <button class="secondary-btn small-action-btn" onclick="cancelTaskEdit()">Cancel</button>
+            </div>
+        </li>
     `;
 }
 
@@ -160,20 +202,27 @@ function renderAgenda() {
         agendaList.innerHTML = `
             <div class="empty-state compact-empty-state">
                 <h3>No agenda yet</h3>
-                <p>Add your first timed agenda item on the right.</p>
+                <p>Add your first dated agenda item on the right.</p>
             </div>
         `;
         return;
     }
 
-    agendaList.innerHTML = currentAgenda.map(item => `
-        <div class="agenda-card">
+    agendaList.innerHTML = currentAgenda.map(item => editingAgendaId === item.id ? renderAgendaEditItem(item) : renderAgendaReadItem(item)).join("");
+}
+
+function renderAgendaReadItem(item) {
+    return `
+        <div class="agenda-card planner-editable-item">
             <div class="agenda-card-header">
                 <div>
                     <h4>${escapeHtml(item.title)}</h4>
-                    <p class="muted-text">${formatTimeRange(item.start_time, item.end_time)}</p>
+                    <p class="muted-text">${formatAgendaSchedule(item)}</p>
                 </div>
-                <button class="small-danger-btn" onclick="deleteAgendaItem(${item.id})">Delete</button>
+                <div class="inline-action-group">
+                    <button class="secondary-btn small-action-btn" onclick="startAgendaEdit(${item.id})">Edit</button>
+                    <button class="small-danger-btn" onclick="deleteAgendaItem(${item.id})">Delete</button>
+                </div>
             </div>
             ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
 
@@ -197,7 +246,38 @@ function renderAgenda() {
                 </form>
             </div>
         </div>
-    `).join("");
+    `;
+}
+
+function renderAgendaEditItem(item) {
+    return `
+        <div class="agenda-card planner-editable-item editing">
+            <div class="inline-edit-grid">
+                <div>
+                    <label for="edit-agenda-title-${item.id}">Title</label>
+                    <input type="text" id="edit-agenda-title-${item.id}" value="${escapeHtml(item.title)}" placeholder="Agenda title">
+                </div>
+                <div>
+                    <label for="edit-agenda-date-${item.id}">Date</label>
+                    <input type="date" id="edit-agenda-date-${item.id}" value="${item.agenda_date || currentEvent?.date || ""}">
+                </div>
+                <div>
+                    <label for="edit-agenda-start-${item.id}">Start time</label>
+                    <input type="time" id="edit-agenda-start-${item.id}" value="${item.start_time || ""}">
+                </div>
+                <div>
+                    <label for="edit-agenda-end-${item.id}">End time</label>
+                    <input type="time" id="edit-agenda-end-${item.id}" value="${item.end_time || ""}">
+                </div>
+            </div>
+            <label for="edit-agenda-description-${item.id}">Description</label>
+            <textarea id="edit-agenda-description-${item.id}" rows="3">${escapeHtml(item.description || "")}</textarea>
+            <div class="inline-action-group top-gap">
+                <button class="secondary-btn small-action-btn" onclick="saveAgendaEdit(${item.id})">Save</button>
+                <button class="secondary-btn small-action-btn" onclick="cancelAgendaEdit()">Cancel</button>
+            </div>
+        </div>
+    `;
 }
 
 async function saveSelectedEvent(event) {
@@ -282,6 +362,7 @@ async function addAgendaItem(event) {
     const payload = {
         event_id: selectedEventId,
         title: document.getElementById("agenda-title").value.trim(),
+        agenda_date: document.getElementById("agenda-date").value,
         start_time: document.getElementById("agenda-start").value,
         end_time: document.getElementById("agenda-end").value,
         description: document.getElementById("agenda-description").value.trim()
@@ -300,7 +381,10 @@ async function addAgendaItem(event) {
             return;
         }
 
-        if (agendaForm) agendaForm.reset();
+        if (agendaForm) {
+            agendaForm.reset();
+            document.getElementById("agenda-date").value = currentEvent?.date || "";
+        }
         messageEl.textContent = "Agenda item added.";
         await initializePlanner();
     } catch (error) {
@@ -338,6 +422,83 @@ async function addLineupItem(event, agendaItemId) {
     }
 }
 
+function startTaskEdit(taskId) {
+    editingTaskId = taskId;
+    renderTasks();
+}
+
+function cancelTaskEdit() {
+    editingTaskId = null;
+    renderTasks();
+}
+
+async function saveTaskEdit(taskId, completed) {
+    const payload = {
+        title: document.getElementById(`edit-task-title-${taskId}`).value.trim(),
+        start_datetime: document.getElementById(`edit-task-start-${taskId}`).value,
+        end_datetime: document.getElementById(`edit-task-end-${taskId}`).value,
+        completed
+    };
+
+    try {
+        const response = await fetch(`${API_BASE}/api/tasks/${taskId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            alert(data.error || "Could not update task.");
+            return;
+        }
+        editingTaskId = null;
+        await initializePlanner();
+    } catch (error) {
+        console.error("Save task error:", error);
+        alert("Server error while saving task.");
+    }
+}
+
+function startAgendaEdit(agendaItemId) {
+    editingAgendaId = agendaItemId;
+    renderAgenda();
+}
+
+function cancelAgendaEdit() {
+    editingAgendaId = null;
+    renderAgenda();
+}
+
+async function saveAgendaEdit(agendaItemId) {
+    const payload = {
+        title: document.getElementById(`edit-agenda-title-${agendaItemId}`).value.trim(),
+        agenda_date: document.getElementById(`edit-agenda-date-${agendaItemId}`).value,
+        start_time: document.getElementById(`edit-agenda-start-${agendaItemId}`).value,
+        end_time: document.getElementById(`edit-agenda-end-${agendaItemId}`).value,
+        description: document.getElementById(`edit-agenda-description-${agendaItemId}`).value.trim()
+    };
+
+    try {
+        const response = await fetch(`${API_BASE}/api/agenda/items/${agendaItemId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            alert(data.error || "Could not update agenda item.");
+            return;
+        }
+        editingAgendaId = null;
+        await initializePlanner();
+    } catch (error) {
+        console.error("Save agenda error:", error);
+        alert("Server error while saving agenda item.");
+    }
+}
+
 async function toggleTask(taskId, title, dueDate, startDateTime, endDateTime, checked) {
     try {
         const response = await fetch(`${API_BASE}/api/tasks/${taskId}`, {
@@ -345,7 +506,7 @@ async function toggleTask(taskId, title, dueDate, startDateTime, endDateTime, ch
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify({
-                title: title,
+                title,
                 due_date: dueDate,
                 start_datetime: startDateTime,
                 end_datetime: endDateTime,
@@ -453,11 +614,12 @@ function formatDateTimeRange(startDateTime, endDateTime, fallbackDate) {
     return "No date";
 }
 
-function formatTimeRange(startTime, endTime) {
-    if (startTime && endTime) return `${startTime} - ${endTime}`;
-    if (startTime) return startTime;
-    if (endTime) return endTime;
-    return "Time not set";
+function formatAgendaSchedule(item) {
+    const dateLabel = item.agenda_date ? formatDate(item.agenda_date) : "No date";
+    if (item.start_time && item.end_time) return `${dateLabel} • ${item.start_time} - ${item.end_time}`;
+    if (item.start_time) return `${dateLabel} • ${item.start_time}`;
+    if (item.end_time) return `${dateLabel} • Ends ${item.end_time}`;
+    return dateLabel;
 }
 
 function formatCurrency(amount) {
@@ -477,10 +639,37 @@ function jsonSafe(value) {
     return JSON.stringify(String(value ?? ""));
 }
 
+window.startTaskEdit = startTaskEdit;
+window.cancelTaskEdit = cancelTaskEdit;
+window.saveTaskEdit = saveTaskEdit;
+window.startAgendaEdit = startAgendaEdit;
+window.cancelAgendaEdit = cancelAgendaEdit;
+window.saveAgendaEdit = saveAgendaEdit;
 window.toggleTask = toggleTask;
 window.deleteTask = deleteTask;
 window.addLineupItem = addLineupItem;
 window.deleteAgendaItem = deleteAgendaItem;
 window.deleteLineupItem = deleteLineupItem;
+window.initializePlanner = initializePlanner;
+window.renderPlanner = renderPlanner;
 
-initializePlanner();
+window.addEventListener("shield-ai-action", async (event) => {
+    const data = event.detail || {};
+    const relatedEventId = data.event?.id || data.event_id || data.task?.event_id;
+
+    if (relatedEventId && String(selectedEventId) === String(relatedEventId)) {
+        await initializePlanner();
+    }
+});
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadSidebar("planner", "Planner", "Manage one event in detail", {
+        brandSubtitle: "Event Planner",
+        actions: [
+            { id: "back-dashboard-btn", label: "Back to Dashboard", className: "secondary-btn", action: "go", href: "dashboard.html" },
+            { id: "logout-btn", label: "Logout", className: "danger-btn", action: "logout" }
+        ]
+    });
+    initializePlanner();
+});
