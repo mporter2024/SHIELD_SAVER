@@ -1,3 +1,6 @@
+from flask import current_app
+from ai.llm_fallback import safe_ollama_interpret
+from ai.action_interpreter import build_interpret_result_from_llm
 from flask import Blueprint, request, jsonify, session
 from ai.unified_chatbot import UnifiedChatbot
 from ai.action_interpreter import interpret_message, get_default_chat_state, resolve_target_event
@@ -5,6 +8,7 @@ from ai.entity_parser import extract_planning_preferences
 from ai.planning_engine import search_venues, search_caterers
 from models.database import get_db
 import sqlite3
+
 
 ai_bp = Blueprint("ai", __name__)
 chatbot = UnifiedChatbot()
@@ -812,8 +816,6 @@ def chat():
                 "results": catering_results
             }), 200
 
-        interpreted = interpret_message(user_message, context=context, state=chat_state)
-        action_type = interpreted["type"]
 
         if action_type == "task_create":
             task_fields = interpreted.get("task") or {}
@@ -911,6 +913,34 @@ def chat():
 
         interpreted = interpret_message(user_message, context=context, state=chat_state)
         action_type = interpreted["type"]
+
+        # -------- OLLAMA FALLBACK START --------
+        use_ollama = current_app.config.get("USE_OLLAMA_FALLBACK", False)
+
+        if use_ollama and action_type in {
+            "fallback",
+            "event_update_no_changes",
+            "event_update_needs_target",
+            "task_create_missing_title",
+            "task_complete_not_found",
+        }:
+            llm_result = safe_ollama_interpret(
+                message=user_message,
+                context={
+                    "events": context.get("events", []),
+                    "tasks": context.get("tasks", []),
+                    "last_event_id": chat_state.get("last_event_id"),
+                },
+                model=current_app.config.get("OLLAMA_MODEL", "qwen2.5:1.5b"),
+        url=current_app.config.get("OLLAMA_URL", "http://localhost:11434/api/chat"),
+    )
+
+    converted = build_interpret_result_from_llm(llm_result, context, chat_state)
+
+    if converted:
+        interpreted = converted
+        action_type = interpreted["type"]
+# -------- OLLAMA FALLBACK END --------
 
         if action_type == "event_create_collecting":
             _save_chat_state(interpreted["state"])

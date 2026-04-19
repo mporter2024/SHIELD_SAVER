@@ -211,6 +211,7 @@ def find_task_by_reference(task_title, tasks):
     return None
 
 def interpret_message(message, context, state):
+
     state = deepcopy(state or get_default_chat_state())
     context = context or {"events": [], "tasks": []}
 
@@ -326,3 +327,108 @@ def interpret_message(message, context, state):
         "reply": None,
         "state": state,
     }
+
+
+def build_interpret_result_from_llm(llm_result, context, state):
+    if not llm_result:
+        return None
+
+    action = llm_result.get("action")
+    fields = llm_result.get("fields", {}) or {}
+    state = state or get_default_chat_state()
+
+    if action == "task_create":
+        task_title = fields.get("task_title") or fields.get("title")
+        if not task_title:
+            return None
+        return {
+            "type": "task_create",
+            "task_data": {
+                "title": task_title,
+                "status": "pending",
+            },
+            "reply": None,
+            "state": state,
+        }
+
+    if action == "task_complete":
+        task_title = fields.get("task_title") or fields.get("title")
+        if not task_title:
+            return None
+        return {
+            "type": "task_complete",
+            "task_data": {
+                "title": task_title,
+                "status": "completed",
+            },
+            "reply": None,
+            "state": state,
+        }
+
+    if action == "event_update":
+        target_event = resolve_target_event("", context, state)
+        if not target_event:
+            return {
+                "type": "event_update_needs_target",
+                "reply": "I can update an event, but I couldn’t tell which one you meant.",
+                "state": state,
+            }
+
+        changes = {}
+        for key in ["title", "date", "location", "description", "guest_count"]:
+            if fields.get(key) not in (None, "", []):
+                changes[key] = fields[key]
+
+        if fields.get("start_time"):
+            changes["_parsed_time_only"] = fields["start_time"]
+
+        if not changes:
+            return None
+
+        state["last_event_id"] = target_event["id"]
+        state["last_intent"] = "event_update"
+        state["last_changes"] = dict(changes)
+
+        return {
+            "type": "event_update",
+            "target_event": target_event,
+            "changes": changes,
+            "reply": None,
+            "state": state,
+        }
+
+    if action == "event_create":
+        draft = {}
+        for key in ["title", "date", "location", "description", "guest_count"]:
+            if fields.get(key) not in (None, "", []):
+                draft[key] = fields[key]
+        if fields.get("start_time") and fields.get("date"):
+            draft["start_datetime"] = f"{fields['date']}T{fields['start_time']}"
+
+        if not draft:
+            return None
+
+        missing = missing_required_event_fields(draft)
+        state["active_flow"] = "event_create"
+        state["pending_event_draft"] = draft
+        state["last_intent"] = "event_create"
+
+        if missing:
+            state["awaiting_field"] = missing[0]
+            return {
+                "type": "event_create_collecting",
+                "draft": draft,
+                "missing_fields": missing,
+                "reply": build_missing_fields_prompt(draft),
+                "state": state,
+            }
+
+        state["awaiting_field"] = None
+        return {
+            "type": "event_create",
+            "draft": draft,
+            "reply": None,
+            "state": state,
+        }
+
+    return None
