@@ -187,6 +187,80 @@ def _extract_date(message: str):
     return None
 
 
+def looks_like_event_update(message: str):
+    lowered = message.lower().strip()
+
+    update_phrases = [
+        "actually",
+        "change it to",
+        "change it",
+        "update it to",
+        "update it",
+        "set it to",
+        "set it",
+        "move it to",
+        "move it",
+        "reschedule it to",
+        "reschedule it",
+        "rename it to",
+        "rename it",
+        "call it",
+        "the location is",
+        "location is",
+        "change the location",
+        "update the location",
+        "set the location",
+        "move the event to",
+        "change the date",
+        "update the date",
+        "set the date",
+        "change the time",
+        "update the time",
+        "set the time",
+        "change the start time",
+        "update the start time",
+        "set the start time",
+        "change the guest count",
+        "update the guest count",
+        "set the guest count",
+        "guest count is",
+        "make it",
+        "bump it to",
+        "switch it to",
+        "push it to",
+        "description is",
+        "change the description",
+        "update the description",
+        "set the description",
+        "catering is",
+        "food is from",
+        "change the catering",
+        "update the catering",
+        "set the catering",
+        "change name to",
+        "change the name to",
+        "update name to",
+        "update the name to",
+        "set name to",
+        "set the name to",
+        "change the title to",
+        "update the title to",
+        "set the title to",
+        ""
+    ]
+
+    if any(phrase in lowered for phrase in update_phrases):
+        return True
+
+    parsed_date = _extract_date(message)
+    parsed_time = _extract_time(message)
+
+    if parsed_date or parsed_time:
+        if any(ref in lowered for ref in ["it", "that event", "this event", "the event", "that one", "this one"]):
+            return True
+
+    return False
+
 def _extract_time(message: str):
     lowered = message.lower()
 
