@@ -349,36 +349,149 @@ def looks_like_event_creation(message: str):
     return any(phrase in lowered for phrase in trigger_phrases)
 
 
-def looks_like_event_update(message: str):
-    lowered = message.lower()
+def extract_event_update_fields(message: str):
+    cleaned_message = message.strip()
+    lowered = cleaned_message.lower()
 
-    update_phrases = [
-        "actually",
-        "change it to",
-        "make it",
-        "update it to",
-        "the location is",
-        "it's called",
-        "it is called",
-        "call it",
-        "named",
-        "catering is",
-        "food is from",
-        "it's for",
-        "this is for",
-        "description is",
-        "move it",
-        "rename it",
-        "reschedule it",
-        "set the guest count",
-        "change the guest count",
-        "update the guest count",
-        "bump it to",
-        "switch it to",
-        "push it to",
+    data = {
+        "title": None,
+        "date": None,
+        "start_datetime": None,
+        "location": None,
+        "description": None,
+        "guest_count": None,
+        "catering": None,
+        "event_size_hint": None,
+    }
+
+    rename_patterns = [
+        r"\brename\s+(?:it|the event)?\s*to\s+(.+?)(?:$|\.)",
+        r"\bchange\s+(?:the title|title)\s+to\s+(.+?)(?:$|\.)",
+        r"\bupdate\s+(?:the title|title)\s+to\s+(.+?)(?:$|\.)",
+        r"\bset\s+(?:the title|title)\s+to\s+(.+?)(?:$|\.)",
+        r"\bcall\s+it\s+(.+?)(?:$|\.)",
+        r"\bit'?s\s+called\s+(.+?)(?:$|\.)",
+    ]
+    for pattern in rename_patterns:
+        match = re.search(pattern, cleaned_message, re.IGNORECASE)
+        if match:
+            data["title"] = _clean_text(match.group(1))
+            break
+
+    location_patterns = [
+        r"\bset\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
+        r"\bchange\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
+        r"\bupdate\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
+        r"\blocation\s+is\s+(.+?)(?:$|\.)",
+        r"\bmove\s+the\s+event\s+to\s+([A-Za-z0-9\s&'\/\-]+?)(?:$|\.)",
+    ]
+    for pattern in location_patterns:
+        match = re.search(pattern, cleaned_message, re.IGNORECASE)
+        if match:
+            candidate = _clean_text(match.group(1))
+            if candidate and not _extract_date(candidate) and not _extract_time(candidate):
+                data["location"] = candidate
+                break
+
+    description_patterns = [
+        r"\bchange\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
+        r"\bupdate\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
+        r"\bset\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
+        r"\bdescription\s+is\s+(.+?)(?:$|\.)",
+    ]
+    for pattern in description_patterns:
+        match = re.search(pattern, cleaned_message, re.IGNORECASE)
+        if match:
+            data["description"] = _title_case_first(_clean_text(match.group(1)))
+            break
+
+    guest_patterns = [
+        r"\bset\s+the\s+guest\s+count\s+to\s+(\d+)\b",
+        r"\bset\s+guest\s+count\s+to\s+(\d+)\b",
+        r"\bchange\s+the\s+guest\s+count\s+to\s+(\d+)\b",
+        r"\bchange\s+guest\s+count\s+to\s+(\d+)\b",
+        r"\bupdate\s+the\s+guest\s+count\s+to\s+(\d+)\b",
+        r"\bupdate\s+guest\s+count\s+to\s+(\d+)\b",
+        r"\bmake\s+the\s+guest\s+count\s+(\d+)\b",
+        r"\bguest\s+count\s+is\s+(\d+)\b",
+        r"\bmake\s+it\s+(\d+)\s+people\b",
+        r"\bmake\s+it\s+(\d+)\s+guests\b",
+        r"\bset\s+it\s+to\s+(\d+)\s+people\b",
+        r"\bset\s+it\s+to\s+(\d+)\s+guests\b",
+        r"\bchange\s+it\s+to\s+(\d+)\s+people\b",
+        r"\bchange\s+it\s+to\s+(\d+)\s+guests\b",
+        r"\bbump\s+(?:it|attendance|guest count)\s+to\s+(\d+)\b",
+        r"\bwe(?:'| a)?re expecting\s+(\d+)\b",
+    ]
+    for pattern in guest_patterns:
+        match = re.search(pattern, cleaned_message, re.IGNORECASE)
+        if match:
+            data["guest_count"] = int(match.group(1))
+            break
+
+    if data["guest_count"] is None:
+        guest_count_from_words = _extract_guest_count(cleaned_message)
+        if guest_count_from_words is not None:
+            data["guest_count"] = guest_count_from_words
+
+    catering_patterns = [
+        r"\bset\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
+        r"\bchange\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
+        r"\bupdate\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
+        r"\bcatering\s+is\s+(.+?)(?:$|\.)",
+        r"\bfood\s+is\s+from\s+(.+?)(?:$|\.)",
+    ]
+    for pattern in catering_patterns:
+        match = re.search(pattern, cleaned_message, re.IGNORECASE)
+        if match:
+            data["catering"] = _clean_text(match.group(1))
+            break
+
+    parsed_date = _extract_date(cleaned_message)
+    parsed_time = _extract_time(cleaned_message)
+
+    if parsed_date:
+        data["date"] = parsed_date
+
+    time_only_patterns = [
+        r"\bset\s+(?:the\s+start\s+time|start\s+time|time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
+        r"\bchange\s+(?:the\s+start\s+time|start\s+time|time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
+        r"\bupdate\s+(?:the\s+start\s+time|start\s+time|time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
+        r"\bmake\s+it\s+start\s+at\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
+        r"\bmove\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
+        r"\bpush\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
+        r"\bswitch\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
+        r"\bupdate\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
+        r"\bset\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
+        r"\bchange\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
+        r"\breschedule\s+it\s+to\s+(?:[A-Za-z]+\s+\d{1,2}(?:st|nd|rd|th)?(?:,\s*\d{4})?\s+)?(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
     ]
 
-    return any(phrase in lowered for phrase in update_phrases)
+    matched_time_only = None
+    for pattern in time_only_patterns:
+        match = re.search(pattern, cleaned_message, re.IGNORECASE)
+        if match:
+            hour = int(match.group(1))
+            minute = int(match.group(2)) if match.group(2) else 0
+            meridiem = match.group(3).lower()
+
+            if meridiem == "pm" and hour != 12:
+                hour += 12
+            if meridiem == "am" and hour == 12:
+                hour = 0
+
+            matched_time_only = f"{hour:02d}:{minute:02d}:00"
+            break
+
+    if matched_time_only:
+        data["_parsed_time_only"] = matched_time_only
+    elif parsed_time and not parsed_date:
+        data["_parsed_time_only"] = parsed_time
+
+    if parsed_date and parsed_time:
+        data["start_datetime"] = f"{parsed_date}T{parsed_time}"
+
+    return data
 
 
 def merge_event_draft(existing: dict, new_data: dict):

@@ -150,9 +150,9 @@ def find_event_from_state_reference(message, events, state):
 
     return None
 
-
 def resolve_target_event(message, context, state):
     events = context.get("events", [])
+    lowered = (message or "").lower()
 
     target_event = find_event_by_title_reference(message, events)
     if target_event:
@@ -171,6 +171,14 @@ def resolve_target_event(message, context, state):
     if len(events) == 1:
         return events[0]
 
+    # Better fallback for natural follow-up edits
+    followup_words = [
+        "actually", "also", "instead", "make it", "change it", "update it",
+        "move it", "rename it", "set it", "call it", "reschedule it"
+    ]
+    if any(word in lowered for word in followup_words) and events:
+        return events[0]
+
     return None
 
 
@@ -187,6 +195,9 @@ def interpret_message(message, context, state):
         for key, value in extracted_update.items()
         if value not in (None, "", [])
     }
+     # Keep helper time field so the route can rebuild start_datetime
+    if extracted_update.get("_parsed_time_only"):
+        update_changes["_parsed_time_only"] = extracted_update["_parsed_time_only"]
     update_changes.pop("catering", None)
     update_changes.pop("event_size_hint", None)
 
