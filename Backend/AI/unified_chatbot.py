@@ -98,86 +98,66 @@ class UnifiedChatbot:
             context = {"events": [], "tasks": []}
 
         normalized = self.normalize_text(message)
-
-        valid_starts = (
-            "add task",
-            "add a task",
-            "create task",
-            "create a task"
-        )
-
-        if not normalized.startswith(valid_starts):
-            return None
-
         original = message.strip()
 
-        prefixes = [
-            "add a task called ",
-            "add a task ",
-            "add task called ",
-            "add task ",
-            "create a task called ",
-            "create a task ",
-            "create task called ",
-            "create task "
+        create_patterns = [
+            r"^add (?:a )?task(?: called)? ",
+            r"^create (?:a )?task(?: called)? ",
+            r"^remind me to ",
+            r"^i need to ",
+            r"^we need to ",
+            r"^we should ",
+            r"^remember to ",
         ]
 
-        remainder = original
-        lowered_original = original.lower()
+        if not any(re.search(pattern, normalized, re.IGNORECASE) for pattern in create_patterns):
+            return None
 
-        for prefix in prefixes:
-            if lowered_original.startswith(prefix):
-                remainder = original[len(prefix):].strip()
+        task_text = original
+        prefix_patterns = [
+            r"^add a task called ", r"^add a task ", r"^add task called ", r"^add task ",
+            r"^create a task called ", r"^create a task ", r"^create task called ", r"^create task ",
+            r"^remind me to ", r"^i need to ", r"^we need to ", r"^we should ", r"^remember to ",
+        ]
+        for pattern in prefix_patterns:
+            new_text = re.sub(pattern, "", task_text, flags=re.IGNORECASE).strip()
+            if new_text != task_text:
+                task_text = new_text
                 break
 
-        if not remainder:
-            return None
-
         due_date = None
-        due_match = re.search(r"\s+due\s+(\d{4}-\d{2}-\d{2})\s*$", remainder, re.IGNORECASE)
+        due_match = re.search(r"\s+due\s+(\d{4}-\d{2}-\d{2})\s*$", task_text, re.IGNORECASE)
         if due_match:
             due_date = due_match.group(1)
-            remainder = remainder[:due_match.start()].strip()
+            task_text = task_text[:due_match.start()].strip()
 
         event_name = None
-        event_match = re.search(r"\s+for\s+(.+)$", remainder, re.IGNORECASE)
+        event_match = re.search(r"\s+for\s+(.+)$", task_text, re.IGNORECASE)
         if event_match:
             event_name = event_match.group(1).strip()
-            title = remainder[:event_match.start()].strip()
+            title = task_text[:event_match.start()].strip()
         else:
-            title = remainder.strip()
+            title = task_text.strip()
 
         if not title:
-            return None
+            return {"error": "Please include the task you want to add."}
 
         selected_event = None
         events = context.get("events", [])
-
         if event_name:
             normalized_event_name = self.normalize_text(event_name)
-
             for event in events:
                 event_title = self.normalize_text(event.get("title", ""))
-                if event_title == normalized_event_name:
+                if event_title == normalized_event_name or normalized_event_name in event_title or event_title in normalized_event_name:
                     selected_event = event
                     break
-
-            if selected_event is None:
-                for event in events:
-                    event_title = self.normalize_text(event.get("title", ""))
-                    if normalized_event_name in event_title or event_title in normalized_event_name:
-                        selected_event = event
-                        break
         else:
             selected_event = self.pick_relevant_event(message, context, allow_fallback=False)
-
             if selected_event is None and len(events) == 1:
                 selected_event = events[0]
 
         if selected_event is None:
-            return {
-                "error": "I couldn’t tell which event this task belongs to. Please include the event name."
-            }
+            return {"error": "I couldn’t tell which event this task belongs to. Please include the event name."}
 
         return {
             "title": title,
@@ -190,120 +170,82 @@ class UnifiedChatbot:
             context = {"events": [], "tasks": []}
 
         normalized = self.normalize_text(message)
-
-        command_starts = (
-            "complete task",
-            "complete",
-            "mark task",
-            "mark",
-            "finish task",
-            "finish"
-        )
-
-        if not normalized.startswith(command_starts):
-            return None
-
-        if "complete" not in normalized and "finish" not in normalized and "mark" not in normalized:
-            return None
-
         original = message.strip()
-        task_part = original
 
-        patterns = [
-            r"^complete task\s+",
-            r"^complete\s+",
-            r"^mark task\s+",
-            r"^mark\s+",
-            r"^finish task\s+",
-            r"^finish\s+"
+        command_patterns = [
+            r"^complete(?: task)? ",
+            r"^mark .+ done$",
+            r"^mark task ",
+            r"^finished? ",
+            r"^done with ",
+            r"^check off ",
+            r"^cross off ",
         ]
+        if not any(re.search(pattern, normalized, re.IGNORECASE) for pattern in command_patterns):
+            return None
 
+        task_part = original
+        patterns = [
+            r"^complete task\s+", r"^complete\s+", r"^mark task\s+", r"^mark\s+",
+            r"^finished\s+", r"^finish\s+", r"^done with\s+", r"^check off\s+", r"^cross off\s+",
+        ]
         for pattern in patterns:
-            task_part = re.sub(pattern, "", task_part, flags=re.IGNORECASE).strip()
-            if task_part != original.strip():
+            new_text = re.sub(pattern, "", task_part, flags=re.IGNORECASE).strip()
+            if new_text != task_part:
+                task_part = new_text
                 break
 
         task_part = re.sub(r"\s+as\s+complete$", "", task_part, flags=re.IGNORECASE).strip()
         task_part = re.sub(r"\s+complete$", "", task_part, flags=re.IGNORECASE).strip()
-        task_part = re.sub(r"\s+for\s+(.+)$", "", task_part, flags=re.IGNORECASE).strip()
+        task_part = re.sub(r"\s+done$", "", task_part, flags=re.IGNORECASE).strip()
 
         event_name = None
         event_match = re.search(r"\s+for\s+(.+)$", original, re.IGNORECASE)
         if event_match:
             event_name = event_match.group(1).strip()
+            task_part = re.sub(r"\s+for\s+(.+)$", "", task_part, flags=re.IGNORECASE).strip()
 
         if not task_part:
             return {"error": "Please include the task name you want to complete."}
 
         tasks = context.get("tasks", [])
         events = context.get("events", [])
-
         selected_event = None
         if event_name:
             normalized_event_name = self.normalize_text(event_name)
             for event in events:
                 event_title = self.normalize_text(event.get("title", ""))
-                if event_title == normalized_event_name:
+                if event_title == normalized_event_name or normalized_event_name in event_title or event_title in normalized_event_name:
                     selected_event = event
                     break
-            if selected_event is None:
-                for event in events:
-                    event_title = self.normalize_text(event.get("title", ""))
-                    if normalized_event_name in event_title or event_title in normalized_event_name:
-                        selected_event = event
-                        break
 
         candidate_tasks = tasks
         if selected_event is not None:
-            candidate_tasks = [
-                task for task in tasks
-                if int(task.get("event_id", 0)) == int(selected_event["id"])
-            ]
+            candidate_tasks = [task for task in tasks if int(task.get("event_id", 0)) == int(selected_event["id"])]
 
         normalized_task_name = self.normalize_text(task_part)
-
         exact_matches = []
         partial_matches = []
-
         for task in candidate_tasks:
             task_title = self.normalize_text(task.get("title", ""))
-
             if task_title == normalized_task_name:
                 exact_matches.append(task)
             elif normalized_task_name in task_title or task_title in normalized_task_name:
                 partial_matches.append(task)
 
         matches = exact_matches if exact_matches else partial_matches
-
         if not matches:
-            return {
-                "error": "I couldn’t find a matching task to complete. Try using the full task name."
-            }
+            return {"error": "I couldn’t find a matching task to complete. Try using the full task name."}
 
-        incomplete_matches = [
-            task for task in matches
-            if int(task.get("completed", 0)) == 0
-        ]
-
+        incomplete_matches = [task for task in matches if int(task.get("completed", 0)) == 0]
         if len(incomplete_matches) == 1:
-            return {
-                "task_id": incomplete_matches[0]["id"]
-            }
-
+            return {"task_id": incomplete_matches[0]["id"]}
         if len(incomplete_matches) > 1:
             task_titles = ", ".join(task["title"] for task in incomplete_matches[:3])
-            return {
-                "error": f"I found multiple matching incomplete tasks: {task_titles}. Please be more specific."
-            }
-
+            return {"error": f"I found multiple matching incomplete tasks: {task_titles}. Please be more specific."}
         if len(matches) == 1 and int(matches[0].get("completed", 0)) == 1:
-            return {
-                "error": f"'{matches[0]['title']}' is already marked complete."
-            }
-
-        return {
-            "error": "I couldn’t find an incomplete version of that task."
-        }
+            return {"error": f"'{matches[0]['title']}' is already marked complete."}
+        return {"error": "I couldn’t find an incomplete version of that task."}
 
     def build_response(self, message: str, context=None, selected_event=None):
         if context is None:

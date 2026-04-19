@@ -73,21 +73,21 @@ def _words_to_number(text: str):
 
 def _extract_guest_count(message: str):
     digit_patterns = [
-        r"\bfor\s+about\s+(\d+)\s+people\b",
-        r"\bfor\s+around\s+(\d+)\s+people\b",
-        r"\bfor\s+roughly\s+(\d+)\s+people\b",
-        r"\bfor\s+(\d+)\s+people\b",
-        r"\babout\s+(\d+)\s+guests\b",
-        r"\baround\s+(\d+)\s+guests\b",
-        r"\b(\d+)\s+guests\b",
-        r"\babout\s+(\d+)\s+attendees\b",
-        r"\b(\d+)\s+attendees\b",
-        r"\bguest count\s+(?:of\s+)?(\d+)\b",
-        r"\bmake it\s+(\d+)\s+people\b",
-        r"\bchange it to\s+(\d+)\s+people\b",
-        r"\bset it to\s+(\d+)\s+people\b",
-        r"\bbump (?:it|attendance|guest count)\s+to\s+(\d+)\b",
-        r"\bwe(?:'| a)?re expecting\s+(\d+)\b",
+        r"for\s+about\s+(\d+)\s+people",
+        r"for\s+around\s+(\d+)\s+people",
+        r"for\s+roughly\s+(\d+)\s+people",
+        r"for\s+(\d+)\s+people",
+        r"about\s+(\d+)\s+guests",
+        r"around\s+(\d+)\s+guests",
+        r"(\d+)\s+guests",
+        r"about\s+(\d+)\s+attendees",
+        r"(\d+)\s+attendees",
+        r"guest count\s+(?:of\s+)?(\d+)",
+        r"make it\s+(\d+)\s+people",
+        r"change it to\s+(\d+)\s+people",
+        r"set it to\s+(\d+)\s+people",
+        r"bump (?:it|attendance|guest count)\s+to\s+(\d+)",
+        r"we(?:'| a)?re expecting\s+(\d+)",
     ]
 
     for pattern in digit_patterns:
@@ -96,10 +96,10 @@ def _extract_guest_count(message: str):
             return int(match.group(1))
 
     word_patterns = [
-        r"\bfor\s+([a-z\-\s]+?)\s+people\b",
-        r"\bfor\s+([a-z\-\s]+?)\s+guests\b",
-        r"\bmake it\s+([a-z\-\s]+?)\s+people\b",
-        r"\bguest count\s+(?:of\s+)?([a-z\-\s]+)\b",
+        r"for\s+([a-z\-\s]+?)\s+people",
+        r"for\s+([a-z\-\s]+?)\s+guests",
+        r"make it\s+([a-z\-\s]+?)\s+people",
+        r"guest count\s+(?:of\s+)?([a-z\-\s]+)",
     ]
 
     for pattern in word_patterns:
@@ -122,7 +122,7 @@ def _extract_date(message: str):
     }
 
     for word, offset in relative_map.items():
-        if re.search(rf"\b{word}\b", lowered):
+        if re.search(rf"{word}", lowered):
             return (today + timedelta(days=offset)).strftime("%Y-%m-%d")
 
     weekday_names = [
@@ -130,7 +130,7 @@ def _extract_date(message: str):
         "thursday", "friday", "saturday", "sunday"
     ]
 
-    next_weekday_match = re.search(r"\bnext\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b", lowered)
+    next_weekday_match = re.search(r"next\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)", lowered)
     if next_weekday_match:
         target_name = next_weekday_match.group(1)
         target_idx = weekday_names.index(target_name)
@@ -140,7 +140,7 @@ def _extract_date(message: str):
         days_ahead += 7
         return (today + timedelta(days=days_ahead)).strftime("%Y-%m-%d")
 
-    plain_weekday_match = re.search(r"\b(on\s+)?(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b", lowered)
+    plain_weekday_match = re.search(r"(on\s+)?(monday|tuesday|wednesday|thursday|friday|saturday|sunday)", lowered)
     if plain_weekday_match:
         target_name = plain_weekday_match.group(2)
         target_idx = weekday_names.index(target_name)
@@ -156,7 +156,7 @@ def _extract_date(message: str):
     }
 
     for month, month_num in month_map.items():
-        pattern = rf"\b{month}\s+(\d{{1,2}})(?:st|nd|rd|th)?(?:,\s*(\d{{4}}))?\b"
+        pattern = rf"{month}\s+(\d{{1,2}})(?:st|nd|rd|th)?(?:,\s*(\d{{4}}))?"
         match = re.search(pattern, lowered, re.IGNORECASE)
         if match:
             day = int(match.group(1))
@@ -166,7 +166,7 @@ def _extract_date(message: str):
             except ValueError:
                 return None
 
-    numeric_match = re.search(r"\b(\d{1,2})/(\d{1,2})(?:/(\d{2,4}))?\b", lowered)
+    numeric_match = re.search(r"(\d{1,2})/(\d{1,2})(?:/(\d{2,4}))?", lowered)
     if numeric_match:
         month_num = int(numeric_match.group(1))
         day = int(numeric_match.group(2))
@@ -187,90 +187,16 @@ def _extract_date(message: str):
     return None
 
 
-def looks_like_event_update(message: str):
-    lowered = message.lower().strip()
-
-    update_phrases = [
-        "actually",
-        "change it to",
-        "change it",
-        "update it to",
-        "update it",
-        "set it to",
-        "set it",
-        "move it to",
-        "move it",
-        "reschedule it to",
-        "reschedule it",
-        "rename it to",
-        "rename it",
-        "call it",
-        "the location is",
-        "location is",
-        "change the location",
-        "update the location",
-        "set the location",
-        "move the event to",
-        "change the date",
-        "update the date",
-        "set the date",
-        "change the time",
-        "update the time",
-        "set the time",
-        "change the start time",
-        "update the start time",
-        "set the start time",
-        "change the guest count",
-        "update the guest count",
-        "set the guest count",
-        "guest count is",
-        "make it",
-        "bump it to",
-        "switch it to",
-        "push it to",
-        "description is",
-        "change the description",
-        "update the description",
-        "set the description",
-        "catering is",
-        "food is from",
-        "change the catering",
-        "update the catering",
-        "set the catering",
-        "change name to",
-        "change the name to",
-        "update name to",
-        "update the name to",
-        "set name to",
-        "set the name to",
-        "change the title to",
-        "update the title to",
-        "set the title to",
-        ""
-    ]
-
-    if any(phrase in lowered for phrase in update_phrases):
-        return True
-
-    parsed_date = _extract_date(message)
-    parsed_time = _extract_time(message)
-
-    if parsed_date or parsed_time:
-        if any(ref in lowered for ref in ["it", "that event", "this event", "the event", "that one", "this one"]):
-            return True
-
-    return False
-
 def _extract_time(message: str):
     lowered = message.lower()
 
-    if re.search(r"\bnoon\b", lowered):
+    if re.search(r"noon", lowered):
         return "12:00:00"
-    if re.search(r"\bmidnight\b", lowered):
+    if re.search(r"midnight", lowered):
         return "00:00:00"
 
     match = re.search(
-        r"\b(?:at|starting at|start at|starts at|for|from|move it to|set it to)\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
+        r"(?:at|starting at|start at|starts at|for|from|move it to|set it to|update it to|change it to)\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)",
         lowered,
         re.IGNORECASE
     )
@@ -291,9 +217,9 @@ def _extract_time(message: str):
 
 def _extract_location(message: str):
     patterns = [
-        r"\bat\s+([A-Za-z0-9\s&'\/\-]+?)(?:\s+for\s+|\s+on\s+|\s+with\s+|\s+starting\b|\.\s*|,\s*|$)",
-        r"\bin\s+([A-Za-z0-9\s&'\/\-]+?)(?:\s+for\s+|\s+on\s+|\s+with\s+|\s+starting\b|\.\s*|,\s*|$)",
-        r"\blocation\s+(?:is\s+|to\s+)?([A-Za-z0-9\s&'\/\-]+?)(?:\.\s*|,\s*|$)",
+        r"at\s+([A-Za-z0-9\s&'\/\-]+?)(?:\s+for\s+|\s+on\s+|\s+with\s+|\s+starting|\.\s*|,\s*|$)",
+        r"in\s+([A-Za-z0-9\s&'\/\-]+?)(?:\s+for\s+|\s+on\s+|\s+with\s+|\s+starting|\.\s*|,\s*|$)",
+        r"location\s+(?:is\s+|to\s+)?([A-Za-z0-9\s&'\/\-]+?)(?:\.\s*|,\s*|$)",
     ]
 
     blocked = {
@@ -314,10 +240,10 @@ def _extract_location(message: str):
 
 def _extract_catering(message: str):
     patterns = [
-        r"\bwith\s+(.+?)\s+catering\b",
-        r"\bcatering\s+(?:from\s+|is\s+|to\s+)?(.+?)(?:$|\.|,)",
-        r"\bfood\s+from\s+(.+?)(?:$|\.|,)",
-        r"\bcater(?:er|ing)?\s+(?:is\s+)?(.+?)(?:$|\.|,)",
+        r"with\s+(.+?)\s+catering",
+        r"catering\s+(?:from\s+|is\s+|to\s+)?(.+?)(?:$|\.|,)",
+        r"food\s+from\s+(.+?)(?:$|\.|,)",
+        r"cater(?:er|ing)?\s+(?:is\s+)?(.+?)(?:$|\.|,)",
     ]
 
     for pattern in patterns:
@@ -329,11 +255,11 @@ def _extract_catering(message: str):
 
 def _extract_title(message: str):
     patterns = [
-        r"\bcalled\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
-        r"\bnamed\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
-        r"\btitle\s+it\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
-        r"\bit'?s\s+called\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
-        r"\bthe\s+title\s+is\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
+        r"called\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
+        r"named\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
+        r"title\s+it\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
+        r"it'?s\s+called\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
+        r"the\s+title\s+is\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
     ]
 
     for pattern in patterns:
@@ -345,11 +271,11 @@ def _extract_title(message: str):
 
 def _extract_description(message: str):
     patterns = [
-        r"\bit'?s\s+for\s+(.+?)(?:$|\.)",
-        r"\bthis is for\s+(.+?)(?:$|\.)",
-        r"\bthe purpose is\s+(.+?)(?:$|\.)",
-        r"\bdescription\s+(?:is\s+|to\s+)?(.+?)(?:$|\.)",
-        r"\bfor\s+(student networking|networking|fundraising|a fundraiser|celebration|meeting|conference|workshop|party)\b",
+        r"it'?s\s+for\s+(.+?)(?:$|\.)",
+        r"this is for\s+(.+?)(?:$|\.)",
+        r"the purpose is\s+(.+?)(?:$|\.)",
+        r"description\s+(?:is\s+|to\s+)?(.+?)(?:$|\.)",
+        r"for\s+(student networking|networking|fundraising|a fundraiser|celebration|meeting|conference|workshop|party)",
     ]
 
     for pattern in patterns:
@@ -423,9 +349,82 @@ def looks_like_event_creation(message: str):
     return any(phrase in lowered for phrase in trigger_phrases)
 
 
+def looks_like_event_update(message: str):
+    lowered = message.lower().strip()
+
+    update_phrases = [
+        "actually",
+        "change it to",
+        "change it",
+        "update it to",
+        "update it",
+        "set it to",
+        "set it",
+        "move it to",
+        "move it",
+        "reschedule it to",
+        "reschedule it",
+        "rename it to",
+        "rename it",
+        "call it",
+        "the location is",
+        "location is",
+        "change the location",
+        "update the location",
+        "set the location",
+        "move the event to",
+        "change the date",
+        "update the date",
+        "set the date",
+        "change the time",
+        "update the time",
+        "set the time",
+        "change the start time",
+        "update the start time",
+        "set the start time",
+        "change the guest count",
+        "update the guest count",
+        "set the guest count",
+        "guest count is",
+        "make it",
+        "bump it to",
+        "switch it to",
+        "push it to",
+        "description is",
+        "change the description",
+        "update the description",
+        "set the description",
+        "catering is",
+        "food is from",
+        "change the catering",
+        "update the catering",
+        "set the catering",
+        "change name to",
+        "change the name to",
+        "update name to",
+        "update the name to",
+        "set name to",
+        "set the name to",
+        "change the title to",
+        "update the title to",
+        "set the title to",
+    ]
+
+    if any(phrase in lowered for phrase in update_phrases):
+        return True
+
+    parsed_date = _extract_date(message)
+    parsed_time = _extract_time(message)
+
+    if parsed_date or parsed_time:
+        if any(ref in lowered for ref in ["it", "that event", "this event", "the event", "that one", "this one"]):
+            return True
+
+    return False
+
+
 def extract_event_update_fields(message: str):
     cleaned_message = message.strip()
-    lowered = cleaned_message.lower()
 
     data = {
         "title": None,
@@ -439,12 +438,12 @@ def extract_event_update_fields(message: str):
     }
 
     rename_patterns = [
-        r"\brename\s+(?:it|the event)?\s*to\s+(.+?)(?:$|\.)",
-        r"\bchange\s+(?:the title|title)\s+to\s+(.+?)(?:$|\.)",
-        r"\bupdate\s+(?:the title|title)\s+to\s+(.+?)(?:$|\.)",
-        r"\bset\s+(?:the title|title)\s+to\s+(.+?)(?:$|\.)",
-        r"\bcall\s+it\s+(.+?)(?:$|\.)",
-        r"\bit'?s\s+called\s+(.+?)(?:$|\.)",
+        r"rename\s+(?:it|the event)?\s*to\s+(.+?)(?:$|\.)",
+        r"change\s+(?:the title|title|the name|name)\s+to\s+(.+?)(?:$|\.)",
+        r"update\s+(?:the title|title|the name|name)\s+to\s+(.+?)(?:$|\.)",
+        r"set\s+(?:the title|title|the name|name)\s+to\s+(.+?)(?:$|\.)",
+        r"call\s+it\s+(.+?)(?:$|\.)",
+        r"it'?s\s+called\s+(.+?)(?:$|\.)",
     ]
     for pattern in rename_patterns:
         match = re.search(pattern, cleaned_message, re.IGNORECASE)
@@ -453,11 +452,11 @@ def extract_event_update_fields(message: str):
             break
 
     location_patterns = [
-        r"\bset\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
-        r"\bchange\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
-        r"\bupdate\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
-        r"\blocation\s+is\s+(.+?)(?:$|\.)",
-        r"\bmove\s+the\s+event\s+to\s+([A-Za-z0-9\s&'\/\-]+?)(?:$|\.)",
+        r"set\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
+        r"change\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
+        r"update\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
+        r"location\s+is\s+(.+?)(?:$|\.)",
+        r"move\s+the\s+event\s+to\s+([A-Za-z0-9\s&'\/\-]+?)(?:$|\.)",
     ]
     for pattern in location_patterns:
         match = re.search(pattern, cleaned_message, re.IGNORECASE)
@@ -468,10 +467,10 @@ def extract_event_update_fields(message: str):
                 break
 
     description_patterns = [
-        r"\bchange\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
-        r"\bupdate\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
-        r"\bset\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
-        r"\bdescription\s+is\s+(.+?)(?:$|\.)",
+        r"change\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
+        r"update\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
+        r"set\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
+        r"description\s+is\s+(.+?)(?:$|\.)",
     ]
     for pattern in description_patterns:
         match = re.search(pattern, cleaned_message, re.IGNORECASE)
@@ -480,22 +479,22 @@ def extract_event_update_fields(message: str):
             break
 
     guest_patterns = [
-        r"\bset\s+the\s+guest\s+count\s+to\s+(\d+)\b",
-        r"\bset\s+guest\s+count\s+to\s+(\d+)\b",
-        r"\bchange\s+the\s+guest\s+count\s+to\s+(\d+)\b",
-        r"\bchange\s+guest\s+count\s+to\s+(\d+)\b",
-        r"\bupdate\s+the\s+guest\s+count\s+to\s+(\d+)\b",
-        r"\bupdate\s+guest\s+count\s+to\s+(\d+)\b",
-        r"\bmake\s+the\s+guest\s+count\s+(\d+)\b",
-        r"\bguest\s+count\s+is\s+(\d+)\b",
-        r"\bmake\s+it\s+(\d+)\s+people\b",
-        r"\bmake\s+it\s+(\d+)\s+guests\b",
-        r"\bset\s+it\s+to\s+(\d+)\s+people\b",
-        r"\bset\s+it\s+to\s+(\d+)\s+guests\b",
-        r"\bchange\s+it\s+to\s+(\d+)\s+people\b",
-        r"\bchange\s+it\s+to\s+(\d+)\s+guests\b",
-        r"\bbump\s+(?:it|attendance|guest count)\s+to\s+(\d+)\b",
-        r"\bwe(?:'| a)?re expecting\s+(\d+)\b",
+        r"set\s+the\s+guest\s+count\s+to\s+(\d+)",
+        r"set\s+guest\s+count\s+to\s+(\d+)",
+        r"change\s+the\s+guest\s+count\s+to\s+(\d+)",
+        r"change\s+guest\s+count\s+to\s+(\d+)",
+        r"update\s+the\s+guest\s+count\s+to\s+(\d+)",
+        r"update\s+guest\s+count\s+to\s+(\d+)",
+        r"make\s+the\s+guest\s+count\s+(\d+)",
+        r"guest\s+count\s+is\s+(\d+)",
+        r"make\s+it\s+(\d+)\s+people",
+        r"make\s+it\s+(\d+)\s+guests",
+        r"set\s+it\s+to\s+(\d+)\s+people",
+        r"set\s+it\s+to\s+(\d+)\s+guests",
+        r"change\s+it\s+to\s+(\d+)\s+people",
+        r"change\s+it\s+to\s+(\d+)\s+guests",
+        r"bump\s+(?:it|attendance|guest count)\s+to\s+(\d+)",
+        r"we(?:'| a)?re expecting\s+(\d+)",
     ]
     for pattern in guest_patterns:
         match = re.search(pattern, cleaned_message, re.IGNORECASE)
@@ -509,11 +508,11 @@ def extract_event_update_fields(message: str):
             data["guest_count"] = guest_count_from_words
 
     catering_patterns = [
-        r"\bset\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
-        r"\bchange\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
-        r"\bupdate\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
-        r"\bcatering\s+is\s+(.+?)(?:$|\.)",
-        r"\bfood\s+is\s+from\s+(.+?)(?:$|\.)",
+        r"set\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
+        r"change\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
+        r"update\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
+        r"catering\s+is\s+(.+?)(?:$|\.)",
+        r"food\s+is\s+from\s+(.+?)(?:$|\.)",
     ]
     for pattern in catering_patterns:
         match = re.search(pattern, cleaned_message, re.IGNORECASE)
@@ -528,17 +527,17 @@ def extract_event_update_fields(message: str):
         data["date"] = parsed_date
 
     time_only_patterns = [
-        r"\bset\s+(?:the\s+start\s+time|start\s+time|time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bchange\s+(?:the\s+start\s+time|start\s+time|time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bupdate\s+(?:the\s+start\s+time|start\s+time|time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bmake\s+it\s+start\s+at\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bmove\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bpush\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bswitch\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bupdate\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bset\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bchange\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\breschedule\s+it\s+to\s+(?:[A-Za-z]+\s+\d{1,2}(?:st|nd|rd|th)?(?:,\s*\d{4})?\s+)?(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
+        r"set\s+(?:the\s+start\s+time|start\s+time|time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)",
+        r"change\s+(?:the\s+start\s+time|start\s+time|time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)",
+        r"update\s+(?:the\s+start\s+time|start\s+time|time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)",
+        r"make\s+it\s+start\s+at\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)",
+        r"move\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)",
+        r"push\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)",
+        r"switch\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)",
+        r"update\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)",
+        r"set\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)",
+        r"change\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)",
+        r"reschedule\s+it\s+to\s+(?:[A-Za-z]+\s+\d{1,2}(?:st|nd|rd|th)?(?:,\s*\d{4})?\s+)?(\d{1,2})(?::(\d{2}))?\s*(am|pm)",
     ]
 
     matched_time_only = None
@@ -564,6 +563,109 @@ def extract_event_update_fields(message: str):
 
     if parsed_date and parsed_time:
         data["start_datetime"] = f"{parsed_date}T{parsed_time}"
+
+    return data
+
+
+def detect_task_action(message: str):
+    lowered = message.lower().strip()
+
+    create_patterns = [
+        r"add\s+(?:a\s+)?task",
+        r"create\s+(?:a\s+)?task",
+        r"new\s+task",
+        r"remind\s+me\s+to",
+        r"i\s+need\s+to",
+        r"we\s+need\s+to",
+        r"we\s+should",
+        r"add\s+.+\s+to\s+(?:my\s+)?(?:task\s+list|todo\s+list|to-do\s+list|list)",
+        r"create\s+(?:a\s+)?reminder",
+        r"add\s+(?:a\s+)?reminder",
+        r"remember\s+to",
+        r"make\s+a\s+note\s+to",
+        r"put\s+.+\s+on\s+(?:my\s+)?(?:task\s+list|todo\s+list|to-do\s+list|list)",
+    ]
+
+    complete_patterns = [
+        r"complete\s+(?:the\s+)?task",
+        r"mark\s+.+\s+done",
+        r"mark\s+(?:the\s+)?task",
+        r"finish(?:ed)?\s+.+",
+        r"finished\s+(?:the\s+)?task",
+        r"done\s+with",
+        r"check\s+off",
+        r"cross\s+off",
+    ]
+
+    for pattern in complete_patterns:
+        if re.search(pattern, lowered, re.IGNORECASE):
+            return "complete"
+
+    for pattern in create_patterns:
+        if re.search(pattern, lowered, re.IGNORECASE):
+            return "create"
+
+    return None
+
+
+def extract_task_fields(message: str):
+    cleaned = message.strip()
+
+    data = {
+        "title": None,
+        "status": None,
+    }
+
+    create_patterns = [
+        r"add\s+(?:a\s+)?task\s+(?:to\s+)?(.+)$",
+        r"create\s+(?:a\s+)?task\s+(?:to\s+)?(.+)$",
+        r"new\s+task\s*[:\-]?\s*(.+)$",
+        r"remind\s+me\s+to\s+(.+)$",
+        r"i\s+need\s+to\s+(.+)$",
+        r"we\s+need\s+to\s+(.+)$",
+        r"we\s+should\s+(.+)$",
+        r"create\s+(?:a\s+)?reminder\s+(?:to\s+)?(.+)$",
+        r"add\s+(?:a\s+)?reminder\s+(?:to\s+)?(.+)$",
+        r"remember\s+to\s+(.+)$",
+        r"make\s+a\s+note\s+to\s+(.+)$",
+        r"put\s+(.+)\s+on\s+(?:my\s+)?(?:task\s+list|todo\s+list|to-do\s+list|list)",
+        r"add\s+(.+)\s+to\s+(?:my\s+)?(?:task\s+list|todo\s+list|to-do\s+list|list)",
+    ]
+
+    complete_patterns = [
+        r"complete\s+(?:the\s+)?task\s+(.+)$",
+        r"mark\s+(.+)\s+done",
+        r"mark\s+(?:the\s+)?task\s+(.+)$",
+        r"finished\s+(.+)$",
+        r"finish\s+(.+)$",
+        r"done\s+with\s+(.+)$",
+        r"check\s+off\s+(.+)$",
+        r"cross\s+off\s+(.+)$",
+    ]
+
+    task_action = detect_task_action(message)
+
+    if task_action == "complete":
+        for pattern in complete_patterns:
+            match = re.search(pattern, cleaned, re.IGNORECASE)
+            if match:
+                data["title"] = _clean_text(match.group(1))
+                data["status"] = "completed"
+                return data
+        data["status"] = "completed"
+        return data
+
+    if task_action == "create":
+        for pattern in create_patterns:
+            match = re.search(pattern, cleaned, re.IGNORECASE)
+            if match:
+                title = _clean_text(match.group(1))
+                title = re.sub(r"(for me|please)$", "", title, flags=re.IGNORECASE).strip()
+                data["title"] = title
+                data["status"] = "pending"
+                return data
+        data["status"] = "pending"
+        return data
 
     return data
 
@@ -616,123 +718,6 @@ def build_missing_fields_prompt(draft: dict):
     if known_parts:
         return f"I’ve got {', '.join(known_parts)}. I still need the {missing_text}."
     return f"I can help create that event. I still need the {missing_text}."
-
-
-def extract_event_update_fields(message: str):
-    data = extract_event_fields(message)
-    cleaned_message = message.strip()
-
-    rename_patterns = [
-        r"\brename\s+(?:it|the event)?\s*to\s+(.+?)(?:$|\.)",
-        r"\bchange\s+(?:the title|title)\s+to\s+(.+?)(?:$|\.)",
-        r"\bupdate\s+(?:the title|title)\s+to\s+(.+?)(?:$|\.)",
-        r"\bset\s+(?:the title|title)\s+to\s+(.+?)(?:$|\.)",
-        r"\bcall\s+it\s+(.+?)(?:$|\.)",
-    ]
-    for pattern in rename_patterns:
-        match = re.search(pattern, cleaned_message, re.IGNORECASE)
-        if match:
-            data["title"] = _clean_text(match.group(1))
-            break
-
-    location_patterns = [
-        r"\bset\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
-        r"\bchange\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
-        r"\bupdate\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
-        r"\blocation\s+is\s+(.+?)(?:$|\.)",
-    ]
-    for pattern in location_patterns:
-        match = re.search(pattern, cleaned_message, re.IGNORECASE)
-        if match:
-            candidate = _clean_text(match.group(1))
-            if not _extract_date(candidate):
-                data["location"] = candidate
-                break
-
-    description_patterns = [
-        r"\bchange\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
-        r"\bupdate\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
-        r"\bset\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
-        r"\bdescription\s+is\s+(.+?)(?:$|\.)",
-    ]
-    for pattern in description_patterns:
-        match = re.search(pattern, cleaned_message, re.IGNORECASE)
-        if match:
-            data["description"] = _title_case_first(_clean_text(match.group(1)))
-            break
-
-    guest_patterns = [
-        r"\bset\s+the\s+guest\s+count\s+to\s+(\d+)\b",
-        r"\bset\s+guest\s+count\s+to\s+(\d+)\b",
-        r"\bchange\s+the\s+guest\s+count\s+to\s+(\d+)\b",
-        r"\bchange\s+guest\s+count\s+to\s+(\d+)\b",
-        r"\bupdate\s+the\s+guest\s+count\s+to\s+(\d+)\b",
-        r"\bupdate\s+guest\s+count\s+to\s+(\d+)\b",
-        r"\bmake\s+the\s+guest\s+count\s+(\d+)\b",
-        r"\bguest\s+count\s+is\s+(\d+)\b",
-        r"\bmake\s+it\s+(\d+)\s+people\b",
-        r"\bmake\s+it\s+(\d+)\s+guests\b",
-        r"\bset\s+it\s+to\s+(\d+)\s+people\b",
-        r"\bset\s+it\s+to\s+(\d+)\s+guests\b",
-        r"\bchange\s+it\s+to\s+(\d+)\s+people\b",
-        r"\bchange\s+it\s+to\s+(\d+)\s+guests\b",
-        r"\bbump\s+(?:it|attendance|guest count)\s+to\s+(\d+)\b",
-        r"\bwe(?:'| a)?re expecting\s+(\d+)\b",
-    ]
-    for pattern in guest_patterns:
-        match = re.search(pattern, cleaned_message, re.IGNORECASE)
-        if match:
-            data["guest_count"] = int(match.group(1))
-            break
-
-    catering_patterns = [
-        r"\bset\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
-        r"\bchange\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
-        r"\bupdate\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
-        r"\bcatering\s+is\s+(.+?)(?:$|\.)",
-        r"\bfood\s+is\s+from\s+(.+?)(?:$|\.)",
-    ]
-    for pattern in catering_patterns:
-        match = re.search(pattern, cleaned_message, re.IGNORECASE)
-        if match:
-            data["catering"] = _clean_text(match.group(1))
-            break
-
-    parsed_date = _extract_date(cleaned_message)
-    parsed_time = _extract_time(cleaned_message)
-
-    if parsed_date:
-        data["date"] = parsed_date
-
-    time_only_patterns = [
-        r"\bset\s+(?:the\s+start\s+time|start\s+time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bchange\s+(?:the\s+start\s+time|start\s+time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bupdate\s+(?:the\s+start\s+time|start\s+time)\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bmake\s+it\s+start\s+at\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bmove\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bpush\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-        r"\bswitch\s+it\s+to\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b",
-    ]
-
-    for pattern in time_only_patterns:
-        match = re.search(pattern, cleaned_message, re.IGNORECASE)
-        if match:
-            hour = int(match.group(1))
-            minute = int(match.group(2)) if match.group(2) else 0
-            meridiem = match.group(3).lower()
-
-            if meridiem == "pm" and hour != 12:
-                hour += 12
-            if meridiem == "am" and hour == 12:
-                hour = 0
-
-            parsed_time = f"{hour:02d}:{minute:02d}:00"
-            break
-
-    if parsed_time:
-        data["_parsed_time_only"] = parsed_time
-
-    return data
 
 
 PLANNING_DIETARY_KEYWORDS = [

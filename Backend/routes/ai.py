@@ -492,6 +492,52 @@ def _task_exists_for_event(event_id, title: str):
     return row is not None
 
 
+def _resolve_event_for_new_task(user_message, context, chat_state):
+    target_event = resolve_target_event(user_message, context, chat_state)
+    if target_event:
+        return target_event
+
+    events = context.get("events", [])
+    if len(events) == 1:
+        return events[0]
+
+    return None
+
+
+def _find_task_by_reference(task_title, tasks, event_id=None):
+    if not task_title:
+        return None
+
+    candidate_tasks = tasks
+    if event_id is not None:
+        candidate_tasks = [task for task in tasks if int(task.get("event_id", 0)) == int(event_id)]
+
+    normalized_query = _normalize_text(task_title)
+
+    for task in candidate_tasks:
+        task_name = _normalize_text(task.get("title"))
+        if task_name == normalized_query:
+            return task
+
+    for task in candidate_tasks:
+        task_name = _normalize_text(task.get("title"))
+        if normalized_query in task_name or task_name in normalized_query:
+            return task
+
+    query_tokens = {token for token in normalized_query.split() if len(token) > 2}
+    best_task = None
+    best_score = 0
+
+    for task in candidate_tasks:
+        task_tokens = {token for token in _normalize_text(task.get("title")).split() if len(token) > 2}
+        overlap = len(query_tokens & task_tokens)
+        if overlap > best_score:
+            best_score = overlap
+            best_task = task
+
+    return best_task if best_score >= 1 else None
+
+
 def _build_starter_task_titles(event):
     title = _normalize_text(event.get("title"))
     description = _normalize_text(event.get("description"))
@@ -766,69 +812,93 @@ def chat():
                 "results": catering_results
             }), 200
 
-        add_action = chatbot.parse_add_task_command(user_message, context=context)
-        if add_action:
-            if "error" in add_action:
+        interpreted = interpret_message(user_message, context=context, state=chat_state)
+        action_type = interpreted["type"]
+
+        if action_type == "task_create":
+            task_fields = interpreted.get("task") or {}
+            task_title = (task_fields.get("title") or "").strip()
+            if not task_title:
+                _save_chat_state(interpreted["state"])
                 return jsonify({
-                    "reply": add_action["error"],
+                    "reply": "I can add that as a task. Tell me what you want the task to be, like 'remind me to call the caterer' or 'add task to confirm the venue.'",
+                    "action": "task_create_missing_title"
+                }), 200
+
+            target_event = _resolve_event_for_new_task(user_message, context, chat_state)
+            if not target_event:
+                _save_chat_state(interpreted["state"])
+                return jsonify({
+                    "reply": "I can add a task, but I couldn’t tell which event it belongs to. Please mention the event title.",
                     "action": "task_create_needs_event"
                 }), 200
 
-            created_task, error = create_task_for_user(user_id, add_action)
+            created_task, error = create_task_for_user(user_id, {
+                "event_id": target_event["id"],
+                "title": task_title,
+            })
             if error:
                 return jsonify({
                     "reply": error,
                     "action": "task_create_failed"
                 }), 200
 
-            chat_state["last_task_id"] = created_task["id"]
-            chat_state["last_event_id"] = created_task["event_id"]
-            chat_state["last_intent"] = "task_create"
-            chat_state["pending_followup"] = {
+            new_state = interpreted["state"]
+            new_state["last_task_id"] = created_task["id"]
+            new_state["last_event_id"] = created_task["event_id"]
+            new_state["pending_followup"] = {
                 "type": "add_another_task",
                 "event_id": created_task["event_id"]
             }
-            _save_chat_state(chat_state)
-
-            timing_suffix = (
-                f" with timing starting {created_task['start_datetime']}."
-                if created_task["start_datetime"]
-                else (
-                    f" with due date {created_task['due_date']}."
-                    if created_task["due_date"] else "."
-                )
-            )
+            _save_chat_state(new_state)
 
             return jsonify({
                 "reply": (
-                    f"Task '{created_task['title']}' was added to '{created_task['event_title']}'"
-                    + timing_suffix
-                    + " Would you like me to add another task for this event?"
+                    f"Task '{created_task['title']}' was added to '{created_task['event_title']}'. "
+                    "Would you like me to add another task for this event?"
                 ),
                 "action": "task_created",
                 "task": created_task
             }), 200
 
-        complete_action = chatbot.parse_complete_task_command(user_message, context=context)
-        if complete_action:
-            if "error" in complete_action:
+        if action_type == "task_complete_not_found":
+            _save_chat_state(interpreted["state"])
+            return jsonify({
+                "reply": interpreted["reply"],
+                "action": "task_complete_failed"
+            }), 200
+
+        if action_type == "task_complete":
+            task_fields = interpreted.get("task") or {}
+            target_task = interpreted.get("target_task")
+
+            if not target_task and task_fields.get("title"):
+                event_hint = resolve_target_event(user_message, context, chat_state)
+                target_task = _find_task_by_reference(
+                    task_fields.get("title"),
+                    context.get("tasks", []),
+                    event_hint.get("id") if event_hint else None,
+                )
+
+            if not target_task:
+                _save_chat_state(interpreted["state"])
                 return jsonify({
-                    "reply": complete_action["error"],
+                    "reply": "I found your task request, but I couldn’t tell which task you meant. Try saying something like 'mark vendor confirmation done' or 'complete catering follow-up.'",
                     "action": "task_complete_failed"
                 }), 200
 
-            completed_task, error = complete_task_for_user(user_id, complete_action["task_id"])
+            completed_task, error = complete_task_for_user(user_id, target_task["id"])
             if error:
                 return jsonify({
                     "reply": error,
                     "action": "task_complete_failed"
                 }), 200
 
-            chat_state["last_task_id"] = completed_task["id"]
-            chat_state["last_event_id"] = completed_task["event_id"]
-            chat_state["last_intent"] = "task_complete"
-            chat_state["pending_followup"] = None
-            _save_chat_state(chat_state)
+            new_state = interpreted["state"]
+            new_state["last_task_id"] = completed_task["id"]
+            new_state["last_event_id"] = completed_task["event_id"]
+            new_state["pending_followup"] = None
+            _save_chat_state(new_state)
 
             return jsonify({
                 "reply": (

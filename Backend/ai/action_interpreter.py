@@ -9,6 +9,8 @@ from ai.entity_parser import (
     merge_event_draft,
     missing_required_event_fields,
     build_missing_fields_prompt,
+    detect_task_action,
+    extract_task_fields,
 )
 
 
@@ -150,9 +152,9 @@ def find_event_from_state_reference(message, events, state):
 
     return None
 
+
 def resolve_target_event(message, context, state):
     events = context.get("events", [])
-    lowered = (message or "").lower()
 
     target_event = find_event_by_title_reference(message, events)
     if target_event:
@@ -171,16 +173,42 @@ def resolve_target_event(message, context, state):
     if len(events) == 1:
         return events[0]
 
-    # Better fallback for natural follow-up edits
-    followup_words = [
-        "actually", "also", "instead", "make it", "change it", "update it",
-        "move it", "rename it", "set it", "call it", "reschedule it"
-    ]
-    if any(word in lowered for word in followup_words) and events:
-        return events[0]
-
     return None
 
+
+
+def find_task_by_reference(task_title, tasks):
+    if not task_title or not tasks:
+        return None
+
+    normalized_query = task_title.lower().strip()
+
+    for task in tasks:
+        task_name = (task.get("title") or "").lower().strip()
+        if task_name == normalized_query:
+            return task
+
+    for task in tasks:
+        task_name = (task.get("title") or "").lower().strip()
+        if normalized_query in task_name or task_name in normalized_query:
+            return task
+
+    query_tokens = {token for token in re.findall(r"\w+", normalized_query) if len(token) > 2}
+    best_task = None
+    best_score = 0
+
+    for task in tasks:
+        task_name = (task.get("title") or "").lower().strip()
+        task_tokens = {token for token in re.findall(r"\w+", task_name) if len(token) > 2}
+        overlap = len(query_tokens & task_tokens)
+        if overlap > best_score:
+            best_score = overlap
+            best_task = task
+
+    if best_score >= 1:
+        return best_task
+
+    return None
 
 def interpret_message(message, context, state):
     state = deepcopy(state or get_default_chat_state())
@@ -195,7 +223,6 @@ def interpret_message(message, context, state):
         for key, value in extracted_update.items()
         if value not in (None, "", [])
     }
-     # Keep helper time field so the route can rebuild start_datetime
     if extracted_update.get("_parsed_time_only"):
         update_changes["_parsed_time_only"] = extracted_update["_parsed_time_only"]
     update_changes.pop("catering", None)
@@ -204,6 +231,38 @@ def interpret_message(message, context, state):
     has_pending_create = bool(pending_event_draft)
     create_triggered = looks_like_event_creation(message) or has_pending_create
     update_triggered = looks_like_existing_event_edit(message) or looks_like_event_update(message)
+    task_action = detect_task_action(message)
+
+    if task_action == "create":
+        task_fields = extract_task_fields(message)
+        state["last_intent"] = "task_create"
+        return {
+            "type": "task_create",
+            "task": task_fields,
+            "reply": None,
+            "state": state,
+        }
+
+    if task_action == "complete":
+        task_fields = extract_task_fields(message)
+        target_task = find_task_by_reference(task_fields.get("title"), context.get("tasks", []))
+        state["last_intent"] = "task_complete"
+
+        if task_fields.get("title") and target_task is None:
+            return {
+                "type": "task_complete_not_found",
+                "task": task_fields,
+                "reply": "I found your task request, but I couldn’t tell which task you meant. Try saying something like 'mark vendor confirmation done' or 'complete catering follow-up.'",
+                "state": state,
+            }
+
+        return {
+            "type": "task_complete",
+            "task": task_fields,
+            "target_task": target_task,
+            "reply": None,
+            "state": state,
+        }
 
     if create_triggered:
         draft = merge_event_draft(pending_event_draft, extracted_create)
