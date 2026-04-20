@@ -2,15 +2,15 @@ import re
 from copy import deepcopy
 
 from ai.entity_parser import (
+    build_missing_fields_prompt,
+    detect_task_action,
     extract_event_fields,
     extract_event_update_fields,
+    extract_task_fields,
     looks_like_event_creation,
     looks_like_event_update,
     merge_event_draft,
     missing_required_event_fields,
-    build_missing_fields_prompt,
-    detect_task_action,
-    extract_task_fields,
 )
 
 
@@ -22,6 +22,50 @@ REFERENCE_WORDS = (
     "that one",
     "this one",
 )
+
+CREATE_INTENT_PATTERNS = [
+    r"\bcreate\b",
+    r"\bplan\b",
+    r"\bset\s+up\b",
+    r"\bsetup\b",
+    r"\borganize\b",
+    r"\bmake\b",
+    r"\bschedule\b",
+    r"\bstart\b",
+    r"\bhelp\s+me\s+create\b",
+    r"\bhelp\s+me\s+plan\b",
+    r"\bcan\s+you\s+create\b",
+    r"\bcan\s+you\s+plan\b",
+    r"\blet'?s\s+plan\b",
+    r"\bi\s+want\s+to\s+create\b",
+    r"\bi\s+want\s+to\s+plan\b",
+    r"\bnew\s+event\b",
+    r"\bevent\s+called\b",
+    r"\bevent\s+named\b",
+    r"\bsomething\s+called\b",
+    r"\bsomething\s+named\b",
+]
+
+STRONG_UPDATE_PATTERNS = [
+    r"\bchange\b",
+    r"\bupdate\b",
+    r"\bmove\b",
+    r"\breschedule\b",
+    r"\brename\b",
+    r"\bedit\b",
+    r"\bswitch\b",
+    r"\bpush\b",
+    r"\bbump\b",
+    r"\bset\s+it\s+to\b",
+    r"\bchange\s+the\s+(?:date|time|location|title|name|description|guest count|catering)\b",
+    r"\bupdate\s+the\s+(?:date|time|location|title|name|description|guest count|catering)\b",
+    r"\bset\s+the\s+(?:date|time|location|title|name|description|guest count|catering)\b",
+    r"\blocation\s+is\b",
+    r"\bdescription\s+is\b",
+    r"\bguest\s+count\s+is\b",
+    r"\bcall\s+it\b",
+    r"\bmake\s+it\b",
+]
 
 
 def get_default_chat_state():
@@ -45,120 +89,60 @@ def normalize_text(text: str) -> str:
     return text
 
 
-def looks_like_existing_event_edit(message: str):
-    lowered = (message or "").lower()
-
-    edit_phrases = [
-        "change ",
-        "update ",
-        "move ",
-        "reschedule ",
-        "rename ",
-        "edit ",
-        "set the location",
-        "set location",
-        "change the location",
-        "update the location",
-        "location is",
-        "set the guest count",
-        "set guest count",
-        "change the guest count",
-        "change guest count",
-        "update the guest count",
-        "update guest count",
-        "guest count is",
-        "set the description",
-        "change the description",
-        "update the description",
-        "description is",
-        "set the title",
-        "change the title",
-        "update the title",
-        "move it",
-        "update it",
-        "change it",
-        "rename it",
-        "set it to",
-        "move that event",
-        "change that event",
-        "update that event",
-        "make it ",
-        "call it ",
-        "bump it to",
-        "switch it to",
-        "push it to",
-    ]
-
-    return any(phrase in lowered for phrase in edit_phrases)
-
-
-def has_meaningful_create_data(extracted_create):
+def has_meaningful_create_data(extracted_create: dict) -> bool:
     return any(
         extracted_create.get(key) not in (None, "", [])
         for key in ["title", "date", "start_datetime", "location", "guest_count", "description"]
     )
 
 
-def should_prefer_create_over_update(message, extracted_create, update_changes, pending_event_draft):
-    lowered = (message or "").lower()
+def has_meaningful_update_data(extracted_update: dict) -> bool:
+    return any(
+        extracted_update.get(key) not in (None, "", [])
+        for key in ["title", "date", "location", "guest_count", "description", "start_datetime"]
+    ) or bool(extracted_update.get("_parsed_time_only"))
 
+
+def _matches_any_pattern(message: str, patterns: list[str]) -> bool:
+    lowered = message.lower()
+    return any(re.search(pattern, lowered) for pattern in patterns)
+
+
+def looks_like_existing_event_edit(message: str) -> bool:
+    return _matches_any_pattern(message or "", STRONG_UPDATE_PATTERNS)
+
+
+def should_force_create(message: str, extracted_create: dict, pending_event_draft: dict) -> bool:
     if pending_event_draft:
         return True
 
-    create_trigger = looks_like_event_creation(message)
-    if not create_trigger:
+    if looks_like_existing_event_edit(message):
         return False
 
-    if not has_meaningful_create_data(extracted_create):
-        return False
+    if _matches_any_pattern(message or "", CREATE_INTENT_PATTERNS):
+        return True
 
-    strong_update_phrases = [
-        "change it",
-        "change it to",
-        "update it",
-        "update it to",
-        "move it",
-        "move it to",
-        "reschedule it",
-        "reschedule it to",
-        "rename it",
-        "rename it to",
-        "set it to",
-        "switch it to",
-        "push it to",
-        "bump it to",
-        "change the location",
-        "update the location",
-        "set the location",
-        "change the date",
-        "update the date",
-        "set the date",
-        "change the time",
-        "update the time",
-        "set the time",
-        "change the title",
-        "update the title",
-        "set the title",
-        "change the guest count",
-        "update the guest count",
-        "set the guest count",
-    ]
+    return looks_like_event_creation(message) and has_meaningful_create_data(extracted_create)
 
-    if any(phrase in lowered for phrase in strong_update_phrases):
-        return False
 
-    return True
+def should_force_update(message: str, extracted_update: dict) -> bool:
+    if looks_like_existing_event_edit(message):
+        return True
+
+    if looks_like_event_update(message) and has_meaningful_update_data(extracted_update):
+        return True
+
+    return False
 
 
 def find_event_by_title_reference(user_message, events):
     lowered_message = normalize_text(user_message)
+    message_words = set(lowered_message.split())
 
     exact_match = None
     partial_match = None
     best_overlap_match = None
     best_overlap_score = 0
-
-    message_words = set(lowered_message.split())
 
     for event in events:
         title = (event.get("title") or "").strip()
@@ -171,18 +155,16 @@ def find_event_by_title_reference(user_message, events):
         if normalized_title == lowered_message:
             return event
 
-        if normalized_title and normalized_title in lowered_message:
-            if exact_match is None:
-                exact_match = event
+        if normalized_title and normalized_title in lowered_message and exact_match is None:
+            exact_match = event
 
-        if title_words:
-            overlap = len(title_words.intersection(message_words))
-            if overlap > best_overlap_score:
-                best_overlap_score = overlap
-                best_overlap_match = event
+        overlap = len(title_words.intersection(message_words)) if title_words else 0
+        if overlap > best_overlap_score:
+            best_overlap_score = overlap
+            best_overlap_match = event
 
-        if any(word in lowered_message for word in [normalized_title]) and partial_match is None:
-            partial_match = event
+        if normalized_title and (normalized_title in lowered_message or lowered_message in normalized_title):
+            partial_match = partial_match or event
 
     if exact_match:
         return exact_match
@@ -190,13 +172,11 @@ def find_event_by_title_reference(user_message, events):
         return best_overlap_match
     if partial_match:
         return partial_match
-
     return None
 
 
 def find_event_from_state_reference(message, events, state):
     lowered = (message or "").lower()
-
     if not any(word in lowered for word in REFERENCE_WORDS):
         return None
 
@@ -207,7 +187,6 @@ def find_event_from_state_reference(message, events, state):
     for event in events:
         if int(event["id"]) == int(last_event_id):
             return event
-
     return None
 
 
@@ -232,7 +211,6 @@ def resolve_target_event(message, context, state):
         return events[0]
 
     return None
-
 
 
 def find_task_by_reference(task_title, tasks):
@@ -268,15 +246,8 @@ def find_task_by_reference(task_title, tasks):
 
     return None
 
-def interpret_message(message, context, state):
 
-    state = deepcopy(state or get_default_chat_state())
-    context = context or {"events": [], "tasks": []}
-
-    pending_event_draft = state.get("pending_event_draft") or {}
-    extracted_create = extract_event_fields(message)
-    extracted_update = extract_event_update_fields(message)
-
+def _clean_update_changes(extracted_update: dict) -> dict:
     update_changes = {
         key: value
         for key, value in extracted_update.items()
@@ -284,23 +255,46 @@ def interpret_message(message, context, state):
     }
     if extracted_update.get("_parsed_time_only"):
         update_changes["_parsed_time_only"] = extracted_update["_parsed_time_only"]
+
     update_changes.pop("catering", None)
     update_changes.pop("event_size_hint", None)
+    return update_changes
 
-    has_pending_create = bool(pending_event_draft)
+
+def _build_create_result(draft: dict, state: dict) -> dict:
+    missing = missing_required_event_fields(draft)
+    state["active_flow"] = "event_create"
+    state["pending_event_draft"] = draft
+    state["last_intent"] = "event_create"
+
+    if missing:
+        state["awaiting_field"] = missing[0]
+        return {
+            "type": "event_create_collecting",
+            "draft": draft,
+            "missing_fields": missing,
+            "reply": build_missing_fields_prompt(draft),
+            "state": state,
+        }
+
+    state["awaiting_field"] = None
+    return {
+        "type": "event_create",
+        "draft": draft,
+        "reply": None,
+        "state": state,
+    }
+
+
+def interpret_message(message, context, state):
+    state = deepcopy(state or get_default_chat_state())
+    context = context or {"events": [], "tasks": []}
+
+    pending_event_draft = state.get("pending_event_draft") or {}
+    extracted_create = extract_event_fields(message)
+    extracted_update = extract_event_update_fields(message)
+    update_changes = _clean_update_changes(extracted_update)
     task_action = detect_task_action(message)
-
-    create_triggered = should_prefer_create_over_update(
-        message=message,
-        extracted_create=extracted_create,
-        update_changes=update_changes,
-        pending_event_draft=pending_event_draft,
-    )
-
-    update_triggered = (
-        not create_triggered
-        and (looks_like_existing_event_edit(message) or looks_like_event_update(message))
-    )
 
     if task_action == "create":
         task_fields = extract_task_fields(message)
@@ -333,31 +327,12 @@ def interpret_message(message, context, state):
             "state": state,
         }
 
+    create_triggered = should_force_create(message, extracted_create, pending_event_draft)
+    update_triggered = False if create_triggered else should_force_update(message, extracted_update)
+
     if create_triggered:
         draft = merge_event_draft(pending_event_draft, extracted_create)
-        missing = missing_required_event_fields(draft)
-
-        state["active_flow"] = "event_create"
-        state["pending_event_draft"] = draft
-        state["last_intent"] = "event_create"
-
-        if missing:
-            state["awaiting_field"] = missing[0]
-            return {
-                "type": "event_create_collecting",
-                "draft": draft,
-                "missing_fields": missing,
-                "reply": build_missing_fields_prompt(draft),
-                "state": state,
-            }
-
-        state["awaiting_field"] = None
-        return {
-            "type": "event_create",
-            "draft": draft,
-            "reply": None,
-            "state": state,
-        }
+        return _build_create_result(draft, state)
 
     if update_triggered:
         target_event = resolve_target_event(message, context, state)
@@ -390,31 +365,9 @@ def interpret_message(message, context, state):
             "state": state,
         }
 
-    if looks_like_event_creation(message) and has_meaningful_create_data(extracted_create):
+    if has_meaningful_create_data(extracted_create) and looks_like_event_creation(message):
         draft = merge_event_draft(pending_event_draft, extracted_create)
-        missing = missing_required_event_fields(draft)
-
-        state["active_flow"] = "event_create"
-        state["pending_event_draft"] = draft
-        state["last_intent"] = "event_create"
-
-        if missing:
-            state["awaiting_field"] = missing[0]
-            return {
-                "type": "event_create_collecting",
-                "draft": draft,
-                "missing_fields": missing,
-                "reply": build_missing_fields_prompt(draft),
-                "state": state,
-            }
-
-        state["awaiting_field"] = None
-        return {
-            "type": "event_create",
-            "draft": draft,
-            "reply": None,
-            "state": state,
-        }
+        return _build_create_result(draft, state)
 
     return {
         "type": "fallback",
@@ -502,27 +455,6 @@ def build_interpret_result_from_llm(llm_result, context, state):
         if not draft:
             return None
 
-        missing = missing_required_event_fields(draft)
-        state["active_flow"] = "event_create"
-        state["pending_event_draft"] = draft
-        state["last_intent"] = "event_create"
-
-        if missing:
-            state["awaiting_field"] = missing[0]
-            return {
-                "type": "event_create_collecting",
-                "draft": draft,
-                "missing_fields": missing,
-                "reply": build_missing_fields_prompt(draft),
-                "state": state,
-            }
-
-        state["awaiting_field"] = None
-        return {
-            "type": "event_create",
-            "draft": draft,
-            "reply": None,
-            "state": state,
-        }
+        return _build_create_result(draft, state)
 
     return None
