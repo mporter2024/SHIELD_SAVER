@@ -1695,3 +1695,7 @@ a.secondary-btn:hover {
   font-weight: 800;
   color: #0f5132;
 }
+
+/* Smart budgeting additions */
+.compact-list { margin: 8px 0 0 18px; color: #183024; }
+.compact-list li { margin-bottom: 8px; line-height: 1.45; }

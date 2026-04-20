@@ -28,14 +28,16 @@ async function initializeOverview() {
         if (!eventResponse.ok) throw new Error(eventData.error || "Could not load event overview.");
         if (!agendaResponse.ok) throw new Error(agendaData.error || "Could not load agenda.");
 
-        renderOverview(eventData.event, eventData.tasks || [], agendaData || []);
+        const budgetResponse = await fetch(`${API_BASE}/api/events/${selectedEventId}/budget-insights`, { method: "GET", credentials: "include" });
+        const budgetData = budgetResponse.ok ? await budgetResponse.json() : null;
+        renderOverview(eventData.event, eventData.tasks || [], agendaData || [], budgetData);
     } catch (error) {
         console.error("Overview initialization failed:", error);
         showOverviewError(error.message || "Could not load overview.");
     }
 }
 
-function renderOverview(event, tasks, agenda) {
+function renderOverview(event, tasks, agenda, budgetData = null) {
     document.getElementById("overview-error").classList.add("hidden");
     document.getElementById("overview-content").classList.remove("hidden");
 
@@ -52,7 +54,8 @@ function renderOverview(event, tasks, agenda) {
     document.getElementById("overview-location").textContent = event.location || "Not set";
     document.getElementById("overview-guests").textContent = String(event.guest_count || 0);
     document.getElementById("overview-schedule").textContent = formatDateTimeRange(event.start_datetime, event.end_datetime, event.date);
-    document.getElementById("overview-budget-total").textContent = formatCurrency(Number(event.budget_total || 0));
+    const budgetLabel = budgetData?.health?.label ? `${formatCurrency(Number(event.budget_total || 0))} (${budgetData.health.label})` : formatCurrency(Number(event.budget_total || 0));
+    document.getElementById("overview-budget-total").textContent = budgetLabel;
     document.getElementById("overview-total-tasks").textContent = String(tasks.length);
     document.getElementById("overview-completed-tasks").textContent = String(completedTasks);
     document.getElementById("overview-pending-tasks").textContent = String(pendingTasks);

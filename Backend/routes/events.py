@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, session
 from models.database import get_db
+from ai.budget_engine import analyze_budget, generate_budget_estimate, calculate_budget_totals
 import sqlite3
 
 
@@ -73,6 +74,84 @@ def get_event(event_id):
     }), 200
 
 
+@events_bp.get("/<int:event_id>/budget-insights")
+def get_budget_insights(event_id):
+    if "user_id" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    db = get_db()
+    event = db.execute(
+        "SELECT * FROM events WHERE id = ? AND user_id = ?",
+        (event_id, session["user_id"]),
+    ).fetchone()
+
+    if event is None:
+        return jsonify({"error": "Event not found"}), 404
+
+    return jsonify(analyze_budget(dict(event))), 200
+
+
+@events_bp.post("/<int:event_id>/budget-estimate")
+def estimate_budget(event_id):
+    if "user_id" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    db = get_db()
+    existing = db.execute(
+        "SELECT * FROM events WHERE id = ? AND user_id = ?",
+        (event_id, session["user_id"]),
+    ).fetchone()
+
+    if existing is None:
+        return jsonify({"error": "Event not found"}), 404
+
+    estimated = generate_budget_estimate(dict(existing))
+    event_data = estimated["event"]
+
+    db.execute(
+        """
+        UPDATE events
+        SET guest_count = ?,
+            venue_cost = ?,
+            food_cost_per_person = ?,
+            decorations_cost = ?,
+            equipment_cost = ?,
+            staff_cost = ?,
+            marketing_cost = ?,
+            misc_cost = ?,
+            contingency_percent = ?,
+            budget_subtotal = ?,
+            budget_contingency = ?,
+            budget_total = ?
+        WHERE id = ? AND user_id = ?
+        """,
+        (
+            event_data.get("guest_count", 0),
+            event_data.get("venue_cost", 0),
+            event_data.get("food_cost_per_person", 0),
+            event_data.get("decorations_cost", 0),
+            event_data.get("equipment_cost", 0),
+            event_data.get("staff_cost", 0),
+            event_data.get("marketing_cost", 0),
+            event_data.get("misc_cost", 0),
+            event_data.get("contingency_percent", 0),
+            event_data.get("budget_subtotal", 0),
+            event_data.get("budget_contingency", 0),
+            event_data.get("budget_total", 0),
+            event_id,
+            session["user_id"],
+        ),
+    )
+    db.commit()
+
+    return jsonify({
+        "event": event_data,
+        "analysis": analyze_budget(event_data),
+        "recommended_venue": estimated.get("recommended_venue"),
+        "recommended_caterer": estimated.get("recommended_caterer"),
+    }), 200
+
+
 @events_bp.get("/user/<int:user_id>")
 def get_events_by_user(user_id):
     db = get_db()
@@ -124,6 +203,11 @@ def create_event():
         "budget_total": clean_number(data.get("budget_total"), 0),
         "user_id": session["user_id"],
     }
+
+    totals = calculate_budget_totals(payload)
+    payload["budget_subtotal"] = totals["subtotal"]
+    payload["budget_contingency"] = totals["contingency"]
+    payload["budget_total"] = totals["total"]
 
     db = get_db()
 
@@ -189,6 +273,15 @@ def update_event(event_id):
         "budget_contingency": clean_number(data.get("budget_contingency"), existing["budget_contingency"] or 0) if "budget_contingency" in data else None,
         "budget_total": clean_number(data.get("budget_total"), existing["budget_total"] or 0) if "budget_total" in data else None,
     }
+
+    derived_source = dict(existing)
+    for field_name, field_value in values.items():
+        if field_value is not None:
+            derived_source[field_name] = field_value
+    totals = calculate_budget_totals(derived_source)
+    values["budget_subtotal"] = totals["subtotal"]
+    values["budget_contingency"] = totals["contingency"]
+    values["budget_total"] = totals["total"]
 
     try:
         result = db.execute(

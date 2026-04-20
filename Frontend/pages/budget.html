@@ -106,6 +106,7 @@
               </div>
 
               <div class="budget-buttons">
+                <button id="generate-budget-btn" type="button" class="secondary-btn">Generate Smart Budget</button>
                 <button id="save-btn" type="button">Save To Event</button>
                 <button id="reset-btn" type="button" class="secondary-btn">Reset</button>
               </div>
@@ -134,11 +135,46 @@
                 <div class="budget-row total-row"><span>Final Total</span><span id="summary-total">$0.00</span></div>
               </div>
 
+              <div class="budget-breakdown">
+                <div class="budget-row"><span>Cost Per Guest</span><span id="summary-cost-per-guest">$0.00</span></div>
+                <div class="budget-row"><span>Largest Category</span><span id="summary-largest-category">—</span></div>
+                <div class="budget-row"><span>Budget Health</span><span id="summary-health-label">Not analyzed</span></div>
+              </div>
+
               <div class="budget-tip-box">
                 <h4>Planning Tip</h4>
                 <p id="budget-tip">
                   Add a contingency amount to protect against last-minute cost changes.
                 </p>
+              </div>
+
+            <div class="panel">
+              <h3>Smart Budget Insights</h3>
+              <div class="snapshot-grid">
+                <div class="info-item">
+                  <strong>Health Score</strong>
+                  <span id="budget-health-score">—</span>
+                </div>
+                <div class="info-item">
+                  <strong>Recommended Venue</strong>
+                  <span id="budget-recommended-venue">—</span>
+                </div>
+                <div class="info-item">
+                  <strong>Recommended Caterer</strong>
+                  <span id="budget-recommended-caterer">—</span>
+                </div>
+                <div class="info-item">
+                  <strong>Event Style</strong>
+                  <span id="budget-style">—</span>
+                </div>
+              </div>
+              <div class="budget-tip-box">
+                <h4>Warnings</h4>
+                <ul id="budget-warnings" class="compact-list"><li>No smart analysis yet.</li></ul>
+              </div>
+              <div class="budget-tip-box">
+                <h4>Suggestions</h4>
+                <ul id="budget-suggestions" class="compact-list"><li>Generate a smart budget to see recommendations.</li></ul>
               </div>
             </div>
 
