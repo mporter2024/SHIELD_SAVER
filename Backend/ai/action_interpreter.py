@@ -92,6 +92,64 @@ def looks_like_existing_event_edit(message: str):
     return any(phrase in lowered for phrase in edit_phrases)
 
 
+def has_meaningful_create_data(extracted_create):
+    return any(
+        extracted_create.get(key) not in (None, "", [])
+        for key in ["title", "date", "start_datetime", "location", "guest_count", "description"]
+    )
+
+
+def should_prefer_create_over_update(message, extracted_create, update_changes, pending_event_draft):
+    lowered = (message or "").lower()
+
+    if pending_event_draft:
+        return True
+
+    create_trigger = looks_like_event_creation(message)
+    if not create_trigger:
+        return False
+
+    if not has_meaningful_create_data(extracted_create):
+        return False
+
+    strong_update_phrases = [
+        "change it",
+        "change it to",
+        "update it",
+        "update it to",
+        "move it",
+        "move it to",
+        "reschedule it",
+        "reschedule it to",
+        "rename it",
+        "rename it to",
+        "set it to",
+        "switch it to",
+        "push it to",
+        "bump it to",
+        "change the location",
+        "update the location",
+        "set the location",
+        "change the date",
+        "update the date",
+        "set the date",
+        "change the time",
+        "update the time",
+        "set the time",
+        "change the title",
+        "update the title",
+        "set the title",
+        "change the guest count",
+        "update the guest count",
+        "set the guest count",
+    ]
+
+    if any(phrase in lowered for phrase in strong_update_phrases):
+        return False
+
+    return True
+
+
 def find_event_by_title_reference(user_message, events):
     lowered_message = normalize_text(user_message)
 
@@ -230,9 +288,19 @@ def interpret_message(message, context, state):
     update_changes.pop("event_size_hint", None)
 
     has_pending_create = bool(pending_event_draft)
-    create_triggered = looks_like_event_creation(message) or has_pending_create
-    update_triggered = looks_like_existing_event_edit(message) or looks_like_event_update(message)
     task_action = detect_task_action(message)
+
+    create_triggered = should_prefer_create_over_update(
+        message=message,
+        extracted_create=extracted_create,
+        update_changes=update_changes,
+        pending_event_draft=pending_event_draft,
+    )
+
+    update_triggered = (
+        not create_triggered
+        and (looks_like_existing_event_edit(message) or looks_like_event_update(message))
+    )
 
     if task_action == "create":
         task_fields = extract_task_fields(message)
@@ -318,6 +386,32 @@ def interpret_message(message, context, state):
             "type": "event_update",
             "target_event": target_event,
             "changes": update_changes,
+            "reply": None,
+            "state": state,
+        }
+
+    if looks_like_event_creation(message) and has_meaningful_create_data(extracted_create):
+        draft = merge_event_draft(pending_event_draft, extracted_create)
+        missing = missing_required_event_fields(draft)
+
+        state["active_flow"] = "event_create"
+        state["pending_event_draft"] = draft
+        state["last_intent"] = "event_create"
+
+        if missing:
+            state["awaiting_field"] = missing[0]
+            return {
+                "type": "event_create_collecting",
+                "draft": draft,
+                "missing_fields": missing,
+                "reply": build_missing_fields_prompt(draft),
+                "state": state,
+            }
+
+        state["awaiting_field"] = None
+        return {
+            "type": "event_create",
+            "draft": draft,
             "reply": None,
             "state": state,
         }

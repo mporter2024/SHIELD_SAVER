@@ -28,7 +28,12 @@ class UnifiedChatbot:
             "hey": "greeting",
             "plan": "event_creation",
             "create": "event_creation",
-            "organize": "event_creation"
+            "organize": "event_creation",
+            "set up": "event_creation",
+            "new event": "event_creation",
+            "called": "event_creation",
+            "named": "event_creation",
+            "titled": "event_creation"
         }
 
     def normalize_text(self, text: str) -> str:

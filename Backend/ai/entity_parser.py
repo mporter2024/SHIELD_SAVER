@@ -217,26 +217,51 @@ def _extract_time(message: str):
 
 def _extract_location(message: str):
     patterns = [
-        r"\bat\s+([A-Za-z0-9\s&'\/\-]+?)(?:\s+for\s+|\s+on\s+|\s+with\s+|\s+starting\b|\.\s*|,\s*|$)",
-        r"\bin\s+([A-Za-z0-9\s&'\/\-]+?)(?:\s+for\s+|\s+on\s+|\s+with\s+|\s+starting\b|\.\s*|,\s*|$)",
+        r"\bat\s+([A-Za-z0-9\s&'\/\-]+?)(?:\s+for\s+|\s+on\s+|\s+with\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
+        r"\bin\s+([A-Za-z0-9\s&'\/\-]+?)(?:\s+for\s+|\s+on\s+|\s+with\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
         r"\blocation\s+(?:is\s+|to\s+)?([A-Za-z0-9\s&'\/\-]+?)(?:\.\s*|,\s*|$)",
     ]
 
     blocked = {
         "about", "around", "roughly", "approximately",
-        "april", "may", "june", "july", "tomorrow", "today"
+        "april", "may", "june", "july", "tomorrow", "today",
+        "noon", "midnight"
     }
 
     for pattern in patterns:
         match = re.search(pattern, message, re.IGNORECASE)
-        if match:
-            candidate = _clean_text(match.group(1))
-            if candidate and candidate.lower() not in blocked:
-                if _extract_date(candidate):
-                    continue
-                return candidate
-    return None
+        if not match:
+            continue
 
+        candidate = _clean_text(match.group(1))
+        lowered = candidate.lower()
+
+        if not candidate or lowered in blocked:
+            continue
+
+        if _extract_date(candidate):
+            continue
+        if _extract_time(candidate):
+            continue
+
+        candidate = re.sub(
+            r"\s+(guest count(?:\s+of)?\s+\d+|\d+\s+guests|\d+\s+people|\d+\s+attendees)\b.*$",
+            "",
+            candidate,
+            flags=re.IGNORECASE,
+        ).strip()
+
+        candidate = re.sub(
+            r"^(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)|noon|midnight)\s+",
+            "",
+            candidate,
+            flags=re.IGNORECASE,
+        ).strip()
+
+        if candidate:
+            return candidate
+
+    return None
 
 def _extract_catering(message: str):
     patterns = [
@@ -255,19 +280,39 @@ def _extract_catering(message: str):
 
 def _extract_title(message: str):
     patterns = [
-        r"\bcalled\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
-        r"\bnamed\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
-        r"\btitle\s+it\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
-        r"\bit'?s\s+called\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
-        r"\bthe\s+title\s+is\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
+        r"\bcalled\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
+        r"\bnamed\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
+        r"\btitled\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
+        r"\btitle\s+it\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
+        r"\bit'?s\s+called\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
+        r"\bthe\s+title\s+is\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
     ]
 
     for pattern in patterns:
         match = re.search(pattern, message, re.IGNORECASE)
-        if match:
-            return _clean_text(match.group(1))
-    return None
+        if not match:
+            continue
 
+        candidate = _clean_text(match.group(1))
+        candidate = re.sub(
+            r"\b(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}(?:st|nd|rd|th)?(?:,\s*\d{4})?\b",
+            "",
+            candidate,
+            flags=re.IGNORECASE,
+        )
+        candidate = re.sub(
+            r"\b\d{1,2}(?::\d{2})?\s*(?:am|pm)\b",
+            "",
+            candidate,
+            flags=re.IGNORECASE,
+        )
+        candidate = re.sub(r"\b(?:today|tomorrow|noon|midnight)\b", "", candidate, flags=re.IGNORECASE)
+        candidate = _clean_text(candidate)
+
+        if candidate:
+            return candidate
+
+    return None
 
 def _extract_description(message: str):
     patterns = [
@@ -324,30 +369,44 @@ def looks_like_event_creation(message: str):
     trigger_phrases = [
         "create an event",
         "create a event",
-        "create an",
-        "create a",
+        "create event",
+        "create this event",
+        "create something",
+        "create a new event",
+        "can you create",
+        "help me create",
+        "i want to create",
+
         "make an event",
         "make a new event",
-        "make an",
-        "make a",
+        "make event",
+
         "plan an event",
         "plan a event",
-        "plan an",
-        "plan a",
-        "organize an event",
-        "organize a",
-        "set up an event",
-        "set up a",
-        "i want to create",
-        "i want to plan",
+        "plan event",
+        "plan this event",
+        "plan something",
+        "can you plan",
         "help me plan",
-        "help me create an event",
-        "create event",
+        "i want to plan",
+        "let's plan",
+
+        "organize an event",
+        "organize a event",
+        "organize event",
+        "organize this event",
+        "organize something",
+
+        "set up an event",
+        "set up a event",
+        "set up event",
+        "set up this event",
+        "set up something",
+
         "new event",
     ]
 
     return any(phrase in lowered for phrase in trigger_phrases)
-
 
 def looks_like_event_update(message: str):
     lowered = message.lower().strip()
