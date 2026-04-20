@@ -17,19 +17,15 @@ def load_cases_from_txt(path):
             if len(parts) != 2:
                 continue
 
-            input_text = parts[0].strip()
+            message = parts[0].strip()
             expected_action = parts[1].strip()
 
             cases.append({
-                "input": input_text,
+                "input": message,
                 "expected_action": expected_action
             })
 
     return cases
-
-
-def load_cases(path):
-    return load_cases_from_txt(path)
 
 
 def main():
@@ -38,14 +34,39 @@ def main():
         return
 
     dataset_path = sys.argv[1]
-    cases = load_cases(dataset_path)
+    cases = load_cases_from_txt(dataset_path)
+
+    context = {
+        "events": [
+            {"id": 1, "title": "Spring Expo"},
+            {"id": 2, "title": "Tech Summit"},
+            {"id": 3, "title": "Career Fair"},
+            {"id": 4, "title": "Alumni Meetup"},
+            {"id": 5, "title": "Gaming Night"},
+            {"id": 6, "title": "Research Showcase"},
+        ],
+        "tasks": [
+            {"id": 1, "title": "confirm catering"},
+            {"id": 2, "title": "book DJ"},
+            {"id": 3, "title": "send invitations"},
+            {"id": 4, "title": "finalize venue contract"},
+            {"id": 5, "title": "review agenda"},
+            {"id": 6, "title": "order decorations"},
+        ]
+    } 
 
     passed = 0
     failed_cases = []
 
     for case in cases:
         state = {}
-        result = interpret_message(case["input"],{}, state)
+
+        try:
+            result = interpret_message(case["input"], context, state)
+        except Exception as e:
+            print(f"ERROR: {case['input']}")
+            print(f"  {e}")
+            continue
 
         actual = result.get("type")
         expected = case["expected_action"]
@@ -68,7 +89,7 @@ def main():
 
     print(f"\n{passed}/{len(cases)} passed")
 
-    # 🔥 Auto-generate regression JSON
+    # 🔥 Auto-generate regression file
     if failed_cases:
         with open("ai_phrase_regression_cases.json", "w", encoding="utf-8") as f:
             json.dump(failed_cases, f, indent=2)

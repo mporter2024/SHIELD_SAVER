@@ -1,1242 +1,138 @@
 [
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_001\tevent_create_wording\t\tcreate an event called Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people"
+    "input": "change the location of Spring Expo to Chartway Arena",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_002\tevent_create_wording\t\tcreate a new event called Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests"
+    "input": "rename Spring Expo to Spring Expo Deluxe",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_003\tevent_create_wording\t\tcreate something called Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests"
+    "input": "set the guest count of Spring Expo to 120",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_004\tevent_create_wording\t\tcreate this event named Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80"
+    "input": "change the description of Spring Expo to outdoor networking event",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_005\tevent_create_wording\t\tcreate event named Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people"
+    "input": "update Spring Expo location to Main Hall",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_006\tevent_create_wording\t\tcreate an event named Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people"
+    "input": "change the location of Tech Summit to Chartway Arena",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_007\tevent_create_wording\t\tcreate a new event titled Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests"
+    "input": "rename Tech Summit to Tech Summit Deluxe",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_008\tevent_create_wording\t\tcreate something titled Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests"
+    "input": "set the guest count of Tech Summit to 120",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_009\tevent_create_wording\t\tcreate this event titled Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80"
+    "input": "change the description of Tech Summit to outdoor networking event",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_010\tevent_create_wording\t\tcreate a event called Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people"
+    "input": "update Tech Summit location to Main Hall",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_011\tevent_create_wording\t\tcreate a an event called Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people"
+    "input": "change the location of Career Fair to Chartway Arena",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_012\tevent_create_wording\t\tcreate a a new event called Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests"
+    "input": "rename Career Fair to Career Fair Deluxe",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_013\tevent_create_wording\t\tcreate a something named Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests"
+    "input": "set the guest count of Career Fair to 120",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_014\tevent_create_wording\t\tcreate a this event named Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80"
+    "input": "change the description of Career Fair to outdoor networking event",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_015\tevent_create_wording\t\tcreate a event named Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people"
+    "input": "update Career Fair location to Main Hall",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_016\tevent_create_wording\t\tcreate a an event titled Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people"
+    "input": "change the location of Alumni Meetup to Chartway Arena",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_017\tevent_create_wording\t\tcreate a a new event titled Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests"
+    "input": "rename Alumni Meetup to Alumni Meetup Deluxe",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_018\tevent_create_wording\t\tcreate a something titled Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests"
+    "input": "set the guest count of Alumni Meetup to 120",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_019\tevent_create_wording\t\tcreate an this event called Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80"
+    "input": "change the description of Alumni Meetup to outdoor networking event",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_020\tevent_create_wording\t\tcreate an event called Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people"
+    "input": "update Alumni Meetup location to Main Hall",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_021\tevent_create_wording\t\tcreate an an event called Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people"
+    "input": "change the location of Gaming Night to Chartway Arena",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_022\tevent_create_wording\t\tcreate an a new event named Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests"
+    "input": "rename Gaming Night to Gaming Night Deluxe",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_023\tevent_create_wording\t\tcreate an something named Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests"
+    "input": "set the guest count of Gaming Night to 120",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_024\tevent_create_wording\t\tcreate an this event named Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80"
+    "input": "change the description of Gaming Night to outdoor networking event",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_025\tevent_create_wording\t\tcreate an event titled Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people"
+    "input": "update Gaming Night location to Main Hall",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_026\tevent_create_wording\t\tcreate an an event titled Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people"
+    "input": "change the location of Research Showcase to Chartway Arena",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_027\tevent_create_wording\t\tcreate an a new event titled Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests"
+    "input": "rename Research Showcase to Research Showcase Deluxe",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_028\tevent_create_wording\t\tcreate a new something called Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests"
+    "input": "set the guest count of Research Showcase to 120",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_029\tevent_create_wording\t\tcreate a new this event called Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80"
+    "input": "change the description of Research Showcase to outdoor networking event",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_030\tevent_create_wording\t\tcreate a new event called Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people"
+    "input": "update Research Showcase location to Main Hall",
+    "expected_action": "event_update"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_031\tevent_create_wording\t\tcreate a new an event named Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people"
+    "input": "complete book DJ",
+    "expected_action": "task_complete"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_032\tevent_create_wording\t\tcreate a new a new event named Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests"
+    "input": "mark send invitations completed",
+    "expected_action": "task_complete"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_033\tevent_create_wording\t\tcreate a new something named Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests"
+    "input": "complete review agenda",
+    "expected_action": "task_complete"
   },
   {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_034\tevent_create_wording\t\tcreate a new this event titled Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_035\tevent_create_wording\t\tcreate a new event titled Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_036\tevent_create_wording\t\tcreate a new an event titled Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_037\tevent_create_wording\t\tplan a new event called Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_038\tevent_create_wording\t\tplan something called Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_039\tevent_create_wording\t\tplan this event called Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_040\tevent_create_wording\t\tplan event named Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_041\tevent_create_wording\t\tplan an event named Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_042\tevent_create_wording\t\tplan a new event named Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_043\tevent_create_wording\t\tplan something titled Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_044\tevent_create_wording\t\tplan this event titled Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_045\tevent_create_wording\t\tplan event titled Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_046\tevent_create_wording\t\tplan a an event called Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_047\tevent_create_wording\t\tplan a a new event called Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_048\tevent_create_wording\t\tplan a something called Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_049\tevent_create_wording\t\tplan a this event named Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_050\tevent_create_wording\t\tplan a event named Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_051\tevent_create_wording\t\tplan a an event named Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_052\tevent_create_wording\t\tplan a a new event titled Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_053\tevent_create_wording\t\tplan a something titled Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_054\tevent_create_wording\t\tplan a this event titled Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_055\tevent_create_wording\t\tplan an event called Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_056\tevent_create_wording\t\tplan an an event called Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_057\tevent_create_wording\t\tplan an a new event called Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_058\tevent_create_wording\t\tplan an something named Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_059\tevent_create_wording\t\tplan an this event named Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_060\tevent_create_wording\t\tplan an event named Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_061\tevent_create_wording\t\tplan an an event titled Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_062\tevent_create_wording\t\tplan an a new event titled Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_063\tevent_create_wording\t\tplan an something titled Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_064\tevent_create_wording\t\thelp me plan this event called Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_065\tevent_create_wording\t\thelp me plan event called Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_066\tevent_create_wording\t\thelp me plan an event called Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_067\tevent_create_wording\t\thelp me plan a new event named Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_068\tevent_create_wording\t\thelp me plan something named Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_069\tevent_create_wording\t\thelp me plan this event named Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_070\tevent_create_wording\t\thelp me plan event titled Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_071\tevent_create_wording\t\thelp me plan an event titled Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_072\tevent_create_wording\t\thelp me plan a new event titled Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_073\tevent_create_wording\t\thelp me create something called Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_074\tevent_create_wording\t\thelp me create this event called Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_075\tevent_create_wording\t\thelp me create event called Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_076\tevent_create_wording\t\thelp me create an event named Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_077\tevent_create_wording\t\thelp me create a new event named Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_078\tevent_create_wording\t\thelp me create something named Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_079\tevent_create_wording\t\thelp me create this event titled Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_080\tevent_create_wording\t\thelp me create event titled Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_081\tevent_create_wording\t\thelp me create an event titled Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_082\tevent_create_wording\t\ti want to create a new event called Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_083\tevent_create_wording\t\ti want to create something called Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_084\tevent_create_wording\t\ti want to create this event called Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_085\tevent_create_wording\t\ti want to create event named Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_086\tevent_create_wording\t\ti want to create an event named Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_087\tevent_create_wording\t\ti want to create a new event named Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_088\tevent_create_wording\t\ti want to create something titled Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_089\tevent_create_wording\t\ti want to create this event titled Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_090\tevent_create_wording\t\ti want to create event titled Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_091\tevent_create_wording\t\ti want to plan an event called Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_092\tevent_create_wording\t\ti want to plan a new event called Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_093\tevent_create_wording\t\ti want to plan something called Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_094\tevent_create_wording\t\ti want to plan this event named Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_095\tevent_create_wording\t\ti want to plan event named Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_096\tevent_create_wording\t\ti want to plan an event named Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_097\tevent_create_wording\t\ti want to plan a new event titled Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_098\tevent_create_wording\t\ti want to plan something titled Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_099\tevent_create_wording\t\ti want to plan this event titled Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_100\tevent_create_wording\t\tset up event called Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_101\tevent_create_wording\t\tset up an event called Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_102\tevent_create_wording\t\tset up a new event called Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_103\tevent_create_wording\t\tset up something named Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_104\tevent_create_wording\t\tset up this event named Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_105\tevent_create_wording\t\tset up event named Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_106\tevent_create_wording\t\tset up an event titled Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_107\tevent_create_wording\t\tset up a new event titled Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_108\tevent_create_wording\t\tset up something titled Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_109\tevent_create_wording\t\torganize this event called Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_110\tevent_create_wording\t\torganize event called Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_111\tevent_create_wording\t\torganize an event called Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_112\tevent_create_wording\t\torganize a new event named Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_113\tevent_create_wording\t\torganize something named Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_114\tevent_create_wording\t\torganize this event named Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_115\tevent_create_wording\t\torganize event titled Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_116\tevent_create_wording\t\torganize an event titled Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_117\tevent_create_wording\t\torganize a new event titled Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_118\tevent_create_wording\t\tcan you create something called Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_119\tevent_create_wording\t\tcan you create this event called Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_120\tevent_create_wording\t\tcan you create event called Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_121\tevent_create_wording\t\tcan you create an event named Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_122\tevent_create_wording\t\tcan you create a new event named Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_123\tevent_create_wording\t\tcan you create something named Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_124\tevent_create_wording\t\tcan you create this event titled Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_125\tevent_create_wording\t\tcan you create event titled Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_126\tevent_create_wording\t\tcan you create an event titled Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_127\tevent_create_wording\t\tcan you plan a new event called Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_128\tevent_create_wording\t\tcan you plan something called Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_129\tevent_create_wording\t\tcan you plan this event called Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_130\tevent_create_wording\t\tcan you plan event named Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_131\tevent_create_wording\t\tcan you plan an event named Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_132\tevent_create_wording\t\tcan you plan a new event named Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_133\tevent_create_wording\t\tcan you plan something titled Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_134\tevent_create_wording\t\tcan you plan this event titled Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_135\tevent_create_wording\t\tcan you plan event titled Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_136\tevent_create_wording\t\tlet's plan an event called Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_137\tevent_create_wording\t\tlet's plan a new event called Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_138\tevent_create_wording\t\tlet's plan something called Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_139\tevent_create_wording\t\tlet's plan this event named Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80"
-  },
-  {
-    "input": "event_create",
-    "expected_action": "event_create_collecting\tcreate_140\tevent_create_wording\t\tlet's plan event named Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_001\tevent_update_time_wording\t1\tchange it to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_002\tevent_update_time_wording\t1\tchange it to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_003\tevent_update_time_wording\t1\tchange it to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_004\tevent_update_time_wording\t1\tchange it to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_005\tevent_update_time_wording\t1\tchange it to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_006\tevent_update_time_wording\t1\tupdate it to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_007\tevent_update_time_wording\t1\tupdate it to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_008\tevent_update_time_wording\t1\tupdate it to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_009\tevent_update_time_wording\t1\tupdate it to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_010\tevent_update_time_wording\t1\tupdate it to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_011\tevent_update_time_wording\t1\tset it to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_012\tevent_update_time_wording\t1\tset it to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_013\tevent_update_time_wording\t1\tset it to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_014\tevent_update_time_wording\t1\tset it to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_015\tevent_update_time_wording\t1\tset it to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_016\tevent_update_time_wording\t1\tmove it to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_017\tevent_update_time_wording\t1\tmove it to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_018\tevent_update_time_wording\t1\tmove it to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_019\tevent_update_time_wording\t1\tmove it to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_020\tevent_update_time_wording\t1\tmove it to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_021\tevent_update_time_wording\t1\tpush it to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_022\tevent_update_time_wording\t1\tpush it to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_023\tevent_update_time_wording\t1\tpush it to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_024\tevent_update_time_wording\t1\tpush it to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_025\tevent_update_time_wording\t1\tpush it to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_026\tevent_update_time_wording\t1\tswitch it to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_027\tevent_update_time_wording\t1\tswitch it to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_028\tevent_update_time_wording\t1\tswitch it to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_029\tevent_update_time_wording\t1\tswitch it to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_030\tevent_update_time_wording\t1\tswitch it to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_031\tevent_update_time_wording\t1\treschedule it to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_032\tevent_update_time_wording\t1\treschedule it to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_033\tevent_update_time_wording\t1\treschedule it to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_034\tevent_update_time_wording\t1\treschedule it to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_035\tevent_update_time_wording\t1\treschedule it to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_036\tevent_update_time_wording\t1\tmake it start at 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_037\tevent_update_time_wording\t1\tmake it start at 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_038\tevent_update_time_wording\t1\tmake it start at 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_039\tevent_update_time_wording\t1\tmake it start at noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_040\tevent_update_time_wording\t1\tmake it start at midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_041\tevent_update_time_wording\t1\tchange the time to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_042\tevent_update_time_wording\t1\tchange the time to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_043\tevent_update_time_wording\t1\tchange the time to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_044\tevent_update_time_wording\t1\tchange the time to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_045\tevent_update_time_wording\t1\tchange the time to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_046\tevent_update_time_wording\t1\tupdate the time to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_047\tevent_update_time_wording\t1\tupdate the time to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_048\tevent_update_time_wording\t1\tupdate the time to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_049\tevent_update_time_wording\t1\tupdate the time to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_050\tevent_update_time_wording\t1\tupdate the time to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_051\tevent_update_time_wording\t1\tset the time to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_052\tevent_update_time_wording\t1\tset the time to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_053\tevent_update_time_wording\t1\tset the time to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_054\tevent_update_time_wording\t1\tset the time to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_055\tevent_update_time_wording\t1\tset the time to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_056\tevent_update_time_wording\t1\tchange the start time to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_057\tevent_update_time_wording\t1\tchange the start time to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_058\tevent_update_time_wording\t1\tchange the start time to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_059\tevent_update_time_wording\t1\tchange the start time to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_060\tevent_update_time_wording\t1\tchange the start time to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_061\tevent_update_time_wording\t1\tupdate the start time to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_062\tevent_update_time_wording\t1\tupdate the start time to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_063\tevent_update_time_wording\t1\tupdate the start time to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_064\tevent_update_time_wording\t1\tupdate the start time to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_065\tevent_update_time_wording\t1\tupdate the start time to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_066\tevent_update_time_wording\t1\tset the start time to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_067\tevent_update_time_wording\t1\tset the start time to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_068\tevent_update_time_wording\t1\tset the start time to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_069\tevent_update_time_wording\t1\tset the start time to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_070\tevent_update_time_wording\t1\tset the start time to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_071\tevent_update_time_wording\t1\tcan you move it to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_072\tevent_update_time_wording\t1\tcan you move it to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_073\tevent_update_time_wording\t1\tcan you move it to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_074\tevent_update_time_wording\t1\tcan you move it to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_075\tevent_update_time_wording\t1\tcan you move it to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_076\tevent_update_time_wording\t1\tlet's move it to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_077\tevent_update_time_wording\t1\tlet's move it to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_078\tevent_update_time_wording\t1\tlet's move it to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_079\tevent_update_time_wording\t1\tlet's move it to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_080\tevent_update_time_wording\t1\tlet's move it to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_081\tevent_update_time_wording\t1\tbump it to 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_082\tevent_update_time_wording\t1\tbump it to 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_083\tevent_update_time_wording\t1\tbump it to 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_084\tevent_update_time_wording\t1\tbump it to noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_085\tevent_update_time_wording\t1\tbump it to midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_086\tevent_update_time_wording\t1\thave it start at 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_087\tevent_update_time_wording\t1\thave it start at 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_088\tevent_update_time_wording\t1\thave it start at 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_089\tevent_update_time_wording\t1\thave it start at noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_090\tevent_update_time_wording\t1\thave it start at midnight"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_091\tevent_update_time_wording\t1\tmake it 6 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_092\tevent_update_time_wording\t1\tmake it 6:30 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_093\tevent_update_time_wording\t1\tmake it 7 pm"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_094\tevent_update_time_wording\t1\tmake it noon"
-  },
-  {
-    "input": "event_update",
-    "expected_action": "event_update_no_changes\tupdate_time_095\tevent_update_time_wording\t1\tmake it midnight"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_001\ttask_create_wording\t1\tadd task call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_002\ttask_create_wording\t1\tadd task send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_003\ttask_create_wording\t1\tadd task confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_004\ttask_create_wording\t1\tadd task review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_005\ttask_create_wording\t1\tadd task prepare name tags"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_006\ttask_create_wording\t1\tadd a task to call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_007\ttask_create_wording\t1\tadd a task to send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_008\ttask_create_wording\t1\tadd a task to confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_009\ttask_create_wording\t1\tadd a task to review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_010\ttask_create_wording\t1\tadd a task to prepare name tags"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_011\ttask_create_wording\t1\tcreate task call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_012\ttask_create_wording\t1\tcreate task send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_013\ttask_create_wording\t1\tcreate task confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_014\ttask_create_wording\t1\tcreate task review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_015\ttask_create_wording\t1\tcreate task prepare name tags"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_016\ttask_create_wording\t1\tcreate a task to call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_017\ttask_create_wording\t1\tcreate a task to send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_018\ttask_create_wording\t1\tcreate a task to confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_019\ttask_create_wording\t1\tcreate a task to review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_020\ttask_create_wording\t1\tcreate a task to prepare name tags"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_021\ttask_create_wording\t1\tremind me to call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_022\ttask_create_wording\t1\tremind me to send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_023\ttask_create_wording\t1\tremind me to confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_024\ttask_create_wording\t1\tremind me to review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_025\ttask_create_wording\t1\tremind me to prepare name tags"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_026\ttask_create_wording\t1\ti need to call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_027\ttask_create_wording\t1\ti need to send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_028\ttask_create_wording\t1\ti need to confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_029\ttask_create_wording\t1\ti need to review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_030\ttask_create_wording\t1\ti need to prepare name tags"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_031\ttask_create_wording\t1\twe need to call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_032\ttask_create_wording\t1\twe need to send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_033\ttask_create_wording\t1\twe need to confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_034\ttask_create_wording\t1\twe need to review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_035\ttask_create_wording\t1\twe need to prepare name tags"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_036\ttask_create_wording\t1\twe should call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_037\ttask_create_wording\t1\twe should send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_038\ttask_create_wording\t1\twe should confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_039\ttask_create_wording\t1\twe should review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_040\ttask_create_wording\t1\twe should prepare name tags"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_041\ttask_create_wording\t1\tremember to call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_042\ttask_create_wording\t1\tremember to send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_043\ttask_create_wording\t1\tremember to confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_044\ttask_create_wording\t1\tremember to review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_045\ttask_create_wording\t1\tremember to prepare name tags"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_046\ttask_create_wording\t1\tmake a note to call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_047\ttask_create_wording\t1\tmake a note to send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_048\ttask_create_wording\t1\tmake a note to confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_049\ttask_create_wording\t1\tmake a note to review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_050\ttask_create_wording\t1\tmake a note to prepare name tags"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_051\ttask_create_wording\t1\tput call the caterer on my task list"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_052\ttask_create_wording\t1\tput send invitations on my task list"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_053\ttask_create_wording\t1\tput confirm the venue on my task list"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_054\ttask_create_wording\t1\tput review the budget on my task list"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_055\ttask_create_wording\t1\tput prepare name tags on my task list"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_056\ttask_create_wording\t1\tadd call the caterer to my to-do list"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_057\ttask_create_wording\t1\tadd send invitations to my to-do list"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_058\ttask_create_wording\t1\tadd confirm the venue to my to-do list"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_059\ttask_create_wording\t1\tadd review the budget to my to-do list"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_060\ttask_create_wording\t1\tadd prepare name tags to my to-do list"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_061\ttask_create_wording\t1\tdon't let me forget to call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_062\ttask_create_wording\t1\tdon't let me forget to send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_063\ttask_create_wording\t1\tdon't let me forget to confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_064\ttask_create_wording\t1\tdon't let me forget to review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_065\ttask_create_wording\t1\tdon't let me forget to prepare name tags"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_066\ttask_create_wording\t1\ti should probably call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_067\ttask_create_wording\t1\ti should probably send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_068\ttask_create_wording\t1\ti should probably confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_069\ttask_create_wording\t1\ti should probably review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_070\ttask_create_wording\t1\ti should probably prepare name tags"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_071\ttask_create_wording\t1\twe still need to call the caterer"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_072\ttask_create_wording\t1\twe still need to send invitations"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_073\ttask_create_wording\t1\twe still need to confirm the venue"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_074\ttask_create_wording\t1\twe still need to review the budget"
-  },
-  {
-    "input": "task_create",
-    "expected_action": "fallback\ttask_create_075\ttask_create_wording\t1\twe still need to prepare name tags"
+    "input": "mark order decorations completed",
+    "expected_action": "task_complete"
   }
 ]

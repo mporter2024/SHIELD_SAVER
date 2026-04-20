@@ -217,51 +217,26 @@ def _extract_time(message: str):
 
 def _extract_location(message: str):
     patterns = [
-        r"\bat\s+([A-Za-z0-9\s&'\/\-]+?)(?:\s+for\s+|\s+on\s+|\s+with\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
-        r"\bin\s+([A-Za-z0-9\s&'\/\-]+?)(?:\s+for\s+|\s+on\s+|\s+with\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
+        r"\bat\s+([A-Za-z0-9\s&'\/\-]+?)(?:\s+for\s+|\s+on\s+|\s+with\s+|\s+starting\b|\.\s*|,\s*|$)",
+        r"\bin\s+([A-Za-z0-9\s&'\/\-]+?)(?:\s+for\s+|\s+on\s+|\s+with\s+|\s+starting\b|\.\s*|,\s*|$)",
         r"\blocation\s+(?:is\s+|to\s+)?([A-Za-z0-9\s&'\/\-]+?)(?:\.\s*|,\s*|$)",
     ]
 
     blocked = {
         "about", "around", "roughly", "approximately",
-        "april", "may", "june", "july", "tomorrow", "today",
-        "noon", "midnight"
+        "april", "may", "june", "july", "tomorrow", "today"
     }
 
     for pattern in patterns:
         match = re.search(pattern, message, re.IGNORECASE)
-        if not match:
-            continue
-
-        candidate = _clean_text(match.group(1))
-        lowered = candidate.lower()
-
-        if not candidate or lowered in blocked:
-            continue
-
-        if _extract_date(candidate):
-            continue
-        if _extract_time(candidate):
-            continue
-
-        candidate = re.sub(
-            r"\s+(guest count(?:\s+of)?\s+\d+|\d+\s+guests|\d+\s+people|\d+\s+attendees)\b.*$",
-            "",
-            candidate,
-            flags=re.IGNORECASE,
-        ).strip()
-
-        candidate = re.sub(
-            r"^(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)|noon|midnight)\s+",
-            "",
-            candidate,
-            flags=re.IGNORECASE,
-        ).strip()
-
-        if candidate:
-            return candidate
-
+        if match:
+            candidate = _clean_text(match.group(1))
+            if candidate and candidate.lower() not in blocked:
+                if _extract_date(candidate):
+                    continue
+                return candidate
     return None
+
 
 def _extract_catering(message: str):
     patterns = [
@@ -280,39 +255,19 @@ def _extract_catering(message: str):
 
 def _extract_title(message: str):
     patterns = [
-        r"\bcalled\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
-        r"\bnamed\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
-        r"\btitled\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
-        r"\btitle\s+it\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
-        r"\bit'?s\s+called\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
-        r"\bthe\s+title\s+is\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\s+starting\b|\s+start(?:s)?\b|\.\s*|,\s*|$)",
+        r"\bcalled\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
+        r"\bnamed\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
+        r"\btitle\s+it\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
+        r"\bit'?s\s+called\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
+        r"\bthe\s+title\s+is\s+(.+?)(?:\s+on\s+|\s+at\s+|\s+for\s+|\s+with\s+|\s+in\s+|\.\s*|,\s*|$)",
     ]
 
     for pattern in patterns:
         match = re.search(pattern, message, re.IGNORECASE)
-        if not match:
-            continue
-
-        candidate = _clean_text(match.group(1))
-        candidate = re.sub(
-            r"\b(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}(?:st|nd|rd|th)?(?:,\s*\d{4})?\b",
-            "",
-            candidate,
-            flags=re.IGNORECASE,
-        )
-        candidate = re.sub(
-            r"\b\d{1,2}(?::\d{2})?\s*(?:am|pm)\b",
-            "",
-            candidate,
-            flags=re.IGNORECASE,
-        )
-        candidate = re.sub(r"\b(?:today|tomorrow|noon|midnight)\b", "", candidate, flags=re.IGNORECASE)
-        candidate = _clean_text(candidate)
-
-        if candidate:
-            return candidate
-
+        if match:
+            return _clean_text(match.group(1))
     return None
+
 
 def _extract_description(message: str):
     patterns = [
@@ -369,44 +324,30 @@ def looks_like_event_creation(message: str):
     trigger_phrases = [
         "create an event",
         "create a event",
-        "create event",
-        "create this event",
-        "create something",
-        "create a new event",
-        "can you create",
-        "help me create",
-        "i want to create",
-
+        "create an",
+        "create a",
         "make an event",
         "make a new event",
-        "make event",
-
+        "make an",
+        "make a",
         "plan an event",
         "plan a event",
-        "plan event",
-        "plan this event",
-        "plan something",
-        "can you plan",
-        "help me plan",
-        "i want to plan",
-        "let's plan",
-
+        "plan an",
+        "plan a",
         "organize an event",
-        "organize a event",
-        "organize event",
-        "organize this event",
-        "organize something",
-
+        "organize a",
         "set up an event",
-        "set up a event",
-        "set up event",
-        "set up this event",
-        "set up something",
-
+        "set up a",
+        "i want to create",
+        "i want to plan",
+        "help me plan",
+        "help me create an event",
+        "create event",
         "new event",
     ]
 
     return any(phrase in lowered for phrase in trigger_phrases)
+
 
 def looks_like_event_update(message: str):
     lowered = message.lower().strip()
@@ -494,9 +435,11 @@ def extract_event_update_fields(message: str):
         "guest_count": None,
         "catering": None,
         "event_size_hint": None,
+        "_parsed_time_only": None,
     }
 
     rename_patterns = [
+        r"\brename\s+.+?\s+to\s+(.+?)(?:$|\.)",
         r"\brename\s+(?:it|the event)?\s*to\s+(.+?)(?:$|\.)",
         r"\bchange\s+(?:the title|title|the name|name)\s+to\s+(.+?)(?:$|\.)",
         r"\bupdate\s+(?:the title|title|the name|name)\s+to\s+(.+?)(?:$|\.)",
@@ -508,9 +451,11 @@ def extract_event_update_fields(message: str):
         match = re.search(pattern, cleaned_message, re.IGNORECASE)
         if match:
             data["title"] = _clean_text(match.group(1))
-            break
+            return data
 
     location_patterns = [
+        r"\bchange\s+the\s+location\s+of\s+.+?\s+to\s+(.+?)(?:$|\.)",
+        r"\bupdate\s+.+?\s+location\s+to\s+(.+?)(?:$|\.)",
         r"\bset\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
         r"\bchange\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
         r"\bupdate\s+the\s+location\s+to\s+(.+?)(?:$|\.)",
@@ -523,9 +468,10 @@ def extract_event_update_fields(message: str):
             candidate = _clean_text(match.group(1))
             if candidate and not _extract_date(candidate) and not _extract_time(candidate):
                 data["location"] = candidate
-                break
+                return data
 
     description_patterns = [
+        r"\bchange\s+the\s+description\s+of\s+.+?\s+to\s+(.+?)(?:$|\.)",
         r"\bchange\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
         r"\bupdate\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
         r"\bset\s+the\s+description\s+to\s+(.+?)(?:$|\.)",
@@ -535,13 +481,16 @@ def extract_event_update_fields(message: str):
         match = re.search(pattern, cleaned_message, re.IGNORECASE)
         if match:
             data["description"] = _title_case_first(_clean_text(match.group(1)))
-            break
+            return data
 
     guest_patterns = [
+        r"\bset\s+the\s+guest\s+count\s+of\s+.+?\s+to\s+(\d+)\b",
         r"\bset\s+the\s+guest\s+count\s+to\s+(\d+)\b",
         r"\bset\s+guest\s+count\s+to\s+(\d+)\b",
+        r"\bchange\s+the\s+guest\s+count\s+of\s+.+?\s+to\s+(\d+)\b",
         r"\bchange\s+the\s+guest\s+count\s+to\s+(\d+)\b",
         r"\bchange\s+guest\s+count\s+to\s+(\d+)\b",
+        r"\bupdate\s+the\s+guest\s+count\s+of\s+.+?\s+to\s+(\d+)\b",
         r"\bupdate\s+the\s+guest\s+count\s+to\s+(\d+)\b",
         r"\bupdate\s+guest\s+count\s+to\s+(\d+)\b",
         r"\bmake\s+the\s+guest\s+count\s+(\d+)\b",
@@ -559,12 +508,13 @@ def extract_event_update_fields(message: str):
         match = re.search(pattern, cleaned_message, re.IGNORECASE)
         if match:
             data["guest_count"] = int(match.group(1))
-            break
+            return data
 
     if data["guest_count"] is None:
         guest_count_from_words = _extract_guest_count(cleaned_message)
         if guest_count_from_words is not None:
             data["guest_count"] = guest_count_from_words
+            return data
 
     catering_patterns = [
         r"\bset\s+the\s+catering\s+to\s+(.+?)(?:$|\.)",
@@ -577,7 +527,7 @@ def extract_event_update_fields(message: str):
         match = re.search(pattern, cleaned_message, re.IGNORECASE)
         if match:
             data["catering"] = _clean_text(match.group(1))
-            break
+            return data
 
     parsed_date = _extract_date(cleaned_message)
     parsed_time = _extract_time(cleaned_message)
@@ -625,35 +575,35 @@ def extract_event_update_fields(message: str):
 
     return data
 
-
 def detect_task_action(message: str):
     lowered = message.lower().strip()
 
-    create_patterns = [
-        r"\badd\s+(?:a\s+)?task\b",
-        r"\bcreate\s+(?:a\s+)?task\b",
-        r"\bnew\s+task\b",
-        r"\bremind\s+me\s+to\b",
-        r"\bi\s+need\s+to\b",
-        r"\bwe\s+need\s+to\b",
-        r"\bwe\s+should\b",
-        r"\badd\s+.+\s+to\s+(?:my\s+)?(?:task\s+list|todo\s+list|to-do\s+list|list)\b",
-        r"\bcreate\s+(?:a\s+)?reminder\b",
-        r"\badd\s+(?:a\s+)?reminder\b",
-        r"\bremember\s+to\b",
-        r"\bmake\s+a\s+note\s+to\b",
-        r"\bput\s+.+\s+on\s+(?:my\s+)?(?:task\s+list|todo\s+list|to-do\s+list|list)\b",
-    ]
-
     complete_patterns = [
-        r"\bcomplete\s+(?:the\s+)?task\b",
-        r"\bmark\s+.+\s+done\b",
-        r"\bmark\s+(?:the\s+)?task\b",
-        r"\bfinish(?:ed)?\s+.+\b",
-        r"\bfinished\s+(?:the\s+)?task\b",
+        r"^complete\s+.+",
+        r"^mark\s+.+\s+as\s+done$",
+        r"^mark\s+.+\s+done$",
+        r"^mark\s+.+\s+completed$",
+        r"^finish(?:ed)?\s+.+",
         r"\bdone\s+with\b",
         r"\bcheck\s+off\b",
         r"\bcross\s+off\b",
+    ]
+
+    create_patterns = [
+        r"^add\s+(?:a\s+)?task\b",
+        r"^add\s+task\b",
+        r"^create\s+(?:a\s+)?task\b",
+        r"^create\s+task\b",
+        r"^make\s+a\s+task\b",
+        r"^new\s+task\b",
+        r"^remind\s+me\s+to\b",
+        r"^i\s+need\s+to\b",
+        r"^we\s+need\s+to\b",
+        r"^we\s+should\b",
+        r"^create\s+(?:a\s+)?reminder\b",
+        r"^add\s+(?:a\s+)?reminder\b",
+        r"^remember\s+to\b",
+        r"^make\s+a\s+note\s+to\b",
     ]
 
     for pattern in complete_patterns:
@@ -666,7 +616,6 @@ def detect_task_action(message: str):
 
     return None
 
-
 def extract_task_fields(message: str):
     cleaned = message.strip()
 
@@ -676,27 +625,31 @@ def extract_task_fields(message: str):
     }
 
     create_patterns = [
-        r"\badd\s+(?:a\s+)?task\s+(?:to\s+)?(.+)$",
-        r"\bcreate\s+(?:a\s+)?task\s+(?:to\s+)?(.+)$",
-        r"\bnew\s+task\s*[:\-]?\s*(.+)$",
-        r"\bremind\s+me\s+to\s+(.+)$",
-        r"\bi\s+need\s+to\s+(.+)$",
-        r"\bwe\s+need\s+to\s+(.+)$",
-        r"\bwe\s+should\s+(.+)$",
-        r"\bcreate\s+(?:a\s+)?reminder\s+(?:to\s+)?(.+)$",
-        r"\badd\s+(?:a\s+)?reminder\s+(?:to\s+)?(.+)$",
-        r"\bremember\s+to\s+(.+)$",
-        r"\bmake\s+a\s+note\s+to\s+(.+)$",
+        r"^add\s+(?:a\s+)?task\s+(?:to\s+)?(.+)$",
+        r"^add\s+task\s+(.+)$",
+        r"^create\s+(?:a\s+)?task\s+(?:called\s+|to\s+)?(.+)$",
+        r"^create\s+task\s+(.+)$",
+        r"^make\s+a\s+task\s+(?:called\s+)?(.+)$",
+        r"^new\s+task\s*[:\-]?\s*(.+)$",
+        r"^remind\s+me\s+to\s+(.+)$",
+        r"^i\s+need\s+to\s+(.+)$",
+        r"^we\s+need\s+to\s+(.+)$",
+        r"^we\s+should\s+(.+)$",
+        r"^create\s+(?:a\s+)?reminder\s+(?:to\s+)?(.+)$",
+        r"^add\s+(?:a\s+)?reminder\s+(?:to\s+)?(.+)$",
+        r"^remember\s+to\s+(.+)$",
+        r"^make\s+a\s+note\s+to\s+(.+)$",
         r"\bput\s+(.+)\s+on\s+(?:my\s+)?(?:task\s+list|todo\s+list|to-do\s+list|list)\b",
         r"\badd\s+(.+)\s+to\s+(?:my\s+)?(?:task\s+list|todo\s+list|to-do\s+list|list)\b",
     ]
 
     complete_patterns = [
-        r"\bcomplete\s+(?:the\s+)?task\s+(.+)$",
-        r"\bmark\s+(.+)\s+done\b",
-        r"\bmark\s+(?:the\s+)?task\s+(.+)$",
-        r"\bfinished\s+(.+)$",
-        r"\bfinish\s+(.+)$",
+        r"^complete\s+(.+)$",
+        r"^mark\s+(.+?)\s+as\s+done$",
+        r"^mark\s+(.+?)\s+done$",
+        r"^mark\s+(.+?)\s+completed$",
+        r"^finish\s+(.+)$",
+        r"^finished\s+(.+)$",
         r"\bdone\s+with\s+(.+)$",
         r"\bcheck\s+off\s+(.+)$",
         r"\bcross\s+off\s+(.+)$",
@@ -727,7 +680,6 @@ def extract_task_fields(message: str):
         return data
 
     return data
-
 
 def merge_event_draft(existing: dict, new_data: dict):
     merged = dict(existing or {})

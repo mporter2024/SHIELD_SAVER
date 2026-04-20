@@ -9,7 +9,7 @@ def run_regression_tests():
 
     for case in cases:
         state = {}
-        result = interpret_message(case["input"], state)
+        result = interpret_message(case["input"],{}, state)
 
         actual = result["type"]
         expected = case["expected_action"]
