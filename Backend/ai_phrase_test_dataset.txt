@@ -1,0 +1,569 @@
+# expected_types\tlabel\tcategory\tstate_last_event_id\tmessage
+event_create|event_create_collecting	create_001	event_create_wording		create an event called Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_002	event_create_wording		create a new event called Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_003	event_create_wording		create something called Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_004	event_create_wording		create this event named Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_005	event_create_wording		create event named Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_006	event_create_wording		create an event named Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_007	event_create_wording		create a new event titled Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_008	event_create_wording		create something titled Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_009	event_create_wording		create this event titled Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_010	event_create_wording		create a event called Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_011	event_create_wording		create a an event called Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_012	event_create_wording		create a a new event called Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_013	event_create_wording		create a something named Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_014	event_create_wording		create a this event named Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_015	event_create_wording		create a event named Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_016	event_create_wording		create a an event titled Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_017	event_create_wording		create a a new event titled Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_018	event_create_wording		create a something titled Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_019	event_create_wording		create an this event called Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_020	event_create_wording		create an event called Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_021	event_create_wording		create an an event called Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_022	event_create_wording		create an a new event named Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_023	event_create_wording		create an something named Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_024	event_create_wording		create an this event named Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_025	event_create_wording		create an event titled Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_026	event_create_wording		create an an event titled Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_027	event_create_wording		create an a new event titled Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_028	event_create_wording		create a new something called Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_029	event_create_wording		create a new this event called Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_030	event_create_wording		create a new event called Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_031	event_create_wording		create a new an event named Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_032	event_create_wording		create a new a new event named Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_033	event_create_wording		create a new something named Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_034	event_create_wording		create a new this event titled Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_035	event_create_wording		create a new event titled Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_036	event_create_wording		create a new an event titled Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_037	event_create_wording		plan a new event called Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_038	event_create_wording		plan something called Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_039	event_create_wording		plan this event called Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_040	event_create_wording		plan event named Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_041	event_create_wording		plan an event named Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_042	event_create_wording		plan a new event named Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_043	event_create_wording		plan something titled Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_044	event_create_wording		plan this event titled Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_045	event_create_wording		plan event titled Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_046	event_create_wording		plan a an event called Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_047	event_create_wording		plan a a new event called Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_048	event_create_wording		plan a something called Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_049	event_create_wording		plan a this event named Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_050	event_create_wording		plan a event named Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_051	event_create_wording		plan a an event named Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_052	event_create_wording		plan a a new event titled Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_053	event_create_wording		plan a something titled Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_054	event_create_wording		plan a this event titled Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_055	event_create_wording		plan an event called Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_056	event_create_wording		plan an an event called Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_057	event_create_wording		plan an a new event called Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_058	event_create_wording		plan an something named Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_059	event_create_wording		plan an this event named Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_060	event_create_wording		plan an event named Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_061	event_create_wording		plan an an event titled Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_062	event_create_wording		plan an a new event titled Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_063	event_create_wording		plan an something titled Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_064	event_create_wording		help me plan this event called Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_065	event_create_wording		help me plan event called Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_066	event_create_wording		help me plan an event called Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_067	event_create_wording		help me plan a new event named Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_068	event_create_wording		help me plan something named Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_069	event_create_wording		help me plan this event named Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_070	event_create_wording		help me plan event titled Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_071	event_create_wording		help me plan an event titled Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_072	event_create_wording		help me plan a new event titled Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_073	event_create_wording		help me create something called Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_074	event_create_wording		help me create this event called Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_075	event_create_wording		help me create event called Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_076	event_create_wording		help me create an event named Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_077	event_create_wording		help me create a new event named Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_078	event_create_wording		help me create something named Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_079	event_create_wording		help me create this event titled Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_080	event_create_wording		help me create event titled Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_081	event_create_wording		help me create an event titled Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_082	event_create_wording		i want to create a new event called Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_083	event_create_wording		i want to create something called Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_084	event_create_wording		i want to create this event called Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_085	event_create_wording		i want to create event named Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_086	event_create_wording		i want to create an event named Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_087	event_create_wording		i want to create a new event named Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_088	event_create_wording		i want to create something titled Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_089	event_create_wording		i want to create this event titled Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_090	event_create_wording		i want to create event titled Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_091	event_create_wording		i want to plan an event called Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_092	event_create_wording		i want to plan a new event called Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_093	event_create_wording		i want to plan something called Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_094	event_create_wording		i want to plan this event named Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_095	event_create_wording		i want to plan event named Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_096	event_create_wording		i want to plan an event named Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_097	event_create_wording		i want to plan a new event titled Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_098	event_create_wording		i want to plan something titled Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_099	event_create_wording		i want to plan this event titled Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_100	event_create_wording		set up event called Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_101	event_create_wording		set up an event called Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_102	event_create_wording		set up a new event called Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_103	event_create_wording		set up something named Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_104	event_create_wording		set up this event named Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_105	event_create_wording		set up event named Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_106	event_create_wording		set up an event titled Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_107	event_create_wording		set up a new event titled Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_108	event_create_wording		set up something titled Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_109	event_create_wording		organize this event called Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_110	event_create_wording		organize event called Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_111	event_create_wording		organize an event called Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_112	event_create_wording		organize a new event named Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_113	event_create_wording		organize something named Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_114	event_create_wording		organize this event named Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_115	event_create_wording		organize event titled Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_116	event_create_wording		organize an event titled Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_117	event_create_wording		organize a new event titled Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_118	event_create_wording		can you create something called Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_119	event_create_wording		can you create this event called Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_120	event_create_wording		can you create event called Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_121	event_create_wording		can you create an event named Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_122	event_create_wording		can you create a new event named Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_123	event_create_wording		can you create something named Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_124	event_create_wording		can you create this event titled Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_125	event_create_wording		can you create event titled Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_126	event_create_wording		can you create an event titled Spring Expo April 24 starting at 5 pm at Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_127	event_create_wording		can you plan a new event called Spring Expo on April 24 for 5 pm in Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_128	event_create_wording		can you plan something called Spring Expo for April 24 at 5:30 pm at the Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_129	event_create_wording		can you plan this event called Spring Expo April 24 starting at 5:30 pm at Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_130	event_create_wording		can you plan event named Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_131	event_create_wording		can you plan an event named Spring Expo for April 24 starting at 5 pm at the Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_132	event_create_wording		can you plan a new event named Spring Expo April 24 for 5 pm at Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_133	event_create_wording		can you plan something titled Spring Expo on April 24 at 5:30 pm in Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_134	event_create_wording		can you plan this event titled Spring Expo for April 24 starting at 5:30 pm at the Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_135	event_create_wording		can you plan event titled Spring Expo April 24 at 5 pm at Webb Center Ballroom for 80 people
+event_create|event_create_collecting	create_136	event_create_wording		let's plan an event called Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people
+event_create|event_create_collecting	create_137	event_create_wording		let's plan a new event called Spring Expo for April 24 for 5 pm at the Webb Center Ballroom for 80 guests
+event_create|event_create_collecting	create_138	event_create_wording		let's plan something called Spring Expo April 24 at 5:30 pm at Webb Center Ballroom with 80 guests
+event_create|event_create_collecting	create_139	event_create_wording		let's plan this event named Spring Expo on April 24 starting at 5:30 pm in Webb Center Ballroom guest count of 80
+event_create|event_create_collecting	create_140	event_create_wording		let's plan event named Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people
+event_update|event_update_no_changes	update_time_001	event_update_time_wording	1	change it to 6 pm
+event_update|event_update_no_changes	update_time_002	event_update_time_wording	1	change it to 6:30 pm
+event_update|event_update_no_changes	update_time_003	event_update_time_wording	1	change it to 7 pm
+event_update|event_update_no_changes	update_time_004	event_update_time_wording	1	change it to noon
+event_update|event_update_no_changes	update_time_005	event_update_time_wording	1	change it to midnight
+event_update|event_update_no_changes	update_time_006	event_update_time_wording	1	update it to 6 pm
+event_update|event_update_no_changes	update_time_007	event_update_time_wording	1	update it to 6:30 pm
+event_update|event_update_no_changes	update_time_008	event_update_time_wording	1	update it to 7 pm
+event_update|event_update_no_changes	update_time_009	event_update_time_wording	1	update it to noon
+event_update|event_update_no_changes	update_time_010	event_update_time_wording	1	update it to midnight
+event_update|event_update_no_changes	update_time_011	event_update_time_wording	1	set it to 6 pm
+event_update|event_update_no_changes	update_time_012	event_update_time_wording	1	set it to 6:30 pm
+event_update|event_update_no_changes	update_time_013	event_update_time_wording	1	set it to 7 pm
+event_update|event_update_no_changes	update_time_014	event_update_time_wording	1	set it to noon
+event_update|event_update_no_changes	update_time_015	event_update_time_wording	1	set it to midnight
+event_update|event_update_no_changes	update_time_016	event_update_time_wording	1	move it to 6 pm
+event_update|event_update_no_changes	update_time_017	event_update_time_wording	1	move it to 6:30 pm
+event_update|event_update_no_changes	update_time_018	event_update_time_wording	1	move it to 7 pm
+event_update|event_update_no_changes	update_time_019	event_update_time_wording	1	move it to noon
+event_update|event_update_no_changes	update_time_020	event_update_time_wording	1	move it to midnight
+event_update|event_update_no_changes	update_time_021	event_update_time_wording	1	push it to 6 pm
+event_update|event_update_no_changes	update_time_022	event_update_time_wording	1	push it to 6:30 pm
+event_update|event_update_no_changes	update_time_023	event_update_time_wording	1	push it to 7 pm
+event_update|event_update_no_changes	update_time_024	event_update_time_wording	1	push it to noon
+event_update|event_update_no_changes	update_time_025	event_update_time_wording	1	push it to midnight
+event_update|event_update_no_changes	update_time_026	event_update_time_wording	1	switch it to 6 pm
+event_update|event_update_no_changes	update_time_027	event_update_time_wording	1	switch it to 6:30 pm
+event_update|event_update_no_changes	update_time_028	event_update_time_wording	1	switch it to 7 pm
+event_update|event_update_no_changes	update_time_029	event_update_time_wording	1	switch it to noon
+event_update|event_update_no_changes	update_time_030	event_update_time_wording	1	switch it to midnight
+event_update|event_update_no_changes	update_time_031	event_update_time_wording	1	reschedule it to 6 pm
+event_update|event_update_no_changes	update_time_032	event_update_time_wording	1	reschedule it to 6:30 pm
+event_update|event_update_no_changes	update_time_033	event_update_time_wording	1	reschedule it to 7 pm
+event_update|event_update_no_changes	update_time_034	event_update_time_wording	1	reschedule it to noon
+event_update|event_update_no_changes	update_time_035	event_update_time_wording	1	reschedule it to midnight
+event_update|event_update_no_changes	update_time_036	event_update_time_wording	1	make it start at 6 pm
+event_update|event_update_no_changes	update_time_037	event_update_time_wording	1	make it start at 6:30 pm
+event_update|event_update_no_changes	update_time_038	event_update_time_wording	1	make it start at 7 pm
+event_update|event_update_no_changes	update_time_039	event_update_time_wording	1	make it start at noon
+event_update|event_update_no_changes	update_time_040	event_update_time_wording	1	make it start at midnight
+event_update|event_update_no_changes	update_time_041	event_update_time_wording	1	change the time to 6 pm
+event_update|event_update_no_changes	update_time_042	event_update_time_wording	1	change the time to 6:30 pm
+event_update|event_update_no_changes	update_time_043	event_update_time_wording	1	change the time to 7 pm
+event_update|event_update_no_changes	update_time_044	event_update_time_wording	1	change the time to noon
+event_update|event_update_no_changes	update_time_045	event_update_time_wording	1	change the time to midnight
+event_update|event_update_no_changes	update_time_046	event_update_time_wording	1	update the time to 6 pm
+event_update|event_update_no_changes	update_time_047	event_update_time_wording	1	update the time to 6:30 pm
+event_update|event_update_no_changes	update_time_048	event_update_time_wording	1	update the time to 7 pm
+event_update|event_update_no_changes	update_time_049	event_update_time_wording	1	update the time to noon
+event_update|event_update_no_changes	update_time_050	event_update_time_wording	1	update the time to midnight
+event_update|event_update_no_changes	update_time_051	event_update_time_wording	1	set the time to 6 pm
+event_update|event_update_no_changes	update_time_052	event_update_time_wording	1	set the time to 6:30 pm
+event_update|event_update_no_changes	update_time_053	event_update_time_wording	1	set the time to 7 pm
+event_update|event_update_no_changes	update_time_054	event_update_time_wording	1	set the time to noon
+event_update|event_update_no_changes	update_time_055	event_update_time_wording	1	set the time to midnight
+event_update|event_update_no_changes	update_time_056	event_update_time_wording	1	change the start time to 6 pm
+event_update|event_update_no_changes	update_time_057	event_update_time_wording	1	change the start time to 6:30 pm
+event_update|event_update_no_changes	update_time_058	event_update_time_wording	1	change the start time to 7 pm
+event_update|event_update_no_changes	update_time_059	event_update_time_wording	1	change the start time to noon
+event_update|event_update_no_changes	update_time_060	event_update_time_wording	1	change the start time to midnight
+event_update|event_update_no_changes	update_time_061	event_update_time_wording	1	update the start time to 6 pm
+event_update|event_update_no_changes	update_time_062	event_update_time_wording	1	update the start time to 6:30 pm
+event_update|event_update_no_changes	update_time_063	event_update_time_wording	1	update the start time to 7 pm
+event_update|event_update_no_changes	update_time_064	event_update_time_wording	1	update the start time to noon
+event_update|event_update_no_changes	update_time_065	event_update_time_wording	1	update the start time to midnight
+event_update|event_update_no_changes	update_time_066	event_update_time_wording	1	set the start time to 6 pm
+event_update|event_update_no_changes	update_time_067	event_update_time_wording	1	set the start time to 6:30 pm
+event_update|event_update_no_changes	update_time_068	event_update_time_wording	1	set the start time to 7 pm
+event_update|event_update_no_changes	update_time_069	event_update_time_wording	1	set the start time to noon
+event_update|event_update_no_changes	update_time_070	event_update_time_wording	1	set the start time to midnight
+event_update|event_update_no_changes	update_time_071	event_update_time_wording	1	can you move it to 6 pm
+event_update|event_update_no_changes	update_time_072	event_update_time_wording	1	can you move it to 6:30 pm
+event_update|event_update_no_changes	update_time_073	event_update_time_wording	1	can you move it to 7 pm
+event_update|event_update_no_changes	update_time_074	event_update_time_wording	1	can you move it to noon
+event_update|event_update_no_changes	update_time_075	event_update_time_wording	1	can you move it to midnight
+event_update|event_update_no_changes	update_time_076	event_update_time_wording	1	let's move it to 6 pm
+event_update|event_update_no_changes	update_time_077	event_update_time_wording	1	let's move it to 6:30 pm
+event_update|event_update_no_changes	update_time_078	event_update_time_wording	1	let's move it to 7 pm
+event_update|event_update_no_changes	update_time_079	event_update_time_wording	1	let's move it to noon
+event_update|event_update_no_changes	update_time_080	event_update_time_wording	1	let's move it to midnight
+event_update|event_update_no_changes	update_time_081	event_update_time_wording	1	bump it to 6 pm
+event_update|event_update_no_changes	update_time_082	event_update_time_wording	1	bump it to 6:30 pm
+event_update|event_update_no_changes	update_time_083	event_update_time_wording	1	bump it to 7 pm
+event_update|event_update_no_changes	update_time_084	event_update_time_wording	1	bump it to noon
+event_update|event_update_no_changes	update_time_085	event_update_time_wording	1	bump it to midnight
+event_update|event_update_no_changes	update_time_086	event_update_time_wording	1	have it start at 6 pm
+event_update|event_update_no_changes	update_time_087	event_update_time_wording	1	have it start at 6:30 pm
+event_update|event_update_no_changes	update_time_088	event_update_time_wording	1	have it start at 7 pm
+event_update|event_update_no_changes	update_time_089	event_update_time_wording	1	have it start at noon
+event_update|event_update_no_changes	update_time_090	event_update_time_wording	1	have it start at midnight
+event_update|event_update_no_changes	update_time_091	event_update_time_wording	1	make it 6 pm
+event_update|event_update_no_changes	update_time_092	event_update_time_wording	1	make it 6:30 pm
+event_update|event_update_no_changes	update_time_093	event_update_time_wording	1	make it 7 pm
+event_update|event_update_no_changes	update_time_094	event_update_time_wording	1	make it noon
+event_update|event_update_no_changes	update_time_095	event_update_time_wording	1	make it midnight
+event_update|event_update_no_changes|fallback	update_guest_001	event_update_guest_wording	1	actually make it 120 people
+event_update|event_update_no_changes|fallback	update_guest_002	event_update_guest_wording	1	actually make it 120 guests
+event_update|event_update_no_changes|fallback	update_guest_003	event_update_guest_wording	1	actually make it 150 people
+event_update|event_update_no_changes|fallback	update_guest_004	event_update_guest_wording	1	actually make it 200 guests
+event_update|event_update_no_changes|fallback	update_guest_005	event_update_guest_wording	1	actually make it 120
+event_update|event_update_no_changes|fallback	update_guest_006	event_update_guest_wording	1	make it 120 people
+event_update|event_update_no_changes|fallback	update_guest_007	event_update_guest_wording	1	make it 120 guests
+event_update|event_update_no_changes|fallback	update_guest_008	event_update_guest_wording	1	make it 150 people
+event_update|event_update_no_changes|fallback	update_guest_009	event_update_guest_wording	1	make it 200 guests
+event_update|event_update_no_changes|fallback	update_guest_010	event_update_guest_wording	1	make it 120
+event_update|event_update_no_changes|fallback	update_guest_011	event_update_guest_wording	1	change it to 120 people
+event_update|event_update_no_changes|fallback	update_guest_012	event_update_guest_wording	1	change it to 120 guests
+event_update|event_update_no_changes|fallback	update_guest_013	event_update_guest_wording	1	change it to 150 people
+event_update|event_update_no_changes|fallback	update_guest_014	event_update_guest_wording	1	change it to 200 guests
+event_update|event_update_no_changes|fallback	update_guest_015	event_update_guest_wording	1	change it to 120
+event_update|event_update_no_changes|fallback	update_guest_016	event_update_guest_wording	1	set it to 120 people
+event_update|event_update_no_changes|fallback	update_guest_017	event_update_guest_wording	1	set it to 120 guests
+event_update|event_update_no_changes|fallback	update_guest_018	event_update_guest_wording	1	set it to 150 people
+event_update|event_update_no_changes|fallback	update_guest_019	event_update_guest_wording	1	set it to 200 guests
+event_update|event_update_no_changes|fallback	update_guest_020	event_update_guest_wording	1	set it to 120
+event_update|event_update_no_changes|fallback	update_guest_021	event_update_guest_wording	1	bump it to 120 people
+event_update|event_update_no_changes|fallback	update_guest_022	event_update_guest_wording	1	bump it to 120 guests
+event_update|event_update_no_changes|fallback	update_guest_023	event_update_guest_wording	1	bump it to 150 people
+event_update|event_update_no_changes|fallback	update_guest_024	event_update_guest_wording	1	bump it to 200 guests
+event_update|event_update_no_changes|fallback	update_guest_025	event_update_guest_wording	1	bump it to 120
+event_update|event_update_no_changes|fallback	update_guest_026	event_update_guest_wording	1	bump attendance to 120 people
+event_update|event_update_no_changes|fallback	update_guest_027	event_update_guest_wording	1	bump attendance to 120 guests
+event_update|event_update_no_changes|fallback	update_guest_028	event_update_guest_wording	1	bump attendance to 150 people
+event_update|event_update_no_changes|fallback	update_guest_029	event_update_guest_wording	1	bump attendance to 200 guests
+event_update|event_update_no_changes|fallback	update_guest_030	event_update_guest_wording	1	bump attendance to 120
+event_update|event_update_no_changes|fallback	update_guest_031	event_update_guest_wording	1	bump guest count to 120 people
+event_update|event_update_no_changes|fallback	update_guest_032	event_update_guest_wording	1	bump guest count to 120 guests
+event_update|event_update_no_changes|fallback	update_guest_033	event_update_guest_wording	1	bump guest count to 150 people
+event_update|event_update_no_changes|fallback	update_guest_034	event_update_guest_wording	1	bump guest count to 200 guests
+event_update|event_update_no_changes|fallback	update_guest_035	event_update_guest_wording	1	bump guest count to 120
+event_update|event_update_no_changes|fallback	update_guest_036	event_update_guest_wording	1	change the guest count to 120 people
+event_update|event_update_no_changes|fallback	update_guest_037	event_update_guest_wording	1	change the guest count to 120 guests
+event_update|event_update_no_changes|fallback	update_guest_038	event_update_guest_wording	1	change the guest count to 150 people
+event_update|event_update_no_changes|fallback	update_guest_039	event_update_guest_wording	1	change the guest count to 200 guests
+event_update|event_update_no_changes|fallback	update_guest_040	event_update_guest_wording	1	change the guest count to 120
+event_update|event_update_no_changes|fallback	update_guest_041	event_update_guest_wording	1	update the guest count to 120 people
+event_update|event_update_no_changes|fallback	update_guest_042	event_update_guest_wording	1	update the guest count to 120 guests
+event_update|event_update_no_changes|fallback	update_guest_043	event_update_guest_wording	1	update the guest count to 150 people
+event_update|event_update_no_changes|fallback	update_guest_044	event_update_guest_wording	1	update the guest count to 200 guests
+event_update|event_update_no_changes|fallback	update_guest_045	event_update_guest_wording	1	update the guest count to 120
+event_update|event_update_no_changes|fallback	update_guest_046	event_update_guest_wording	1	set the guest count to 120 people
+event_update|event_update_no_changes|fallback	update_guest_047	event_update_guest_wording	1	set the guest count to 120 guests
+event_update|event_update_no_changes|fallback	update_guest_048	event_update_guest_wording	1	set the guest count to 150 people
+event_update|event_update_no_changes|fallback	update_guest_049	event_update_guest_wording	1	set the guest count to 200 guests
+event_update|event_update_no_changes|fallback	update_guest_050	event_update_guest_wording	1	set the guest count to 120
+event_update|event_update_no_changes|fallback	update_guest_051	event_update_guest_wording	1	guest count is 120 people
+event_update|event_update_no_changes|fallback	update_guest_052	event_update_guest_wording	1	guest count is 120 guests
+event_update|event_update_no_changes|fallback	update_guest_053	event_update_guest_wording	1	guest count is 150 people
+event_update|event_update_no_changes|fallback	update_guest_054	event_update_guest_wording	1	guest count is 200 guests
+event_update|event_update_no_changes|fallback	update_guest_055	event_update_guest_wording	1	guest count is 120
+event_update|event_update_no_changes|fallback	update_guest_056	event_update_guest_wording	1	we're expecting 120 people
+event_update|event_update_no_changes|fallback	update_guest_057	event_update_guest_wording	1	we're expecting 120 guests
+event_update|event_update_no_changes|fallback	update_guest_058	event_update_guest_wording	1	we're expecting 150 people
+event_update|event_update_no_changes|fallback	update_guest_059	event_update_guest_wording	1	we're expecting 200 guests
+event_update|event_update_no_changes|fallback	update_guest_060	event_update_guest_wording	1	we're expecting 120
+event_update|event_update_no_changes|fallback	update_guest_061	event_update_guest_wording	1	we are expecting 120 people
+event_update|event_update_no_changes|fallback	update_guest_062	event_update_guest_wording	1	we are expecting 120 guests
+event_update|event_update_no_changes|fallback	update_guest_063	event_update_guest_wording	1	we are expecting 150 people
+event_update|event_update_no_changes|fallback	update_guest_064	event_update_guest_wording	1	we are expecting 200 guests
+event_update|event_update_no_changes|fallback	update_guest_065	event_update_guest_wording	1	we are expecting 120
+event_update|event_update_no_changes|fallback	update_guest_066	event_update_guest_wording	1	increase attendance to 120 people
+event_update|event_update_no_changes|fallback	update_guest_067	event_update_guest_wording	1	increase attendance to 120 guests
+event_update|event_update_no_changes|fallback	update_guest_068	event_update_guest_wording	1	increase attendance to 150 people
+event_update|event_update_no_changes|fallback	update_guest_069	event_update_guest_wording	1	increase attendance to 200 guests
+event_update|event_update_no_changes|fallback	update_guest_070	event_update_guest_wording	1	increase attendance to 120
+event_update|event_update_no_changes|fallback	update_guest_071	event_update_guest_wording	1	raise the guest count to 120 people
+event_update|event_update_no_changes|fallback	update_guest_072	event_update_guest_wording	1	raise the guest count to 120 guests
+event_update|event_update_no_changes|fallback	update_guest_073	event_update_guest_wording	1	raise the guest count to 150 people
+event_update|event_update_no_changes|fallback	update_guest_074	event_update_guest_wording	1	raise the guest count to 200 guests
+event_update|event_update_no_changes|fallback	update_guest_075	event_update_guest_wording	1	raise the guest count to 120
+event_update|event_update_no_changes|fallback	update_guest_nat_076	event_update_guest_wording	1	make it bigger
+event_update|event_update_no_changes|fallback	update_guest_nat_077	event_update_guest_wording	1	make it smaller
+event_update|event_update_no_changes|fallback	update_guest_nat_078	event_update_guest_wording	1	make it more crowded
+event_update|event_update_no_changes|fallback	update_guest_nat_079	event_update_guest_wording	1	have more people come
+event_update|event_update_no_changes|fallback	update_guest_nat_080	event_update_guest_wording	1	we need a bigger turnout
+event_update|event_update_no_changes|fallback	update_location_001	event_update_location_wording	1	change the location to Student Center Ballroom
+event_update|event_update_no_changes|fallback	update_location_002	event_update_location_wording	1	change the location to Engineering Auditorium
+event_update|event_update_no_changes|fallback	update_location_003	event_update_location_wording	1	change the location to Campus Lawn
+event_update|event_update_no_changes|fallback	update_location_004	event_update_location_wording	1	change the location to Library Conference Room
+event_update|event_update_no_changes|fallback	update_location_005	event_update_location_wording	1	update the location to Student Center Ballroom
+event_update|event_update_no_changes|fallback	update_location_006	event_update_location_wording	1	update the location to Engineering Auditorium
+event_update|event_update_no_changes|fallback	update_location_007	event_update_location_wording	1	update the location to Campus Lawn
+event_update|event_update_no_changes|fallback	update_location_008	event_update_location_wording	1	update the location to Library Conference Room
+event_update|event_update_no_changes|fallback	update_location_009	event_update_location_wording	1	set the location to Student Center Ballroom
+event_update|event_update_no_changes|fallback	update_location_010	event_update_location_wording	1	set the location to Engineering Auditorium
+event_update|event_update_no_changes|fallback	update_location_011	event_update_location_wording	1	set the location to Campus Lawn
+event_update|event_update_no_changes|fallback	update_location_012	event_update_location_wording	1	set the location to Library Conference Room
+event_update|event_update_no_changes|fallback	update_location_013	event_update_location_wording	1	location is Student Center Ballroom
+event_update|event_update_no_changes|fallback	update_location_014	event_update_location_wording	1	location is Engineering Auditorium
+event_update|event_update_no_changes|fallback	update_location_015	event_update_location_wording	1	location is Campus Lawn
+event_update|event_update_no_changes|fallback	update_location_016	event_update_location_wording	1	location is Library Conference Room
+event_update|event_update_no_changes|fallback	update_location_017	event_update_location_wording	1	move the event to Student Center Ballroom
+event_update|event_update_no_changes|fallback	update_location_018	event_update_location_wording	1	move the event to Engineering Auditorium
+event_update|event_update_no_changes|fallback	update_location_019	event_update_location_wording	1	move the event to Campus Lawn
+event_update|event_update_no_changes|fallback	update_location_020	event_update_location_wording	1	move the event to Library Conference Room
+event_update|event_update_no_changes|fallback	update_location_021	event_update_location_wording	1	put it in Student Center Ballroom
+event_update|event_update_no_changes|fallback	update_location_022	event_update_location_wording	1	put it in Engineering Auditorium
+event_update|event_update_no_changes|fallback	update_location_023	event_update_location_wording	1	put it in Campus Lawn
+event_update|event_update_no_changes|fallback	update_location_024	event_update_location_wording	1	put it in Library Conference Room
+event_update|event_update_no_changes|fallback	update_location_025	event_update_location_wording	1	have it at Student Center Ballroom
+event_update|event_update_no_changes|fallback	update_location_026	event_update_location_wording	1	have it at Engineering Auditorium
+event_update|event_update_no_changes|fallback	update_location_027	event_update_location_wording	1	have it at Campus Lawn
+event_update|event_update_no_changes|fallback	update_location_028	event_update_location_wording	1	have it at Library Conference Room
+event_update|event_update_no_changes|fallback	update_location_029	event_update_location_wording	1	move it to Student Center Ballroom
+event_update|event_update_no_changes|fallback	update_location_030	event_update_location_wording	1	move it to Engineering Auditorium
+event_update|event_update_no_changes|fallback	update_location_031	event_update_location_wording	1	move it to Campus Lawn
+event_update|event_update_no_changes|fallback	update_location_032	event_update_location_wording	1	move it to Library Conference Room
+event_update|event_update_no_changes|fallback	update_location_033	event_update_location_wording	1	switch the venue to Student Center Ballroom
+event_update|event_update_no_changes|fallback	update_location_034	event_update_location_wording	1	switch the venue to Engineering Auditorium
+event_update|event_update_no_changes|fallback	update_location_035	event_update_location_wording	1	switch the venue to Campus Lawn
+event_update|event_update_no_changes|fallback	update_location_036	event_update_location_wording	1	switch the venue to Library Conference Room
+event_update|event_update_no_changes|fallback	update_location_037	event_update_location_wording	1	use Student Center Ballroom instead
+event_update|event_update_no_changes|fallback	update_location_038	event_update_location_wording	1	use Engineering Auditorium instead
+event_update|event_update_no_changes|fallback	update_location_039	event_update_location_wording	1	use Campus Lawn instead
+event_update|event_update_no_changes|fallback	update_location_040	event_update_location_wording	1	use Library Conference Room instead
+event_update|event_update_no_changes|fallback	update_location_041	event_update_location_wording	1	make the location Student Center Ballroom
+event_update|event_update_no_changes|fallback	update_location_042	event_update_location_wording	1	make the location Engineering Auditorium
+event_update|event_update_no_changes|fallback	update_location_043	event_update_location_wording	1	make the location Campus Lawn
+event_update|event_update_no_changes|fallback	update_location_044	event_update_location_wording	1	make the location Library Conference Room
+event_update|event_update_no_changes|fallback	update_location_045	event_update_location_wording	1	set venue to Student Center Ballroom
+event_update|event_update_no_changes|fallback	update_location_046	event_update_location_wording	1	set venue to Engineering Auditorium
+event_update|event_update_no_changes|fallback	update_location_047	event_update_location_wording	1	set venue to Campus Lawn
+event_update|event_update_no_changes|fallback	update_location_048	event_update_location_wording	1	set venue to Library Conference Room
+event_update|event_update_no_changes|fallback	update_title_001	event_update_title_wording	1	call it Spring Expo 2026
+event_update|event_update_no_changes|fallback	update_title_002	event_update_title_wording	1	call it Spring Innovation Expo
+event_update|event_update_no_changes|fallback	update_title_003	event_update_title_wording	1	call it Shield Spring Expo
+event_update|event_update_no_changes|fallback	update_title_004	event_update_title_wording	1	call it Campus Security Mixer
+event_update|event_update_no_changes|fallback	update_title_005	event_update_title_wording	1	rename it to Spring Expo 2026
+event_update|event_update_no_changes|fallback	update_title_006	event_update_title_wording	1	rename it to Spring Innovation Expo
+event_update|event_update_no_changes|fallback	update_title_007	event_update_title_wording	1	rename it to Shield Spring Expo
+event_update|event_update_no_changes|fallback	update_title_008	event_update_title_wording	1	rename it to Campus Security Mixer
+event_update|event_update_no_changes|fallback	update_title_009	event_update_title_wording	1	change the title to Spring Expo 2026
+event_update|event_update_no_changes|fallback	update_title_010	event_update_title_wording	1	change the title to Spring Innovation Expo
+event_update|event_update_no_changes|fallback	update_title_011	event_update_title_wording	1	change the title to Shield Spring Expo
+event_update|event_update_no_changes|fallback	update_title_012	event_update_title_wording	1	change the title to Campus Security Mixer
+event_update|event_update_no_changes|fallback	update_title_013	event_update_title_wording	1	update the title to Spring Expo 2026
+event_update|event_update_no_changes|fallback	update_title_014	event_update_title_wording	1	update the title to Spring Innovation Expo
+event_update|event_update_no_changes|fallback	update_title_015	event_update_title_wording	1	update the title to Shield Spring Expo
+event_update|event_update_no_changes|fallback	update_title_016	event_update_title_wording	1	update the title to Campus Security Mixer
+event_update|event_update_no_changes|fallback	update_title_017	event_update_title_wording	1	set the title to Spring Expo 2026
+event_update|event_update_no_changes|fallback	update_title_018	event_update_title_wording	1	set the title to Spring Innovation Expo
+event_update|event_update_no_changes|fallback	update_title_019	event_update_title_wording	1	set the title to Shield Spring Expo
+event_update|event_update_no_changes|fallback	update_title_020	event_update_title_wording	1	set the title to Campus Security Mixer
+event_update|event_update_no_changes|fallback	update_title_021	event_update_title_wording	1	it's called Spring Expo 2026
+event_update|event_update_no_changes|fallback	update_title_022	event_update_title_wording	1	it's called Spring Innovation Expo
+event_update|event_update_no_changes|fallback	update_title_023	event_update_title_wording	1	it's called Shield Spring Expo
+event_update|event_update_no_changes|fallback	update_title_024	event_update_title_wording	1	it's called Campus Security Mixer
+event_update|event_update_no_changes|fallback	update_title_025	event_update_title_wording	1	name it Spring Expo 2026
+event_update|event_update_no_changes|fallback	update_title_026	event_update_title_wording	1	name it Spring Innovation Expo
+event_update|event_update_no_changes|fallback	update_title_027	event_update_title_wording	1	name it Shield Spring Expo
+event_update|event_update_no_changes|fallback	update_title_028	event_update_title_wording	1	name it Campus Security Mixer
+event_update|event_update_no_changes|fallback	update_title_029	event_update_title_wording	1	change the name to Spring Expo 2026
+event_update|event_update_no_changes|fallback	update_title_030	event_update_title_wording	1	change the name to Spring Innovation Expo
+event_update|event_update_no_changes|fallback	update_title_031	event_update_title_wording	1	change the name to Shield Spring Expo
+event_update|event_update_no_changes|fallback	update_title_032	event_update_title_wording	1	change the name to Campus Security Mixer
+event_update|event_update_no_changes|fallback	update_title_033	event_update_title_wording	1	update the name to Spring Expo 2026
+event_update|event_update_no_changes|fallback	update_title_034	event_update_title_wording	1	update the name to Spring Innovation Expo
+event_update|event_update_no_changes|fallback	update_title_035	event_update_title_wording	1	update the name to Shield Spring Expo
+event_update|event_update_no_changes|fallback	update_title_036	event_update_title_wording	1	update the name to Campus Security Mixer
+event_update|event_update_no_changes|fallback	update_title_037	event_update_title_wording	1	set the name to Spring Expo 2026
+event_update|event_update_no_changes|fallback	update_title_038	event_update_title_wording	1	set the name to Spring Innovation Expo
+event_update|event_update_no_changes|fallback	update_title_039	event_update_title_wording	1	set the name to Shield Spring Expo
+event_update|event_update_no_changes|fallback	update_title_040	event_update_title_wording	1	set the name to Campus Security Mixer
+event_update|event_update_no_changes|fallback	update_date_001	event_update_date_wording	1	move it to April 26
+event_update|event_update_no_changes|fallback	update_date_002	event_update_date_wording	1	move it to next friday
+event_update|event_update_no_changes|fallback	update_date_003	event_update_date_wording	1	move it to tomorrow
+event_update|event_update_no_changes|fallback	update_date_004	event_update_date_wording	1	move it to 4/26
+event_update|event_update_no_changes|fallback	update_date_005	event_update_date_wording	1	move it to May 1
+event_update|event_update_no_changes|fallback	update_date_006	event_update_date_wording	1	reschedule it to April 26
+event_update|event_update_no_changes|fallback	update_date_007	event_update_date_wording	1	reschedule it to next friday
+event_update|event_update_no_changes|fallback	update_date_008	event_update_date_wording	1	reschedule it to tomorrow
+event_update|event_update_no_changes|fallback	update_date_009	event_update_date_wording	1	reschedule it to 4/26
+event_update|event_update_no_changes|fallback	update_date_010	event_update_date_wording	1	reschedule it to May 1
+event_update|event_update_no_changes|fallback	update_date_011	event_update_date_wording	1	change the date to April 26
+event_update|event_update_no_changes|fallback	update_date_012	event_update_date_wording	1	change the date to next friday
+event_update|event_update_no_changes|fallback	update_date_013	event_update_date_wording	1	change the date to tomorrow
+event_update|event_update_no_changes|fallback	update_date_014	event_update_date_wording	1	change the date to 4/26
+event_update|event_update_no_changes|fallback	update_date_015	event_update_date_wording	1	change the date to May 1
+event_update|event_update_no_changes|fallback	update_date_016	event_update_date_wording	1	update the date to April 26
+event_update|event_update_no_changes|fallback	update_date_017	event_update_date_wording	1	update the date to next friday
+event_update|event_update_no_changes|fallback	update_date_018	event_update_date_wording	1	update the date to tomorrow
+event_update|event_update_no_changes|fallback	update_date_019	event_update_date_wording	1	update the date to 4/26
+event_update|event_update_no_changes|fallback	update_date_020	event_update_date_wording	1	update the date to May 1
+event_update|event_update_no_changes|fallback	update_date_021	event_update_date_wording	1	set the date to April 26
+event_update|event_update_no_changes|fallback	update_date_022	event_update_date_wording	1	set the date to next friday
+event_update|event_update_no_changes|fallback	update_date_023	event_update_date_wording	1	set the date to tomorrow
+event_update|event_update_no_changes|fallback	update_date_024	event_update_date_wording	1	set the date to 4/26
+event_update|event_update_no_changes|fallback	update_date_025	event_update_date_wording	1	set the date to May 1
+event_update|event_update_no_changes|fallback	update_date_026	event_update_date_wording	1	push it to April 26
+event_update|event_update_no_changes|fallback	update_date_027	event_update_date_wording	1	push it to next friday
+event_update|event_update_no_changes|fallback	update_date_028	event_update_date_wording	1	push it to tomorrow
+event_update|event_update_no_changes|fallback	update_date_029	event_update_date_wording	1	push it to 4/26
+event_update|event_update_no_changes|fallback	update_date_030	event_update_date_wording	1	push it to May 1
+event_update|event_update_no_changes|fallback	update_date_031	event_update_date_wording	1	switch it to April 26
+event_update|event_update_no_changes|fallback	update_date_032	event_update_date_wording	1	switch it to next friday
+event_update|event_update_no_changes|fallback	update_date_033	event_update_date_wording	1	switch it to tomorrow
+event_update|event_update_no_changes|fallback	update_date_034	event_update_date_wording	1	switch it to 4/26
+event_update|event_update_no_changes|fallback	update_date_035	event_update_date_wording	1	switch it to May 1
+event_update|event_update_no_changes|fallback	update_date_036	event_update_date_wording	1	have it on April 26
+event_update|event_update_no_changes|fallback	update_date_037	event_update_date_wording	1	have it on next friday
+event_update|event_update_no_changes|fallback	update_date_038	event_update_date_wording	1	have it on tomorrow
+event_update|event_update_no_changes|fallback	update_date_039	event_update_date_wording	1	have it on 4/26
+event_update|event_update_no_changes|fallback	update_date_040	event_update_date_wording	1	have it on May 1
+task_create|fallback	task_create_001	task_create_wording	1	add task call the caterer
+task_create|fallback	task_create_002	task_create_wording	1	add task send invitations
+task_create|fallback	task_create_003	task_create_wording	1	add task confirm the venue
+task_create|fallback	task_create_004	task_create_wording	1	add task review the budget
+task_create|fallback	task_create_005	task_create_wording	1	add task prepare name tags
+task_create|fallback	task_create_006	task_create_wording	1	add a task to call the caterer
+task_create|fallback	task_create_007	task_create_wording	1	add a task to send invitations
+task_create|fallback	task_create_008	task_create_wording	1	add a task to confirm the venue
+task_create|fallback	task_create_009	task_create_wording	1	add a task to review the budget
+task_create|fallback	task_create_010	task_create_wording	1	add a task to prepare name tags
+task_create|fallback	task_create_011	task_create_wording	1	create task call the caterer
+task_create|fallback	task_create_012	task_create_wording	1	create task send invitations
+task_create|fallback	task_create_013	task_create_wording	1	create task confirm the venue
+task_create|fallback	task_create_014	task_create_wording	1	create task review the budget
+task_create|fallback	task_create_015	task_create_wording	1	create task prepare name tags
+task_create|fallback	task_create_016	task_create_wording	1	create a task to call the caterer
+task_create|fallback	task_create_017	task_create_wording	1	create a task to send invitations
+task_create|fallback	task_create_018	task_create_wording	1	create a task to confirm the venue
+task_create|fallback	task_create_019	task_create_wording	1	create a task to review the budget
+task_create|fallback	task_create_020	task_create_wording	1	create a task to prepare name tags
+task_create|fallback	task_create_021	task_create_wording	1	remind me to call the caterer
+task_create|fallback	task_create_022	task_create_wording	1	remind me to send invitations
+task_create|fallback	task_create_023	task_create_wording	1	remind me to confirm the venue
+task_create|fallback	task_create_024	task_create_wording	1	remind me to review the budget
+task_create|fallback	task_create_025	task_create_wording	1	remind me to prepare name tags
+task_create|fallback	task_create_026	task_create_wording	1	i need to call the caterer
+task_create|fallback	task_create_027	task_create_wording	1	i need to send invitations
+task_create|fallback	task_create_028	task_create_wording	1	i need to confirm the venue
+task_create|fallback	task_create_029	task_create_wording	1	i need to review the budget
+task_create|fallback	task_create_030	task_create_wording	1	i need to prepare name tags
+task_create|fallback	task_create_031	task_create_wording	1	we need to call the caterer
+task_create|fallback	task_create_032	task_create_wording	1	we need to send invitations
+task_create|fallback	task_create_033	task_create_wording	1	we need to confirm the venue
+task_create|fallback	task_create_034	task_create_wording	1	we need to review the budget
+task_create|fallback	task_create_035	task_create_wording	1	we need to prepare name tags
+task_create|fallback	task_create_036	task_create_wording	1	we should call the caterer
+task_create|fallback	task_create_037	task_create_wording	1	we should send invitations
+task_create|fallback	task_create_038	task_create_wording	1	we should confirm the venue
+task_create|fallback	task_create_039	task_create_wording	1	we should review the budget
+task_create|fallback	task_create_040	task_create_wording	1	we should prepare name tags
+task_create|fallback	task_create_041	task_create_wording	1	remember to call the caterer
+task_create|fallback	task_create_042	task_create_wording	1	remember to send invitations
+task_create|fallback	task_create_043	task_create_wording	1	remember to confirm the venue
+task_create|fallback	task_create_044	task_create_wording	1	remember to review the budget
+task_create|fallback	task_create_045	task_create_wording	1	remember to prepare name tags
+task_create|fallback	task_create_046	task_create_wording	1	make a note to call the caterer
+task_create|fallback	task_create_047	task_create_wording	1	make a note to send invitations
+task_create|fallback	task_create_048	task_create_wording	1	make a note to confirm the venue
+task_create|fallback	task_create_049	task_create_wording	1	make a note to review the budget
+task_create|fallback	task_create_050	task_create_wording	1	make a note to prepare name tags
+task_create|fallback	task_create_051	task_create_wording	1	put call the caterer on my task list
+task_create|fallback	task_create_052	task_create_wording	1	put send invitations on my task list
+task_create|fallback	task_create_053	task_create_wording	1	put confirm the venue on my task list
+task_create|fallback	task_create_054	task_create_wording	1	put review the budget on my task list
+task_create|fallback	task_create_055	task_create_wording	1	put prepare name tags on my task list
+task_create|fallback	task_create_056	task_create_wording	1	add call the caterer to my to-do list
+task_create|fallback	task_create_057	task_create_wording	1	add send invitations to my to-do list
+task_create|fallback	task_create_058	task_create_wording	1	add confirm the venue to my to-do list
+task_create|fallback	task_create_059	task_create_wording	1	add review the budget to my to-do list
+task_create|fallback	task_create_060	task_create_wording	1	add prepare name tags to my to-do list
+task_create|fallback	task_create_061	task_create_wording	1	don't let me forget to call the caterer
+task_create|fallback	task_create_062	task_create_wording	1	don't let me forget to send invitations
+task_create|fallback	task_create_063	task_create_wording	1	don't let me forget to confirm the venue
+task_create|fallback	task_create_064	task_create_wording	1	don't let me forget to review the budget
+task_create|fallback	task_create_065	task_create_wording	1	don't let me forget to prepare name tags
+task_create|fallback	task_create_066	task_create_wording	1	i should probably call the caterer
+task_create|fallback	task_create_067	task_create_wording	1	i should probably send invitations
+task_create|fallback	task_create_068	task_create_wording	1	i should probably confirm the venue
+task_create|fallback	task_create_069	task_create_wording	1	i should probably review the budget
+task_create|fallback	task_create_070	task_create_wording	1	i should probably prepare name tags
+task_create|fallback	task_create_071	task_create_wording	1	we still need to call the caterer
+task_create|fallback	task_create_072	task_create_wording	1	we still need to send invitations
+task_create|fallback	task_create_073	task_create_wording	1	we still need to confirm the venue
+task_create|fallback	task_create_074	task_create_wording	1	we still need to review the budget
+task_create|fallback	task_create_075	task_create_wording	1	we still need to prepare name tags
+task_complete|task_complete_not_found|fallback	task_complete_001	task_complete_wording	1	mark send invitations done
+task_complete|task_complete_not_found|fallback	task_complete_002	task_complete_wording	1	mark call the caterer done
+task_complete|task_complete_not_found|fallback	task_complete_003	task_complete_wording	1	mark confirm venue done
+task_complete|task_complete_not_found|fallback	task_complete_004	task_complete_wording	1	complete send invitations
+task_complete|task_complete_not_found|fallback	task_complete_005	task_complete_wording	1	complete call the caterer
+task_complete|task_complete_not_found|fallback	task_complete_006	task_complete_wording	1	complete confirm venue
+task_complete|task_complete_not_found|fallback	task_complete_007	task_complete_wording	1	finish send invitations
+task_complete|task_complete_not_found|fallback	task_complete_008	task_complete_wording	1	finish call the caterer
+task_complete|task_complete_not_found|fallback	task_complete_009	task_complete_wording	1	finish confirm venue
+task_complete|task_complete_not_found|fallback	task_complete_010	task_complete_wording	1	finished send invitations
+task_complete|task_complete_not_found|fallback	task_complete_011	task_complete_wording	1	finished call the caterer
+task_complete|task_complete_not_found|fallback	task_complete_012	task_complete_wording	1	finished confirm venue
+task_complete|task_complete_not_found|fallback	task_complete_013	task_complete_wording	1	done with send invitations
+task_complete|task_complete_not_found|fallback	task_complete_014	task_complete_wording	1	done with call the caterer
+task_complete|task_complete_not_found|fallback	task_complete_015	task_complete_wording	1	done with confirm venue
+task_complete|task_complete_not_found|fallback	task_complete_016	task_complete_wording	1	check off send invitations
+task_complete|task_complete_not_found|fallback	task_complete_017	task_complete_wording	1	check off call the caterer
+task_complete|task_complete_not_found|fallback	task_complete_018	task_complete_wording	1	check off confirm venue
+task_complete|task_complete_not_found|fallback	task_complete_019	task_complete_wording	1	cross off send invitations
+task_complete|task_complete_not_found|fallback	task_complete_020	task_complete_wording	1	cross off call the caterer
+task_complete|task_complete_not_found|fallback	task_complete_021	task_complete_wording	1	cross off confirm venue
+task_complete|task_complete_not_found|fallback	task_complete_022	task_complete_wording	1	mark task send invitations done
+task_complete|task_complete_not_found|fallback	task_complete_023	task_complete_wording	1	mark task call the caterer done
+task_complete|task_complete_not_found|fallback	task_complete_024	task_complete_wording	1	mark task confirm venue done
+task_complete|task_complete_not_found|fallback	task_complete_025	task_complete_wording	1	complete the task send invitations
+task_complete|task_complete_not_found|fallback	task_complete_026	task_complete_wording	1	complete the task call the caterer
+task_complete|task_complete_not_found|fallback	task_complete_027	task_complete_wording	1	complete the task confirm venue
+task_complete|task_complete_not_found|fallback	task_complete_028	task_complete_wording	1	i already send invitations
+task_complete|task_complete_not_found|fallback	task_complete_029	task_complete_wording	1	i already call the caterer
+task_complete|task_complete_not_found|fallback	task_complete_030	task_complete_wording	1	i already confirm venue
+task_complete|task_complete_not_found|fallback	task_complete_031	task_complete_wording	1	send invitations is done
+task_complete|task_complete_not_found|fallback	task_complete_032	task_complete_wording	1	call the caterer is done
+task_complete|task_complete_not_found|fallback	task_complete_033	task_complete_wording	1	confirm venue is done
+task_complete|task_complete_not_found|fallback	task_complete_034	task_complete_wording	1	send invitations is finished
+task_complete|task_complete_not_found|fallback	task_complete_035	task_complete_wording	1	call the caterer is finished
+task_complete|task_complete_not_found|fallback	task_complete_036	task_complete_wording	1	confirm venue is finished
+fallback|event_update_no_changes|event_update	ambiguous_001	ambiguous_wording	1	fix it
+fallback|event_update_no_changes|event_update	ambiguous_002	ambiguous_wording	1	do that
+fallback|event_update_no_changes|event_update	ambiguous_003	ambiguous_wording	1	make it better
+fallback|event_update_no_changes|event_update	ambiguous_004	ambiguous_wording	1	handle that
+fallback|event_update_no_changes|event_update	ambiguous_005	ambiguous_wording	1	take care of it
+fallback|event_update_no_changes|event_update	ambiguous_006	ambiguous_wording	1	change that one
+fallback|event_update_no_changes|event_update	ambiguous_007	ambiguous_wording	1	update that
+fallback|event_update_no_changes|event_update	ambiguous_008	ambiguous_wording	1	make it work
+fallback|event_update_no_changes|event_update	ambiguous_009	ambiguous_wording	1	do the thing
+fallback|event_update_no_changes|event_update	ambiguous_010	ambiguous_wording	1	same for the other one
+fallback|event_update_no_changes|event_update	ambiguous_011	ambiguous_wording	1	actually do that
+fallback|event_update_no_changes|event_update	ambiguous_012	ambiguous_wording	1	can you fix this
+fallback|event_update_no_changes|event_update	ambiguous_013	ambiguous_wording	1	make it more formal
+fallback|event_update_no_changes|event_update	ambiguous_014	ambiguous_wording	1	switch to something cheaper
