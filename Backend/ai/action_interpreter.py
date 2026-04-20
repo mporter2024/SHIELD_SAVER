@@ -27,6 +27,7 @@ CREATE_INTENT_PATTERNS = [
     r"\bcreate\b",
     r"\bplan\b",
     r"\bset\s+up\b",
+    r"\bset\s+an\s+event\s+up\b",
     r"\bsetup\b",
     r"\borganize\b",
     r"\bmake\b",
@@ -51,6 +52,7 @@ CREATE_INTENT_PATTERNS = [
     r"\bbuild\s+out\b.*\bas\s+an\s+event\b",
     r"\bneeds\s+to\s+be\s+created\b",
     r"\btrying\s+to\s+host\b",
+    r"\bi\s+need\s+to\s+host\b",
     r"\bneed\s+to\s+host\b",
     r"\bi'?d\s+like\b.*\badded\b",
     r"\bfor\s+me\s+add\b",
@@ -174,6 +176,30 @@ def _matches_any_pattern(message: str, patterns: list[str]) -> bool:
     lowered = message.lower()
     return any(re.search(pattern, lowered) for pattern in patterns)
 
+
+
+
+def _looks_like_strong_event_create(message: str, extracted_create: dict) -> bool:
+    lowered = (message or '').lower()
+    if not has_meaningful_create_data(extracted_create):
+        return False
+
+    has_date = bool(extracted_create.get('date')) or bool(extracted_create.get('start_datetime')) or bool(re.search(MONTH_PATTERN, lowered, re.IGNORECASE))
+    has_location = bool(extracted_create.get('location')) or bool(re.search(r"\b(?:at|in)\s+[a-z]", lowered))
+    has_size = extracted_create.get('guest_count') not in (None, '', []) or bool(re.search(r"\b\d+\s+(?:people|guests|attendees)\b", lowered))
+
+    phrasing = any(re.search(p, lowered) for p in [
+        r"\bset\s+an\s+event\s+up\b",
+        r"\bi\s+need\s+to\s+host\b",
+        r"\btrying\s+to\s+host\b",
+        r"\bcalled\b",
+        r"\bi'?m\s+planning\b",
+        r"\badd\b",
+        r"\bcreate\b",
+        r"\bplan\b",
+    ])
+
+    return phrasing and has_date and has_location and has_size
 
 def looks_like_existing_event_edit(message: str) -> bool:
     return _matches_any_pattern(message or "", STRONG_UPDATE_PATTERNS)
@@ -548,14 +574,16 @@ def interpret_message(message, context, state):
     task_fields = extract_task_fields(message)
     supplemental_task_action, supplemental_task_title = _supplement_task_action(message)
 
-    if supplemental_task_action:
+    pre_task_create_override = should_force_create(message, extracted_create, pending_event_draft) or _looks_like_strong_event_create(message, extracted_create)
+
+    if supplemental_task_action and not pre_task_create_override:
         task_action = supplemental_task_action
         task_fields = {
             "title": supplemental_task_title,
             "status": "pending" if task_action == "create" else "completed",
         }
 
-    if task_action == "create":
+    if task_action == "create" and not pre_task_create_override:
         state["last_intent"] = "task_create"
         return {
             "type": "task_create",
@@ -564,7 +592,7 @@ def interpret_message(message, context, state):
             "state": state,
         }
 
-    if task_action == "complete":
+    if task_action == "complete" and not pre_task_create_override:
         target_task = find_task_by_reference(task_fields.get("title"), context.get("tasks", []))
         state["last_intent"] = "task_complete"
         return {
@@ -575,7 +603,7 @@ def interpret_message(message, context, state):
             "state": state,
         }
 
-    create_triggered = should_force_create(message, extracted_create, pending_event_draft)
+    create_triggered = pre_task_create_override
     update_triggered = False if create_triggered else should_force_update(message, extracted_update)
 
     if create_triggered:
