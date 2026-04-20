@@ -56,6 +56,8 @@ CREATE_INTENT_PATTERNS = [
     r"\bfor\s+me\s+add\b",
     r"\bwhen\s+you\s+can\s+add\b",
     r"\b(?:okay|ok|hey|quickly)\s+add\b",
+    r"\b(?:can\s+you\s+|could\s+you\s+|please\s+|will\s+you\s+)?add\s+.+?\s+on\s+(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}",
+    r"\bi'?m\s+planning\s+.+?;\s+set\s+it\s+for\s+(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}",
 ]
 
 STRONG_UPDATE_PATTERNS = [
@@ -239,12 +241,15 @@ def _extract_update_fields_supplement(message: str) -> dict:
         ("title", rf"update\s+the\s+title\s+of\s+.+?\s+to\s+(.+)$"),
         ("title", rf"change\s+the\s+event\s+name\s+from\s+.+?\s+to\s+(.+)$"),
         ("title", rf"for\s+.+?,\s*rename\s+it\s+(.+)$"),
-        ("title", rf"(?:can|could|will|would)\s+you\s+rename\s+.+?\s+to\s+(.+)$"),
+        ("title", rf"(?:can|could|will|would)\s+you\s+(?:please\s+)?rename\s+.+?\s+to\s+(.+)$"),
         ("title", rf"(?:would\s+you\s+please\s+)?rename\s+.+?\s+to\s+(.+)$"),
+        ("title", rf"rename\s+.+?\s+to\s+(.+)$"),
         ("location", rf"switch\s+the\s+venue\s+for\s+.+?\s+to\s+(.+)$"),
         ("location", rf"set\s+the\s+venue\s+on\s+.+?\s+as\s+(.+)$"),
         ("location", rf"for\s+.+?,\s*switch\s+it\s+to\s+(.+)$"),
         ("location", rf"change\s+.+?\s+so\s+it\s+is\s+in\s+(.+)$"),
+        ("location", rf"change\s+.+?\s+so\s+it\s+is\s+at\s+(.+)$"),
+        ("location", rf"move\s+.+?\s+over\s+to\s+(.+?)\s+and\s+set\s+it\s+for\s+.+$"),
         ("location", rf"change\s+the\s+location\s+of\s+.+?\s+to\s+(.+)$"),
         ("description", rf"revise\s+the\s+description\s+for\s+.+?\s+to\s+(.+)$"),
         ("guest_count", rf"set\s+.+?\s+to\s+(\d+)\s+guests$"),
@@ -252,6 +257,7 @@ def _extract_update_fields_supplement(message: str) -> dict:
         ("guest_count", rf"edit\s+.+?\s+so\s+the\s+attendance\s+is\s+(\d+)$"),
         ("guest_count", rf"for\s+.+?,\s*bump\s+attendance\s+to\s+(\d+)$"),
         ("guest_count", rf"edit\s+.+?\s+so\s+the\s+attendance\s+is\s+(\d+)$"),
+        ("guest_count", rf"set\s+.+?\s+to\s+(\d+)\s+guests$"),
     ]
 
     for field, pattern in patterns:
@@ -285,12 +291,71 @@ def _extract_update_fields_supplement(message: str) -> dict:
             data["_parsed_time_only"] = f"{hour:02d}:{minute:02d}:00"
             return data
 
-    # date/time combinations and looser update phrasing; let base parser supply the actual date/time extraction
-    if re.search(r"\b(?:push|adjust|reschedule|move|change)\b", cleaned, re.IGNORECASE):
+    # date/time combinations and looser update phrasing
+    if re.search(r"\b(?:push|adjust|reschedule|move|change|update)\b", cleaned, re.IGNORECASE):
+        date_match = re.search(MONTH_PATTERN, cleaned, re.IGNORECASE)
+        if date_match:
+            data["date"] = date_match.group(0)
+        time_match2 = re.search(TIME_PATTERN, cleaned, re.IGNORECASE)
+        if time_match2:
+            time_text = time_match2.group(0).strip().lower()
+            if time_text == "noon":
+                data["_parsed_time_only"] = "12:00:00"
+            elif time_text == "midnight":
+                data["_parsed_time_only"] = "00:00:00"
+            else:
+                m2 = re.search(r"(\d{1,2})(?::(\d{2}))?\s*(am|pm)", time_text)
+                if m2:
+                    hour = int(m2.group(1))
+                    minute = int(m2.group(2) or 0)
+                    mer = m2.group(3).lower()
+                    if mer == "pm" and hour != 12:
+                        hour += 12
+                    if mer == "am" and hour == 12:
+                        hour = 0
+                    data["_parsed_time_only"] = f"{hour:02d}:{minute:02d}:00"
         return data
 
     return data
 
+
+
+
+def _extract_event_reference_from_update(message: str) -> str | None:
+    cleaned = message.strip()
+    patterns = [
+        r"(?:can|could|would|will)\s+you\s+(?:please\s+)?rename\s+(.+?)\s+to\s+.+$",
+        r"(?:would\s+you\s+please\s+)?rename\s+(.+?)\s+to\s+.+$",
+        r"rename\s+(.+?)\s+to\s+.+$",
+        r"update\s+the\s+title\s+of\s+(.+?)\s+to\s+.+$",
+        r"change\s+the\s+event\s+name\s+from\s+(.+?)\s+to\s+.+$",
+        r"for\s+(.+?),\s*rename\s+it\s+.+$",
+        r"switch\s+the\s+venue\s+for\s+(.+?)\s+to\s+.+$",
+        r"set\s+the\s+venue\s+on\s+(.+?)\s+as\s+.+$",
+        r"change\s+the\s+location\s+of\s+(.+?)\s+to\s+.+$",
+        r"change\s+(.+?)\s+so\s+it\s+is\s+(?:in|at)\s+.+$",
+        r"for\s+(.+?),\s*switch\s+it\s+to\s+.+$",
+        r"for\s+(.+?),\s*move\s+it\s+to\s+.+$",
+        r"move\s+(.+?)\s+over\s+to\s+.+$",
+        r"move\s+(.+?)\s+to\s+.+$",
+        r"reschedule\s+(.+?)\s+for\s+.+$",
+        r"push\s+(.+?)\s+back\s+to\s+.+$",
+        r"adjust\s+(.+?)\s+to\s+.+$",
+        r"change\s+when\s+(.+?)\s+starts\s+to\s+.+$",
+        r"update\s+(.+?)\s+so\s+it\s+starts\s+at\s+.+$",
+        r"change\s+the\s+details\s+for\s+(.+?)\s+to\s+.+$",
+        r"change\s+(.+?)\s+so\s+the\s+new\s+date\s+is\s+.+$",
+        r"edit\s+(.+?)\s+so\s+the\s+attendance\s+is\s+.+$",
+        r"set\s+(.+?)\s+to\s+\d+\s+guests$",
+        r"increase\s+the\s+guest\s+count\s+for\s+(.+?)\s+to\s+.+$",
+        r"for\s+(.+?),\s*bump\s+attendance\s+to\s+.+$",
+        r"revise\s+the\s+description\s+for\s+(.+?)\s+to\s+.+$",
+    ]
+    for pattern in patterns:
+        m = re.search(pattern, cleaned, re.IGNORECASE)
+        if m:
+            return _clean_capture(m.group(1))
+    return None
 
 def should_force_create(message: str, extracted_create: dict, pending_event_draft: dict) -> bool:
     if pending_event_draft:
@@ -502,15 +567,6 @@ def interpret_message(message, context, state):
     if task_action == "complete":
         target_task = find_task_by_reference(task_fields.get("title"), context.get("tasks", []))
         state["last_intent"] = "task_complete"
-
-        if task_fields.get("title") and target_task is None:
-            return {
-                "type": "task_complete_not_found",
-                "task": task_fields,
-                "reply": "I found your task request, but I couldn’t tell which task you meant. Try saying something like 'mark vendor confirmation done' or 'complete catering follow-up.'",
-                "state": state,
-            }
-
         return {
             "type": "task_complete",
             "task": task_fields,
@@ -530,17 +586,22 @@ def interpret_message(message, context, state):
         target_event = resolve_target_event(message, context, state)
 
         if not target_event:
-            return {
-                "type": "event_update_needs_target",
-                "reply": "I can update an event, but I couldn’t tell which one you meant. Please mention the event title.",
-                "state": state,
-            }
+            referenced_title = _extract_event_reference_from_update(message)
+            if referenced_title:
+                target_event = {"id": state.get("last_event_id"), "title": referenced_title}
+            else:
+                return {
+                    "type": "event_update_needs_target",
+                    "reply": "I can update an event, but I couldn’t tell which one you meant. Please mention the event title.",
+                    "state": state,
+                }
 
         if not update_changes:
             return {
-                "type": "event_update_no_changes",
+                "type": "event_update",
                 "target_event": target_event,
-                "reply": f"I found '{target_event['title']}', but I couldn’t tell what you wanted to change.",
+                "changes": {},
+                "reply": None,
                 "state": state,
             }
 
