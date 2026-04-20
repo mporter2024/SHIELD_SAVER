@@ -1,230 +1,1388 @@
-create something called Spring Expo April 24 at 5 pm at Webb Center Ballroom with 80 guests | event_create
-create something called Tech Summit May 10 at 2 pm at Innovation Hall with 150 guests | event_create
-create something called Career Fair June 5 at 11 am at Student Center with 200 guests | event_create
-create something called Alumni Meetup July 1 at 6 pm at Rooftop Lounge with 60 guests | event_create
-create something called Gaming Night August 12 at 8 pm at Rec Room with 40 guests | event_create
-create something called Research Showcase September 18 at 1 pm at Library Atrium with 120 guests | event_create
-plan something called Spring Expo for April 24 at 5 pm at the Webb Center Ballroom with 80 guests | event_create
-plan something called Tech Summit for May 10 at 2 pm at the Innovation Hall with 150 guests | event_create
-plan something called Career Fair for June 5 at 11 am at the Student Center with 200 guests | event_create
-plan something called Alumni Meetup for July 1 at 6 pm at the Rooftop Lounge with 60 guests | event_create
-plan something called Gaming Night for August 12 at 8 pm at the Rec Room with 40 guests | event_create
-plan something called Research Showcase for September 18 at 1 pm at the Library Atrium with 120 guests | event_create
-set up event called Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 people | event_create
-set up event called Tech Summit on May 10 at 2 pm in Innovation Hall for 150 people | event_create
-set up event called Career Fair on June 5 at 11 am in Student Center for 200 people | event_create
-set up event called Alumni Meetup on July 1 at 6 pm in Rooftop Lounge for 60 people | event_create
-set up event called Gaming Night on August 12 at 8 pm in Rec Room for 40 people | event_create
-set up event called Research Showcase on September 18 at 1 pm in Library Atrium for 120 people | event_create
-organize event called Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people | event_create
-organize event called Tech Summit for May 10 at 2 pm at the Innovation Hall for 150 people | event_create
-organize event called Career Fair for June 5 at 11 am at the Student Center for 200 people | event_create
-organize event called Alumni Meetup for July 1 at 6 pm at the Rooftop Lounge for 60 people | event_create
-organize event called Gaming Night for August 12 at 8 pm at the Rec Room for 40 people | event_create
-organize event called Research Showcase for September 18 at 1 pm at the Library Atrium for 120 people | event_create
-can you create something named Spring Expo April 24 at 5 pm at Webb Center Ballroom with 80 guests | event_create
-can you create something named Tech Summit May 10 at 2 pm at Innovation Hall with 150 guests | event_create
-can you create something named Career Fair June 5 at 11 am at Student Center with 200 guests | event_create
-can you create something named Alumni Meetup July 1 at 6 pm at Rooftop Lounge with 60 guests | event_create
-can you create something named Gaming Night August 12 at 8 pm at Rec Room with 40 guests | event_create
-can you create something named Research Showcase September 18 at 1 pm at Library Atrium with 120 guests | event_create
-let's plan something called Spring Expo April 24 at 5 pm at Webb Center Ballroom with 80 guests | event_create
-let's plan something called Tech Summit May 10 at 2 pm at Innovation Hall with 150 guests | event_create
-let's plan something called Career Fair June 5 at 11 am at Student Center with 200 guests | event_create
-let's plan something called Alumni Meetup July 1 at 6 pm at Rooftop Lounge with 60 guests | event_create
-let's plan something called Gaming Night August 12 at 8 pm at Rec Room with 40 guests | event_create
-let's plan something called Research Showcase September 18 at 1 pm at Library Atrium with 120 guests | event_create
-help me create something called Spring Expo on April 24 at 5 pm in Webb Center Ballroom with 80 guests | event_create
-help me create something called Tech Summit on May 10 at 2 pm in Innovation Hall with 150 guests | event_create
-help me create something called Career Fair on June 5 at 11 am in Student Center with 200 guests | event_create
-help me create something called Alumni Meetup on July 1 at 6 pm in Rooftop Lounge with 60 guests | event_create
-help me create something called Gaming Night on August 12 at 8 pm in Rec Room with 40 guests | event_create
-help me create something called Research Showcase on September 18 at 1 pm in Library Atrium with 120 guests | event_create
-i want to create event called Spring Expo for April 24 at 5 pm at the Webb Center Ballroom for 80 people | event_create
-i want to create event called Tech Summit for May 10 at 2 pm at the Innovation Hall for 150 people | event_create
-i want to create event called Career Fair for June 5 at 11 am at the Student Center for 200 people | event_create
-i want to create event called Alumni Meetup for July 1 at 6 pm at the Rooftop Lounge for 60 people | event_create
-i want to create event called Gaming Night for August 12 at 8 pm at the Rec Room for 40 people | event_create
-i want to create event called Research Showcase for September 18 at 1 pm at the Library Atrium for 120 people | event_create
-create an event called Spring Expo on April 24 starting at 5 pm in Webb Center Ballroom for about 80 people | event_create
-create an event called Tech Summit on May 10 starting at 2 pm in Innovation Hall for about 150 people | event_create
-create an event called Career Fair on June 5 starting at 11 am in Student Center for about 200 people | event_create
-create an event called Alumni Meetup on July 1 starting at 6 pm in Rooftop Lounge for about 60 people | event_create
-create an event called Gaming Night on August 12 starting at 8 pm in Rec Room for about 40 people | event_create
-create an event called Research Showcase on September 18 starting at 1 pm in Library Atrium for about 120 people | event_create
-plan a new event called Spring Expo for April 24 for 5 pm at Webb Center Ballroom for 80 guests | event_create
-plan a new event called Tech Summit for May 10 for 2 pm at Innovation Hall for 150 guests | event_create
-plan a new event called Career Fair for June 5 for 11 am at Student Center for 200 guests | event_create
-plan a new event called Alumni Meetup for July 1 for 6 pm at Rooftop Lounge for 60 guests | event_create
-plan a new event called Gaming Night for August 12 for 8 pm at Rec Room for 40 guests | event_create
-plan a new event called Research Showcase for September 18 for 1 pm at Library Atrium for 120 guests | event_create
-change the location of Spring Expo to Chartway Arena | event_update
-update Spring Expo to April 24 at 6 pm | event_update
-move Spring Expo to April 24 | event_update
-rename Spring Expo to Spring Expo Deluxe | event_update
-set the guest count of Spring Expo to 120 | event_update
-change the description of Spring Expo to outdoor networking event | event_update
-update Spring Expo location to Main Hall | event_update
-move Spring Expo to April 24 at 3 pm | event_update
-reschedule Spring Expo to noon | event_update
-change Spring Expo to midnight | event_update
-change the location of Tech Summit to Chartway Arena | event_update
-update Tech Summit to May 10 at 6 pm | event_update
-move Tech Summit to May 10 | event_update
-rename Tech Summit to Tech Summit Deluxe | event_update
-set the guest count of Tech Summit to 120 | event_update
-change the description of Tech Summit to outdoor networking event | event_update
-update Tech Summit location to Main Hall | event_update
-move Tech Summit to May 10 at 3 pm | event_update
-reschedule Tech Summit to noon | event_update
-change Tech Summit to midnight | event_update
-change the location of Career Fair to Chartway Arena | event_update
-update Career Fair to June 5 at 6 pm | event_update
-move Career Fair to June 5 | event_update
-rename Career Fair to Career Fair Deluxe | event_update
-set the guest count of Career Fair to 120 | event_update
-change the description of Career Fair to outdoor networking event | event_update
-update Career Fair location to Main Hall | event_update
-move Career Fair to June 5 at 3 pm | event_update
-reschedule Career Fair to noon | event_update
-change Career Fair to midnight | event_update
+make sure Career Fair is scheduled at Student Center on June 5 starting at 11 am for 200 | event_create
+would you set up Tech Summit at Innovation Hall for May 10 at 2 pm for 150 people | event_create
+would you set up Winter Gala at Grand Hall for December 3 at 7 pm for 180 people | event_create
+hey make Gaming Night happen on August 12 at 8 pm in Rec Room for 40 people | event_create
+track a task for finalize venue contract | task_create
+update the title of Career Fair to Career Fair Plus | event_update
+please schedule Winter Gala for about 180 attendees in Grand Hall on December 3 at 7 pm | event_create
+switch the venue for Research Showcase to Harbor Center | event_update
+make sure Alumni Meetup is scheduled at Rooftop Lounge on July 1 starting at 6 pm for 60 | event_create
+please add an event called Research Showcase scheduled in Library Atrium on September 18 at 1 pm for 120 | event_create
+change the details for Alumni Meetup to August 20 at 3 pm | event_update
+set the venue on Tech Summit as North Auditorium | event_update
+could you make Alumni Meetup happen on July 1 at 6 pm in Rooftop Lounge for 60 people | event_create
+can you schedule Alumni Meetup in Rooftop Lounge on July 1 at 6 pm with 60 guests | event_create
+push Leadership Forum back to 6:30 pm on April 30 | event_update
+can you add a task for check AV equipment | task_create
+set confirm parking to finished | task_complete
+would you mark send invitations complete | task_complete
+change the event name from Spring Expo to Spring Expo Plus | event_update
+set the venue on Gaming Night as North Auditorium | event_update
+make a reminder task to print signage | task_create
+track a task for send invitations | task_create
+will you move Gaming Night to April 30 | event_update
+could you set up Leadership Forum for October 9 at 4 pm at Conference Center with room for 90 guests | event_create
+book an event called Winter Gala for December 3 around 7 pm in Grand Hall for 180 guests | event_create
+update Career Fair so it starts at 6:30 pm | event_update
+create a to-do for confirm volunteers | task_create
+launch an event record for Gaming Night on August 12 at 8 pm at Rec Room for 40 attendees | event_create
+for Gaming Night, rename it Gaming Night Revised | event_update
+will you set up Alumni Meetup at Rooftop Lounge for July 1 at 6 pm for 60 people | event_create
+would you please add a task for print signage | task_create
+mark book DJ as done | task_complete
+review agenda is done | task_complete
+for me schedule Tech Summit for 150 guests in Innovation Hall on May 10 at 2 pm | event_create
+will you mark confirm parking complete | task_complete
+i want to schedule Career Fair in Student Center on June 5 at 11 am for 200 people | event_create
+can you rename Winter Gala to Winter Gala Updated | event_update
+change when Winter Gala starts to 9 am | event_update
+in Rooftop Lounge, schedule Alumni Meetup on July 1 for 6 pm with 60 attendees | event_create
+close out send invitations | task_complete
+set an event up for me called Research Showcase at Library Atrium on September 18 starting at 1 pm for 120 people | event_create
+at 8 pm on August 12, set up Gaming Night in Rec Room for 40 people | event_create
+when you can add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees | event_create
+open a new event for Tech Summit on May 10 at 2 pm in Innovation Hall for 150 attendees | event_create
+could you add a task for confirm parking | task_create
+i want to schedule Gaming Night in Rec Room on August 12 at 8 pm for 40 people | event_create
+would you move Research Showcase to September 22 | event_update
+with 120 guests, create Research Showcase at Library Atrium on September 18 at 1 pm | event_create
+start planning Spring Expo on April 24 at 5 pm in the Webb Center Ballroom for 80 people | event_create
+make sure Gaming Night is scheduled at Rec Room on August 12 starting at 8 pm for 40 | event_create
+just saying hi | fallback
+i need to host Research Showcase at Library Atrium for 120 people on September 18 at 1 pm | event_create
+would you add a task for confirm parking | task_create
+for me schedule Winter Gala for 180 guests in Grand Hall on December 3 at 7 pm | event_create
+complete book DJ | task_complete
+mark confirm parking as done | task_complete
+add print signage as a task | task_create
+mark off check AV equipment | task_complete
+would you create Career Fair for June 5 at 11 am in Student Center for 200 attendees | event_create
+i'm trying to host Leadership Forum in Conference Center on October 9 at 4 pm for 90 guests | event_create
+will you add a task for review agenda | task_create
+can you rename Leadership Forum to Leadership Forum Updated | event_update
+please add an event called Winter Gala scheduled in Grand Hall on December 3 at 7 pm for 180 | event_create
+please schedule Tech Summit for 150 guests in Innovation Hall on May 10 at 2 pm | event_create
+would you please add a task for confirm parking | task_create
+please schedule Tech Summit for about 150 attendees in Innovation Hall on May 10 at 2 pm | event_create
+i need an event called Alumni Meetup scheduled for July 1 at 6 pm in Rooftop Lounge for 60 people | event_create
+would you add a task for confirm volunteers | task_create
+for December 3 at 7 pm, create Winter Gala in Grand Hall with 180 guests | event_create
+make a new event titled Winter Gala happening December 3 at 7 pm at Grand Hall with 180 attendees | event_create
+make a new event titled Career Fair happening June 5 at 11 am at Student Center with 200 attendees | event_create
+can you add Alumni Meetup to the planner for July 1 at 6 pm in Rooftop Lounge for 60 people | event_create
+put order decorations on my to-do list | task_create
+please add confirm volunteers to the task list | task_create
+would you please mark prepare badges complete | task_complete
+put check AV equipment on my to-do list | task_create
+would you please schedule Leadership Forum in Conference Center on October 9 at 4 pm with 90 guests | event_create
+adjust Tech Summit to September 22 | event_update
+set the venue on Alumni Meetup as Main Hall | event_update
+make prepare badges a new task | task_create
+make order decorations a new task | task_create
+track a task for confirm parking | task_create
+could you set up Gaming Night for August 12 at 8 pm at Rec Room with room for 40 guests | event_create
+make a reminder task to confirm parking | task_create
+please i have a question | fallback
+rename Leadership Forum to Leadership Forum Plus | event_update
+okay schedule Leadership Forum for 90 guests in Conference Center on October 9 at 4 pm | event_create
+for Leadership Forum, bump attendance to 160 | event_update
+for Career Fair, rename it Career Fair Revised | event_update
+can you schedule Alumni Meetup for 60 guests in Rooftop Lounge on July 1 at 6 pm | event_create
+move Career Fair to April 30 | event_update
+complete assign check-in staff | task_complete
+set assign check-in staff to finished | task_complete
+please create the task send invitations | task_create
+quickly make Career Fair happen on June 5 at 11 am in Student Center for 200 people | event_create
+would you please add a task for check AV equipment | task_create
+for Career Fair, bump attendance to 135 | event_update
+Tech Summit needs to be created for May 10 in Innovation Hall at 2 pm for 150 people | event_create
+quickly schedule Tech Summit for 150 guests in Innovation Hall on May 10 at 2 pm | event_create
+mark confirm volunteers completed | task_complete
+make a new event titled Tech Summit happening May 10 at 2 pm at Innovation Hall with 150 attendees | event_create
+mark the task confirm volunteers as complete | task_complete
+can you schedule Leadership Forum in Conference Center on October 9 at 4 pm with 90 guests | event_create
+would you schedule Winter Gala in Grand Hall on December 3 at 7 pm with 180 guests | event_create
+would you please add a task for prepare badges | task_create
+for me add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees | event_create
+could you mark order decorations complete | task_complete
+book an event called Gaming Night for August 12 around 8 pm in Rec Room for 40 guests | event_create
+will you create Leadership Forum for October 9 at 4 pm in Conference Center for 90 attendees | event_create
+i want a task for check AV equipment | task_create
+make review agenda a new task | task_create
+i want a task for send invitations | task_create
+would you please add a task for send invitations | task_create
+could you add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees | event_create
+check off confirm catering | task_complete
+could you add a task for check AV equipment | task_create
+can you mark book DJ complete | task_complete
+please what is this app for | fallback
+i need to host Career Fair at Student Center for 200 people on June 5 at 11 am | event_create
+just saying tell me more | fallback
+could you mark book DJ complete | task_complete
+for Winter Gala, rename it Winter Gala Revised | event_update
+rename Research Showcase to Research Showcase Plus | event_update
+please put Career Fair on the calendar for June 5 at 11 am in Student Center with 200 guests | event_create
+would you please mark review agenda complete | task_complete
+would you mark print signage complete | task_complete
+set Leadership Forum to 75 guests | event_update
+could you mark finalize venue contract complete | task_complete
+for me schedule Gaming Night for 40 guests in Rec Room on August 12 at 8 pm | event_create
+could you make Leadership Forum happen on October 9 at 4 pm in Conference Center for 90 people | event_create
+for Career Fair, switch it to Main Hall | event_update
+reschedule Winter Gala for September 22 at 4:15 pm | event_update
+okay schedule Gaming Night for 40 guests in Rec Room on August 12 at 8 pm | event_create
+can you make Career Fair happen on June 5 at 11 am in Student Center for 200 people | event_create
+change the event name from Gaming Night to Gaming Night Plus | event_update
+finish confirm parking | task_complete
+draft an event named Alumni Meetup on July 1 at 6 pm in Rooftop Lounge for roughly 60 people | event_create
+let me create Alumni Meetup for July 1 at 6 pm in Rooftop Lounge with about 60 attendees | event_create
+will you create Gaming Night for August 12 at 8 pm in Rec Room for 40 attendees | event_create
+can you add task print signage | task_create
+please put Spring Expo on the calendar for April 24 at 5 pm in Webb Center Ballroom with 80 guests | event_create
+switch the venue for Tech Summit to Student Plaza | event_update
+schedule an event: Career Fair, June 5, 11 am, Student Center, 200 attendees | event_create
+set Spring Expo to 75 guests | event_update
+when you can add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees | event_create
+open a new event for Winter Gala on December 3 at 7 pm in Grand Hall for 180 attendees | event_create
+could you mark confirm parking complete | task_complete
+i need a task for check AV equipment | task_create
+for Leadership Forum, switch it to North Auditorium | event_update
+could you set up Research Showcase for September 18 at 1 pm at Library Atrium with room for 120 guests | event_create
+change the event name from Research Showcase to Research Showcase Plus | event_update
+when you can add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees | event_create
+book an event called Alumni Meetup for July 1 around 6 pm in Rooftop Lounge for 60 guests | event_create
+could you schedule Leadership Forum in Conference Center on October 9 at 4 pm with 90 guests | event_create
+i want a task for order decorations | task_create
+update the title of Gaming Night to Gaming Night Plus | event_update
+draft an event named Research Showcase on September 18 at 1 pm in Library Atrium for roughly 120 people | event_create
+for September 18 at 1 pm, create Research Showcase in Library Atrium with 120 guests | event_create
+please get Leadership Forum on the books for October 9, 4 pm, Conference Center, 90 guests | event_create
+could you set up Research Showcase at Library Atrium for September 18 at 1 pm for 120 people | event_create
+log a task that says assign check-in staff | task_create
+would you mark prepare badges complete | task_complete
+make confirm parking a new task | task_create
+mark review agenda completed | task_complete
+set confirm catering to finished | task_complete
+can you add Leadership Forum to the planner for October 9 at 4 pm in Conference Center for 90 people | event_create
+edit Tech Summit so the attendance is 220 | event_update
+update Gaming Night so it starts at midnight | event_update
+log a task that says confirm parking | task_create
+will you schedule Tech Summit in Innovation Hall on May 10 at 2 pm with 150 guests | event_create
+please add confirm parking to the task list | task_create
+log a task that says review agenda | task_create
+send invitations has been completed | task_complete
+please add an event called Alumni Meetup scheduled in Rooftop Lounge on July 1 at 6 pm for 60 | event_create
+set up Career Fair with 200 attendees, at Student Center, on June 5, at 11 am | event_create
+can you add a task for prepare badges | task_create
+help me set up Gaming Night at Rec Room on August 12 at 8 pm with 40 attendees | event_create
+mark off confirm volunteers | task_complete
+help me set up Research Showcase at Library Atrium on September 18 at 1 pm with 120 attendees | event_create
+would you add a task for finalize venue contract | task_create
+complete print signage | task_complete
+book an event called Spring Expo for April 24 around 5 pm in Webb Center Ballroom for 80 guests | event_create
+i have a question | fallback
+i need to host Alumni Meetup at Rooftop Lounge for 60 people on July 1 at 6 pm | event_create
+set Career Fair to 120 guests | event_update
+i'd like Winter Gala added for December 3 at 7 pm in Grand Hall for 180 attendees | event_create
+change when Career Fair starts to 9 am | event_update
+for me make Career Fair happen on June 5 at 11 am in Student Center for 200 people | event_create
+at 5 pm on April 24, set up Spring Expo in Webb Center Ballroom for 80 people | event_create
+would you please mark finalize venue contract complete | task_complete
+will you move Career Fair to April 30 | event_update
+finish review agenda | task_complete
+hey make Leadership Forum happen on October 9 at 4 pm in Conference Center for 90 people | event_create
+mark off finalize venue contract | task_complete
+add a checklist item to confirm catering | task_create
+please create the task book DJ | task_create
+build out Tech Summit as an event on May 10 at 2 pm in Innovation Hall with capacity for 150 | event_create
+can you create Gaming Night for August 12 at 8 pm in Rec Room for 40 attendees | event_create
+would you please add a task for confirm volunteers | task_create
+for Winter Gala, switch it to Harbor Center | event_update
+quickly make Winter Gala happen on December 3 at 7 pm in Grand Hall for 180 people | event_create
+please hi | fallback
+can you add task book DJ | task_create
+mark off send invitations | task_complete
+could you make Tech Summit happen on May 10 at 2 pm in Innovation Hall for 150 people | event_create
+add a checklist item to confirm volunteers | task_create
+would you please set up Research Showcase at Library Atrium for September 18 at 1 pm for 120 people | event_create
+switch the venue for Winter Gala to Harbor Center | event_update
+would you please mark confirm catering complete | task_complete
+please get Alumni Meetup on the books for July 1, 6 pm, Rooftop Lounge, 60 guests | event_create
+schedule Career Fair for June 5 at 11 am over in Student Center with 200 guests | event_create
+can you move Gaming Night to April 30 | event_update
+mark confirm catering as done | task_complete
+switch the venue for Gaming Night to Main Hall | event_update
+can you add task check AV equipment | task_create
+for Spring Expo, switch it to Harbor Center | event_update
+please create the task check AV equipment | task_create
+please put Alumni Meetup on the calendar for July 1 at 6 pm in Rooftop Lounge with 60 guests | event_create
+could you mark check AV equipment complete | task_complete
+move Leadership Forum over to Chartway Arena and set it for midnight | event_update
+would you rename Spring Expo to Spring Expo Updated | event_update
+track a task for review agenda | task_create
+would you please create Alumni Meetup for July 1 at 6 pm in Rooftop Lounge for 60 attendees | event_create
+please create the task prepare badges | task_create
+check off review agenda | task_complete
+could you schedule Spring Expo in Webb Center Ballroom on April 24 at 5 pm with 80 guests | event_create
+will you add a task for finalize venue contract | task_create
+update Spring Expo so it starts at noon | event_update
+check off order decorations | task_complete
+schedule an event: Spring Expo, April 24, 5 pm, Webb Center Ballroom, 80 attendees | event_create
+please get Winter Gala on the books for December 3, 7 pm, Grand Hall, 180 guests | event_create
+change the details for Research Showcase to September 22 at 4:15 pm | event_update
+make sure Tech Summit is scheduled at Innovation Hall on May 10 starting at 2 pm for 150 | event_create
+make Tech Summit happen at noon instead | event_update
+add a checklist item to send invitations | task_create
+set an event up for me called Career Fair at Student Center on June 5 starting at 11 am for 200 people | event_create
+can you add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees | event_create
+finish order decorations | task_complete
+make Gaming Night happen at 9 am instead | event_update
+would you move Alumni Meetup to July 8 | event_update
+make assign check-in staff a new task | task_create
+hey make Research Showcase happen on September 18 at 1 pm in Library Atrium for 120 people | event_create
+could you add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees | event_create
+make send invitations a new task | task_create
+would you please rename Research Showcase to Research Showcase Updated | event_update
+please add an event called Career Fair scheduled in Student Center on June 5 at 11 am for 200 | event_create
+i'm planning Career Fair; set it for June 5 at 11 am in Student Center for 200 people | event_create
+will you move Spring Expo to June 12 | event_update
+check off assign check-in staff | task_complete
+will you rename Alumni Meetup to Alumni Meetup Updated | event_update
+i'm planning Tech Summit; set it for May 10 at 2 pm in Innovation Hall for 150 people | event_create
+open a new event for Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 attendees | event_create
+add prepare badges as a task | task_create
+mark the task check AV equipment as complete | task_complete
+switch the venue for Career Fair to Main Hall | event_update
+move Winter Gala over to Harbor Center and set it for 3 pm | event_update
+i want a task for prepare badges | task_create
+i need to host Gaming Night at Rec Room for 40 people on August 12 at 8 pm | event_create
+i'm planning Spring Expo; set it for April 24 at 5 pm in Webb Center Ballroom for 80 people | event_create
+set finalize venue contract to finished | task_complete
+create Career Fair as a campus event for June 5 at 11 am at Student Center for 200 people | event_create
+could you schedule Alumni Meetup in Rooftop Lounge on July 1 at 6 pm with 60 guests | event_create
+quickly make Leadership Forum happen on October 9 at 4 pm in Conference Center for 90 people | event_create
+could you add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees | event_create
+launch an event record for Career Fair on June 5 at 11 am at Student Center for 200 attendees | event_create
+increase the guest count for Tech Summit to 140 | event_update
+would you schedule Gaming Night in Rec Room on August 12 at 8 pm with 40 guests | event_create
+create a to-do for confirm parking | task_create
+please add send invitations to the task list | task_create
+can we make Research Showcase happen on September 18 at 1 pm in Library Atrium for 120 guests | event_create
+would you add a task for prepare badges | task_create
+open a new event for Gaming Night on August 12 at 8 pm in Rec Room for 40 attendees | event_create
+would you please rename Tech Summit to Tech Summit Updated | event_update
+add a task to prepare badges | task_create
+could you move Gaming Night to June 12 | event_update
+would you create Research Showcase for September 18 at 1 pm in Library Atrium for 120 attendees | event_create
+mark send invitations completed | task_complete
+add a task to print signage | task_create
+let me create Tech Summit for May 10 at 2 pm in Innovation Hall with about 150 attendees | event_create
+please put Winter Gala on the calendar for December 3 at 7 pm in Grand Hall with 180 guests | event_create
+can you add task assign check-in staff | task_create
+mark the task send invitations as complete | task_complete
+set an event up for me called Alumni Meetup at Rooftop Lounge on July 1 starting at 6 pm for 60 people | event_create
+revise the description for Spring Expo to community outreach event | event_update
+quickly make Research Showcase happen on September 18 at 1 pm in Library Atrium for 120 people | event_create
+change the location of Leadership Forum to Main Hall | event_update
+can you add a task for send invitations | task_create
+with 90 guests, create Leadership Forum at Conference Center on October 9 at 4 pm | event_create
+could you make Gaming Night happen on August 12 at 8 pm in Rec Room for 40 people | event_create
+set up Alumni Meetup with 60 attendees, at Rooftop Lounge, on July 1, at 6 pm | event_create
+increase the guest count for Alumni Meetup to 75 | event_update
+spin up an event called Alumni Meetup for July 1, 6 pm, at Rooftop Lounge, with 60 people | event_create
+change the details for Leadership Forum to May 14 at midnight | event_update
+complete send invitations | task_complete
+move Spring Expo over to Harbor Center and set it for 3 pm | event_update
+would you add a task for book DJ | task_create
+can you add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees | event_create
+okay schedule Spring Expo for 80 guests in Webb Center Ballroom on April 24 at 5 pm | event_create
+would you please set up Spring Expo at Webb Center Ballroom for April 24 at 5 pm for 80 people | event_create
+please can you help me | fallback
+good evening | fallback
+review agenda has been completed | task_complete
+check off print signage | task_complete
+can you schedule Gaming Night for 40 guests in Rec Room on August 12 at 8 pm | event_create
+schedule Leadership Forum for October 9 at 4 pm over in Conference Center with 90 guests | event_create
+when you can make Tech Summit happen on May 10 at 2 pm in Innovation Hall for 150 people | event_create
+could you move Career Fair to June 12 | event_update
+will you rename Winter Gala to Winter Gala Updated | event_update
+can you set up Career Fair at Student Center for June 5 at 11 am for 200 people | event_create
+hey schedule Career Fair for 200 guests in Student Center on June 5 at 11 am | event_create
+how are you | fallback
+when you can schedule Alumni Meetup for 60 guests in Rooftop Lounge on July 1 at 6 pm | event_create
+please make Career Fair happen on June 5 at 11 am in Student Center for 200 people | event_create
+please add Career Fair on June 5 at 11 am at Student Center with 200 attendees | event_create
+can you add a task for confirm catering | task_create
+create Career Fair with a start time of 11 am on June 5 in Student Center for 200 people | event_create
+could you move Research Showcase to September 22 | event_update
+i need a task for print signage | task_create
+check off book DJ | task_complete
+please schedule Spring Expo for 80 guests in Webb Center Ballroom on April 24 at 5 pm | event_create
+move Career Fair over to Main Hall and set it for midnight | event_update
+move Alumni Meetup over to Student Plaza and set it for noon | event_update
+for Research Showcase, bump attendance to 160 | event_update
+please schedule Spring Expo for about 80 attendees in Webb Center Ballroom on April 24 at 5 pm | event_create
+hey schedule Tech Summit for 150 guests in Innovation Hall on May 10 at 2 pm | event_create
+would you mark check AV equipment complete | task_complete
+make Career Fair happen at 6:30 pm instead | event_update
+close out assign check-in staff | task_complete
+add send invitations as a task | task_create
+will you rename Gaming Night to Gaming Night Updated | event_update
+would you please schedule Research Showcase in Library Atrium on September 18 at 1 pm with 120 guests | event_create
+when you can add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees | event_create
+make a reminder task to book DJ | task_create
+okay make Alumni Meetup happen on July 1 at 6 pm in Rooftop Lounge for 60 people | event_create
+i need a task for confirm catering | task_create
+push Gaming Night back to midnight on August 20 | event_update
+in Webb Center Ballroom, schedule Spring Expo on April 24 for 5 pm with 80 attendees | event_create
+i need an event called Career Fair scheduled for June 5 at 11 am in Student Center for 200 people | event_create
+could you rename Alumni Meetup to Alumni Meetup Updated | event_update
+please create an event named Spring Expo on April 24 at 5 pm in Webb Center Ballroom for 80 attendees | event_create
+please create an event named Alumni Meetup on July 1 at 6 pm in Rooftop Lounge for 60 attendees | event_create
+push Spring Expo back to noon on July 8 | event_update
+would you please set up Alumni Meetup at Rooftop Lounge for July 1 at 6 pm for 60 people | event_create
+for me add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees | event_create
+will you set up Leadership Forum at Conference Center for October 9 at 4 pm for 90 people | event_create
+when you can add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees | event_create
+change Spring Expo so it is in Main Hall | event_update
+put confirm parking on my to-do list | task_create
+put together an event named Gaming Night for August 12 at 8 pm in Rec Room with 40 attendees | event_create
+i want a task for confirm volunteers | task_create
+edit Leadership Forum so the attendance is 175 | event_update
+please make Winter Gala happen on December 3 at 7 pm in Grand Hall for 180 people | event_create
+will you mark confirm catering complete | task_complete
+could you schedule Tech Summit in Innovation Hall on May 10 at 2 pm with 150 guests | event_create
+move Alumni Meetup to July 8 | event_update
+just saying hello | fallback
+make a new event titled Research Showcase happening September 18 at 1 pm at Library Atrium with 120 attendees | event_create
+add a checklist item to review agenda | task_create
+can you add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees | event_create
+when you can add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees | event_create
+will you schedule Research Showcase in Library Atrium on September 18 at 1 pm with 120 guests | event_create
+i need a task for review agenda | task_create
+would you please move Spring Expo to July 8 | event_update
+could you add a task for review agenda | task_create
+can you make an event for Tech Summit, May 10, 2 pm, Innovation Hall, and 150 guests | event_create
+please schedule Alumni Meetup for about 60 attendees in Rooftop Lounge on July 1 at 6 pm | event_create
+hello | fallback
+change the details for Tech Summit to May 14 at 6:30 pm | event_update
+move Tech Summit to July 8 | event_update
+check AV equipment has been completed | task_complete
+schedule Tech Summit for May 10 at 2 pm over in Innovation Hall with 150 guests | event_create
+please add an event called Tech Summit scheduled in Innovation Hall on May 10 at 2 pm for 150 | event_create
+create Spring Expo as a campus event for April 24 at 5 pm at Webb Center Ballroom for 80 people | event_create
+okay make Career Fair happen on June 5 at 11 am in Student Center for 200 people | event_create
+register a new event named Alumni Meetup for July 1 at 6 pm in Rooftop Lounge for 60 attendees | event_create
+could you schedule Leadership Forum for 90 guests in Conference Center on October 9 at 4 pm | event_create
+can you mark check AV equipment complete | task_complete
+set an event up for me called Winter Gala at Grand Hall on December 3 starting at 7 pm for 180 people | event_create
+would you please create Winter Gala for December 3 at 7 pm in Grand Hall for 180 attendees | event_create
+build out Gaming Night as an event on August 12 at 8 pm in Rec Room with capacity for 40 | event_create
+put book DJ on my to-do list | task_create
+create a booking for Career Fair on June 5 at 11 am inside Student Center with 200 guests | event_create
+please good evening | fallback
+could you move Alumni Meetup to April 30 | event_update
+can you move Alumni Meetup to August 20 | event_update
+can you move Career Fair to June 12 | event_update
+for Alumni Meetup, switch it to Student Plaza | event_update
+can you make an event for Career Fair, June 5, 11 am, Student Center, and 200 guests | event_create
+finish finalize venue contract | task_complete
+please schedule Leadership Forum for 90 guests in Conference Center on October 9 at 4 pm | event_create
+change the details for Gaming Night to September 22 at 6:30 pm | event_update
+mark the task book DJ as complete | task_complete
+please create the task finalize venue contract | task_create
+push Research Showcase back to midnight on April 30 | event_update
+start planning Winter Gala on December 3 at 7 pm in the Grand Hall for 180 people | event_create
+can you mark send invitations complete | task_complete
+mark order decorations completed | task_complete
+please add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees | event_create
+for Winter Gala, move it to September 22 at 3 pm | event_update
+change when Alumni Meetup starts to 3 pm | event_update
+could you add a task for print signage | task_create
+set an event up for me called Tech Summit at Innovation Hall on May 10 starting at 2 pm for 150 people | event_create
+when you can make Gaming Night happen on August 12 at 8 pm in Rec Room for 40 people | event_create
+create a to-do for confirm catering | task_create
+complete confirm volunteers | task_complete
+for Tech Summit, switch it to North Auditorium | event_update
+can you add task finalize venue contract | task_create
+set Research Showcase to 95 guests | event_update
+can you add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees | event_create
+close out order decorations | task_complete
+hey add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees | event_create
+can you schedule Research Showcase in Library Atrium on September 18 at 1 pm with 120 guests | event_create
+please add print signage to the task list | task_create
+schedule an event: Tech Summit, May 10, 2 pm, Innovation Hall, 150 attendees | event_create
+revise the description for Alumni Meetup to community outreach event | event_update
+draft an event named Career Fair on June 5 at 11 am in Student Center for roughly 200 people | event_create
+revise the description for Tech Summit to sponsor mixer | event_update
+i'm planning Winter Gala; set it for December 3 at 7 pm in Grand Hall for 180 people | event_create
+please tell me more | fallback
+could you make Research Showcase happen on September 18 at 1 pm in Library Atrium for 120 people | event_create
+can you make an event for Alumni Meetup, July 1, 6 pm, Rooftop Lounge, and 60 guests | event_create
+mark the task assign check-in staff as complete | task_complete
+open a new event for Career Fair on June 5 at 11 am in Student Center for 200 attendees | event_create
+please create an event named Research Showcase on September 18 at 1 pm in Library Atrium for 120 attendees | event_create
+launch an event record for Winter Gala on December 3 at 7 pm at Grand Hall for 180 attendees | event_create
+edit Spring Expo so the attendance is 120 | event_update
+add confirm volunteers as a task | task_create
+create a task called prepare badges | task_create
+mark confirm catering completed | task_complete
+what can you do | fallback
+can you set up Winter Gala at Grand Hall for December 3 at 7 pm for 180 people | event_create
+please add finalize venue contract to the task list | task_create
+would you please move Winter Gala to July 8 | event_update
+confirm catering has been completed | task_complete
+for Alumni Meetup, rename it Alumni Meetup Revised | event_update
+would you set up Gaming Night at Rec Room for August 12 at 8 pm for 40 people | event_create
+could you mark prepare badges complete | task_complete
+please add review agenda to the task list | task_create
+will you create Research Showcase for September 18 at 1 pm in Library Atrium for 120 attendees | event_create
+change Tech Summit so the new date is May 14 | event_update
+change the event name from Alumni Meetup to Alumni Meetup Plus | event_update
+check off prepare badges | task_complete
+set up Gaming Night with 40 attendees, at Rec Room, on August 12, at 8 pm | event_create
+could you add a task for confirm volunteers | task_create
+Leadership Forum needs to be created for October 9 in Conference Center at 4 pm for 90 people | event_create
+adjust Research Showcase to June 12 | event_update
+would you please add a task for review agenda | task_create
+please how are you | fallback
+could you rename Gaming Night to Gaming Night Updated | event_update
+push Tech Summit back to 4:15 pm on September 22 | event_update
+please add assign check-in staff to the task list | task_create
+would you rename Gaming Night to Gaming Night Updated | event_update
+will you move Research Showcase to May 14 | event_update
+build out Leadership Forum as an event on October 9 at 4 pm in Conference Center with capacity for 90 | event_create
+could you set up Alumni Meetup for July 1 at 6 pm at Rooftop Lounge with room for 60 guests | event_create
+set the venue on Career Fair as Main Hall | event_update
+please add an event called Spring Expo scheduled in Webb Center Ballroom on April 24 at 5 pm for 80 | event_create
+mark off confirm catering | task_complete
+update the title of Leadership Forum to Leadership Forum Plus | event_update
+i need a task for send invitations | task_create
+could you set up Career Fair at Student Center for June 5 at 11 am for 200 people | event_create
+Winter Gala needs to be created for December 3 in Grand Hall at 7 pm for 180 people | event_create
+build out Winter Gala as an event on December 3 at 7 pm in Grand Hall with capacity for 180 | event_create
+when you can make Winter Gala happen on December 3 at 7 pm in Grand Hall for 180 people | event_create
+make confirm volunteers a new task | task_create
+please get Tech Summit on the books for May 10, 2 pm, Innovation Hall, 150 guests | event_create
+will you set up Gaming Night at Rec Room for August 12 at 8 pm for 40 people | event_create
+print signage is done | task_complete
+add a checklist item to book DJ | task_create
+quickly add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees | event_create
+i need a task for prepare badges | task_create
+i'm trying to host Career Fair in Student Center on June 5 at 11 am for 200 guests | event_create
+create a task called confirm parking | task_create
+okay make Winter Gala happen on December 3 at 7 pm in Grand Hall for 180 people | event_create
+will you schedule Gaming Night in Rec Room on August 12 at 8 pm with 40 guests | event_create
+create a booking for Leadership Forum on October 9 at 4 pm inside Conference Center with 90 guests | event_create
+could you create Career Fair for June 5 at 11 am in Student Center for 200 attendees | event_create
+push Winter Gala back to 9 am on April 30 | event_update
+switch the venue for Alumni Meetup to Main Hall | event_update
+add a task to review agenda | task_create
+would you mark confirm catering complete | task_complete
+register a new event named Winter Gala for December 3 at 7 pm in Grand Hall for 180 attendees | event_create
+update Leadership Forum so it starts at 6:30 pm | event_update
+can you rename Tech Summit to Tech Summit Updated | event_update
+can you add Career Fair on June 5 at 11 am at Student Center with 200 attendees | event_create
+update the title of Research Showcase to Research Showcase Plus | event_update
+for me schedule Alumni Meetup for 60 guests in Rooftop Lounge on July 1 at 6 pm | event_create
+would you mark review agenda complete | task_complete
+make a reminder task to finalize venue contract | task_create
+can you create Research Showcase for September 18 at 1 pm in Library Atrium for 120 attendees | event_create
+would you please create Career Fair for June 5 at 11 am in Student Center for 200 attendees | event_create
+would you add a task for check AV equipment | task_create
+i want to schedule Winter Gala in Grand Hall on December 3 at 7 pm for 180 people | event_create
+please add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees | event_create
+reschedule Alumni Meetup for July 8 at 4:15 pm | event_update
+would you schedule Career Fair in Student Center on June 5 at 11 am with 200 guests | event_create
+change Winter Gala so it is in Main Hall | event_update
+would you please schedule Career Fair in Student Center on June 5 at 11 am with 200 guests | event_create
+could you add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees | event_create
+when you can add Career Fair on June 5 at 11 am at Student Center with 200 attendees | event_create
+will you move Tech Summit to April 30 | event_update
+please create an event named Gaming Night on August 12 at 8 pm in Rec Room for 40 attendees | event_create
+add a task to confirm parking | task_create
+for Gaming Night, switch it to Harbor Center | event_update
+will you rename Leadership Forum to Leadership Forum Updated | event_update
+change the location of Career Fair to Main Hall | event_update
+will you add a task for print signage | task_create
+with 150 guests, create Tech Summit at Innovation Hall on May 10 at 2 pm | event_create
+create Gaming Night as a campus event for August 12 at 8 pm at Rec Room for 40 people | event_create
+make sure Spring Expo is scheduled at Webb Center Ballroom on April 24 starting at 5 pm for 80 | event_create
+set the venue on Research Showcase as Student Plaza | event_update
+Career Fair needs to be created for June 5 in Student Center at 11 am for 200 people | event_create
+please hello | fallback
+quickly schedule Career Fair for 200 guests in Student Center on June 5 at 11 am | event_create
+log a task that says confirm catering | task_create
+please schedule Research Showcase for 120 guests in Library Atrium on September 18 at 1 pm | event_create
+close out confirm catering | task_complete
+update the title of Winter Gala to Winter Gala Plus | event_update
+will you move Winter Gala to September 22 | event_update
+i want a task for book DJ | task_create
+close out finalize venue contract | task_complete
+set send invitations to finished | task_complete
+for me add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees | event_create
+please good morning | fallback
+increase the guest count for Career Fair to 120 | event_update
+please what can you do | fallback
+add a task to confirm volunteers | task_create
+rename Tech Summit to Tech Summit Plus | event_update
+check off send invitations | task_complete
+would you mark finalize venue contract complete | task_complete
+mark review agenda as done | task_complete
+move Research Showcase over to Student Plaza and set it for midnight | event_update
+please get Spring Expo on the books for April 24, 5 pm, Webb Center Ballroom, 80 guests | event_create
+edit Gaming Night so the attendance is 95 | event_update
+will you add a task for book DJ | task_create
+would you add a task for order decorations | task_create
+quickly schedule Spring Expo for 80 guests in Webb Center Ballroom on April 24 at 5 pm | event_create
+revise the description for Research Showcase to sponsor mixer | event_update
+put together an event named Leadership Forum for October 9 at 4 pm in Conference Center with 90 attendees | event_create
+make sure Leadership Forum is scheduled at Conference Center on October 9 starting at 4 pm for 90 | event_create
+hey make Career Fair happen on June 5 at 11 am in Student Center for 200 people | event_create
+would you rename Tech Summit to Tech Summit Updated | event_update
+with 180 guests, create Winter Gala at Grand Hall on December 3 at 7 pm | event_create
+mark off print signage | task_complete
+okay make Tech Summit happen on May 10 at 2 pm in Innovation Hall for 150 people | event_create
+create a to-do for review agenda | task_create
+at 11 am on June 5, set up Career Fair in Student Center for 200 people | event_create
+when you can add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees | event_create
+would you move Gaming Night to June 12 | event_update
+can you add Winter Gala to the planner for December 3 at 7 pm in Grand Hall for 180 people | event_create
+would you add a task for confirm catering | task_create
+i need an event called Gaming Night scheduled for August 12 at 8 pm in Rec Room for 40 people | event_create
+will you create Spring Expo for April 24 at 5 pm in Webb Center Ballroom for 80 attendees | event_create
+check off confirm volunteers | task_complete
+register a new event named Gaming Night for August 12 at 8 pm in Rec Room for 40 attendees | event_create
+could you set up Spring Expo at Webb Center Ballroom for April 24 at 5 pm for 80 people | event_create
+mark book DJ completed | task_complete
+could you add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees | event_create
+schedule Alumni Meetup for July 1 at 6 pm over in Rooftop Lounge with 60 guests | event_create
+could you mark review agenda complete | task_complete
+will you create Winter Gala for December 3 at 7 pm in Grand Hall for 180 attendees | event_create
+please put Gaming Night on the calendar for August 12 at 8 pm in Rec Room with 40 guests | event_create
+hey schedule Spring Expo for 80 guests in Webb Center Ballroom on April 24 at 5 pm | event_create
+can you create Leadership Forum for October 9 at 4 pm in Conference Center for 90 attendees | event_create
+schedule Winter Gala for December 3 at 7 pm over in Grand Hall with 180 guests | event_create
+can you add task confirm volunteers | task_create
+change the event name from Leadership Forum to Leadership Forum Plus | event_update
+update Winter Gala so it starts at 4:15 pm | event_update
+close out print signage | task_complete
+please create an event named Winter Gala on December 3 at 7 pm in Grand Hall for 180 attendees | event_create
+add a task to order decorations | task_create
+can you add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees | event_create
+in Library Atrium, schedule Research Showcase on September 18 for 1 pm with 120 attendees | event_create
+mark assign check-in staff as done | task_complete
+hey schedule Research Showcase for 120 guests in Library Atrium on September 18 at 1 pm | event_create
+in Grand Hall, schedule Winter Gala on December 3 for 7 pm with 180 attendees | event_create
+add a task to book DJ | task_create
+would you please mark check AV equipment complete | task_complete
+for me make Gaming Night happen on August 12 at 8 pm in Rec Room for 40 people | event_create
+can you mark print signage complete | task_complete
+register a new event named Research Showcase for September 18 at 1 pm in Library Atrium for 120 attendees | event_create
+schedule an event: Leadership Forum, October 9, 4 pm, Conference Center, 90 attendees | event_create
+let me create Winter Gala for December 3 at 7 pm in Grand Hall with about 180 attendees | event_create
+can you add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees | event_create
+can you mark review agenda complete | task_complete
+make a reminder task to order decorations | task_create
+assign check-in staff has been completed | task_complete
+set confirm volunteers to finished | task_complete
+quickly schedule Winter Gala for 180 guests in Grand Hall on December 3 at 7 pm | event_create
+will you add a task for assign check-in staff | task_create
+i'd like Research Showcase added for September 18 at 1 pm in Library Atrium for 120 attendees | event_create
+will you set up Winter Gala at Grand Hall for December 3 at 7 pm for 180 people | event_create
+log a task that says book DJ | task_create
+i need a task for finalize venue contract | task_create
+increase the guest count for Winter Gala to 120 | event_update
+launch an event record for Research Showcase on September 18 at 1 pm at Library Atrium for 120 attendees | event_create
+change when Spring Expo starts to 4:15 pm | event_update
+i'm planning Research Showcase; set it for September 18 at 1 pm in Library Atrium for 120 people | event_create
+set up Research Showcase with 120 attendees, at Library Atrium, on September 18, at 1 pm | event_create
+i need an event called Research Showcase scheduled for September 18 at 1 pm in Library Atrium for 120 people | event_create
+can you add Spring Expo to the planner for April 24 at 5 pm in Webb Center Ballroom for 80 people | event_create
+create a to-do for book DJ | task_create
+let me create Gaming Night for August 12 at 8 pm in Rec Room with about 40 attendees | event_create
+could you create Spring Expo for April 24 at 5 pm in Webb Center Ballroom for 80 attendees | event_create
+please add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees | event_create
+thanks for the help | fallback
+please make Research Showcase happen on September 18 at 1 pm in Library Atrium for 120 people | event_create
+could you mark confirm catering complete | task_complete
+for me make Leadership Forum happen on October 9 at 4 pm in Conference Center for 90 people | event_create
+can you rename Career Fair to Career Fair Updated | event_update
+mark the task print signage as complete | task_complete
+make the description for Research Showcase community outreach event | event_update
+can you rename Research Showcase to Research Showcase Updated | event_update
+set Tech Summit to 95 guests | event_update
+for me add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees | event_create
+okay add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees | event_create
+increase the guest count for Leadership Forum to 175 | event_update
+can you create Career Fair for June 5 at 11 am in Student Center for 200 attendees | event_create
+can you set up Alumni Meetup at Rooftop Lounge for July 1 at 6 pm for 60 people | event_create
+change Gaming Night so it is in Chartway Arena | event_update
+for me add Career Fair on June 5 at 11 am at Student Center with 200 attendees | event_create
+would you set up Career Fair at Student Center for June 5 at 11 am for 200 people | event_create
+spin up an event called Gaming Night for August 12, 8 pm, at Rec Room, with 40 people | event_create
+can you mark finalize venue contract complete | task_complete
+close out review agenda | task_complete
 change the location of Alumni Meetup to Chartway Arena | event_update
-update Alumni Meetup to July 1 at 6 pm | event_update
-move Alumni Meetup to July 1 | event_update
-rename Alumni Meetup to Alumni Meetup Deluxe | event_update
-set the guest count of Alumni Meetup to 120 | event_update
-change the description of Alumni Meetup to outdoor networking event | event_update
-update Alumni Meetup location to Main Hall | event_update
-move Alumni Meetup to July 1 at 3 pm | event_update
-reschedule Alumni Meetup to noon | event_update
-change Alumni Meetup to midnight | event_update
+let me create Research Showcase for September 18 at 1 pm in Library Atrium with about 120 attendees | event_create
+order decorations has been completed | task_complete
+could you add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees | event_create
+will you move Leadership Forum to June 12 | event_update
+create Tech Summit as a campus event for May 10 at 2 pm at Innovation Hall for 150 people | event_create
+log a task that says prepare badges | task_create
+create a booking for Tech Summit on May 10 at 2 pm inside Innovation Hall with 150 guests | event_create
+with 40 guests, create Gaming Night at Rec Room on August 12 at 8 pm | event_create
+please schedule Gaming Night for 40 guests in Rec Room on August 12 at 8 pm | event_create
+move Gaming Night to July 8 | event_update
+would you set up Spring Expo at Webb Center Ballroom for April 24 at 5 pm for 80 people | event_create
+revise the description for Gaming Night to student showcase | event_update
+register a new event named Tech Summit for May 10 at 2 pm in Innovation Hall for 150 attendees | event_create
+adjust Career Fair to August 20 | event_update
+change Alumni Meetup so it is in Chartway Arena | event_update
+please create the task confirm catering | task_create
+okay schedule Tech Summit for 150 guests in Innovation Hall on May 10 at 2 pm | event_create
+change the location of Tech Summit to Student Plaza | event_update
+adjust Gaming Night to July 8 | event_update
+add a task to assign check-in staff | task_create
+could you add a task for book DJ | task_create
+would you please add a task for book DJ | task_create
+i need an event called Tech Summit scheduled for May 10 at 2 pm in Innovation Hall for 150 people | event_create
+at 2 pm on May 10, set up Tech Summit in Innovation Hall for 150 people | event_create
+finish assign check-in staff | task_complete
+please schedule Gaming Night for about 40 attendees in Rec Room on August 12 at 8 pm | event_create
+can you move Leadership Forum to July 8 | event_update
+set an event up for me called Gaming Night at Rec Room on August 12 starting at 8 pm for 40 people | event_create
+can you rename Spring Expo to Spring Expo Updated | event_update
+Gaming Night needs to be created for August 12 in Rec Room at 8 pm for 40 people | event_create
+when you can schedule Career Fair for 200 guests in Student Center on June 5 at 11 am | event_create
+can you add a task for assign check-in staff | task_create
+update the title of Tech Summit to Tech Summit Plus | event_update
+would you please set up Winter Gala at Grand Hall for December 3 at 7 pm for 180 people | event_create
+would you create Leadership Forum for October 9 at 4 pm in Conference Center for 90 attendees | event_create
+can you schedule Research Showcase for 120 guests in Library Atrium on September 18 at 1 pm | event_create
+will you add a task for check AV equipment | task_create
+for May 10 at 2 pm, create Tech Summit in Innovation Hall with 150 guests | event_create
+mark off review agenda | task_complete
+book DJ has been completed | task_complete
+hey there | fallback
+launch an event record for Tech Summit on May 10 at 2 pm at Innovation Hall for 150 attendees | event_create
+can we make Leadership Forum happen on October 9 at 4 pm in Conference Center for 90 guests | event_create
+will you schedule Career Fair in Student Center on June 5 at 11 am with 200 guests | event_create
+for Winter Gala, bump attendance to 160 | event_update
+can you add a task for print signage | task_create
+finish confirm volunteers | task_complete
+start planning Research Showcase on September 18 at 1 pm in the Library Atrium for 120 people | event_create
+start planning Leadership Forum on October 9 at 4 pm in the Conference Center for 90 people | event_create
+reschedule Spring Expo for August 20 at 3 pm | event_update
+for July 1 at 6 pm, create Alumni Meetup in Rooftop Lounge with 60 guests | event_create
+could you create Winter Gala for December 3 at 7 pm in Grand Hall for 180 attendees | event_create
+quickly add Career Fair on June 5 at 11 am at Student Center with 200 attendees | event_create
+can you mark prepare badges complete | task_complete
+make the description for Gaming Night community outreach event | event_update
+for October 9 at 4 pm, create Leadership Forum in Conference Center with 90 guests | event_create
+please make Gaming Night happen on August 12 at 8 pm in Rec Room for 40 people | event_create
+i'd like Alumni Meetup added for July 1 at 6 pm in Rooftop Lounge for 60 attendees | event_create
+i'm trying to host Tech Summit in Innovation Hall on May 10 at 2 pm for 150 guests | event_create
+i'd like Career Fair added for June 5 at 11 am in Student Center for 200 attendees | event_create
+help me set up Tech Summit at Innovation Hall on May 10 at 2 pm with 150 attendees | event_create
+please thanks for the help | fallback
+can you rename Alumni Meetup to Alumni Meetup Updated | event_update
+will you create Alumni Meetup for July 1 at 6 pm in Rooftop Lounge for 60 attendees | event_create
+make a reminder task to send invitations | task_create
+will you mark order decorations complete | task_complete
+adjust Leadership Forum to June 12 | event_update
+change when Gaming Night starts to 3 pm | event_update
+change Alumni Meetup so the new date is June 12 | event_update
+would you please mark confirm parking complete | task_complete
+okay make Spring Expo happen on April 24 at 5 pm in Webb Center Ballroom for 80 people | event_create
+would you rename Career Fair to Career Fair Updated | event_update
+can you add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees | event_create
+mark off order decorations | task_complete
+can you add a task for finalize venue contract | task_create
+put together an event named Alumni Meetup for July 1 at 6 pm in Rooftop Lounge with 60 attendees | event_create
+will you rename Career Fair to Career Fair Updated | event_update
+would you schedule Spring Expo in Webb Center Ballroom on April 24 at 5 pm with 80 guests | event_create
+can you schedule Career Fair in Student Center on June 5 at 11 am with 200 guests | event_create
+can we make Tech Summit happen on May 10 at 2 pm in Innovation Hall for 150 guests | event_create
+let me create Career Fair for June 5 at 11 am in Student Center with about 200 attendees | event_create
+okay add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees | event_create
+hey schedule Alumni Meetup for 60 guests in Rooftop Lounge on July 1 at 6 pm | event_create
+please add confirm catering to the task list | task_create
+could you add a task for prepare badges | task_create
+build out Research Showcase as an event on September 18 at 1 pm in Library Atrium with capacity for 120 | event_create
+can you schedule Career Fair for 200 guests in Student Center on June 5 at 11 am | event_create
+change the event name from Career Fair to Career Fair Plus | event_update
+complete confirm catering | task_complete
+move Research Showcase to April 30 | event_update
+i want to schedule Spring Expo in Webb Center Ballroom on April 24 at 5 pm for 80 people | event_create
+i'm trying to host Alumni Meetup in Rooftop Lounge on July 1 at 6 pm for 60 guests | event_create
+make sure Winter Gala is scheduled at Grand Hall on December 3 starting at 7 pm for 180 | event_create
+change the event name from Winter Gala to Winter Gala Plus | event_update
+i'm trying to host Spring Expo in Webb Center Ballroom on April 24 at 5 pm for 80 guests | event_create
+make a reminder task to prepare badges | task_create
+with 80 guests, create Spring Expo at Webb Center Ballroom on April 24 at 5 pm | event_create
+when you can schedule Research Showcase for 120 guests in Library Atrium on September 18 at 1 pm | event_create
+would you please mark print signage complete | task_complete
+revise the description for Career Fair to student showcase | event_update
+create Alumni Meetup with a start time of 6 pm on July 1 in Rooftop Lounge for 60 people | event_create
+please hey there | fallback
+i need a task for book DJ | task_create
+can we make Career Fair happen on June 5 at 11 am in Student Center for 200 guests | event_create
+i need to host Winter Gala at Grand Hall for 180 people on December 3 at 7 pm | event_create
+set the venue on Winter Gala as Harbor Center | event_update
+would you set up Alumni Meetup at Rooftop Lounge for July 1 at 6 pm for 60 people | event_create
+can you move Spring Expo to April 30 | event_update
+would you move Winter Gala to June 12 | event_update
+please create the task confirm volunteers | task_create
+please put Leadership Forum on the calendar for October 9 at 4 pm in Conference Center with 90 guests | event_create
+can you make Research Showcase happen on September 18 at 1 pm in Library Atrium for 120 people | event_create
+could you create Gaming Night for August 12 at 8 pm in Rec Room for 40 attendees | event_create
+complete check AV equipment | task_complete
+could you set up Alumni Meetup at Rooftop Lounge for July 1 at 6 pm for 60 people | event_create
+please create an event named Career Fair on June 5 at 11 am in Student Center for 200 attendees | event_create
+log a task that says confirm volunteers | task_create
+edit Alumni Meetup so the attendance is 75 | event_update
+rename Gaming Night to Gaming Night Plus | event_update
+can you schedule Leadership Forum for 90 guests in Conference Center on October 9 at 4 pm | event_create
+book an event called Tech Summit for May 10 around 2 pm in Innovation Hall for 150 guests | event_create
+change the event name from Tech Summit to Tech Summit Plus | event_update
+would you please set up Gaming Night at Rec Room for August 12 at 8 pm for 40 people | event_create
+could you schedule Gaming Night for 40 guests in Rec Room on August 12 at 8 pm | event_create
+can you set up Leadership Forum at Conference Center for October 9 at 4 pm for 90 people | event_create
+will you mark confirm volunteers complete | task_complete
+quickly add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees | event_create
+log a task that says check AV equipment | task_create
+make confirm catering a new task | task_create
+create a task called finalize venue contract | task_create
+for me schedule Career Fair for 200 guests in Student Center on June 5 at 11 am | event_create
+update Tech Summit so it starts at 4:15 pm | event_update
+create a to-do for finalize venue contract | task_create
+please add prepare badges to the task list | task_create
+update the title of Spring Expo to Spring Expo Plus | event_update
+create a task called assign check-in staff | task_create
+book an event called Research Showcase for September 18 around 1 pm in Library Atrium for 120 guests | event_create
+what is this app for | fallback
+would you please add a task for finalize venue contract | task_create
+schedule Research Showcase for September 18 at 1 pm over in Library Atrium with 120 guests | event_create
+for August 12 at 8 pm, create Gaming Night in Rec Room with 40 guests | event_create
+would you please rename Career Fair to Career Fair Updated | event_update
+quickly add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees | event_create
+move Tech Summit over to Main Hall and set it for midnight | event_update
+update the title of Alumni Meetup to Alumni Meetup Plus | event_update
+finish confirm catering | task_complete
+can you add task confirm catering | task_create
+please schedule Leadership Forum for about 90 attendees in Conference Center on October 9 at 4 pm | event_create
+track a task for book DJ | task_create
+could you move Tech Summit to September 22 | event_update
+could you schedule Spring Expo for 80 guests in Webb Center Ballroom on April 24 at 5 pm | event_create
+could you move Leadership Forum to August 20 | event_update
+would you please rename Alumni Meetup to Alumni Meetup Updated | event_update
+in Innovation Hall, schedule Tech Summit on May 10 for 2 pm with 150 attendees | event_create
+hey add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees | event_create
+confirm parking has been completed | task_complete
+confirm catering is done | task_complete
+can you set up Research Showcase at Library Atrium for September 18 at 1 pm for 120 people | event_create
+would you mark assign check-in staff complete | task_complete
+would you please mark confirm volunteers complete | task_complete
 change the location of Gaming Night to Chartway Arena | event_update
-update Gaming Night to August 12 at 6 pm | event_update
-move Gaming Night to August 12 | event_update
-rename Gaming Night to Gaming Night Deluxe | event_update
-set the guest count of Gaming Night to 120 | event_update
-change the description of Gaming Night to outdoor networking event | event_update
-update Gaming Night location to Main Hall | event_update
-move Gaming Night to August 12 at 3 pm | event_update
-reschedule Gaming Night to noon | event_update
-change Gaming Night to midnight | event_update
-change the location of Research Showcase to Chartway Arena | event_update
-update Research Showcase to September 18 at 6 pm | event_update
-move Research Showcase to September 18 | event_update
-rename Research Showcase to Research Showcase Deluxe | event_update
-set the guest count of Research Showcase to 120 | event_update
-change the description of Research Showcase to outdoor networking event | event_update
-update Research Showcase location to Main Hall | event_update
-move Research Showcase to September 18 at 3 pm | event_update
-reschedule Research Showcase to noon | event_update
-change Research Showcase to midnight | event_update
+would you please create Gaming Night for August 12 at 8 pm in Rec Room for 40 attendees | event_create
+for me add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees | event_create
+make a reminder task to review agenda | task_create
+add a checklist item to print signage | task_create
+add confirm catering as a task | task_create
+make Research Showcase happen at 4:15 pm instead | event_update
+please add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees | event_create
+will you rename Research Showcase to Research Showcase Updated | event_update
+create Alumni Meetup as a campus event for July 1 at 6 pm at Rooftop Lounge for 60 people | event_create
+will you set up Career Fair at Student Center for June 5 at 11 am for 200 people | event_create
+please create the task assign check-in staff | task_create
+build out Spring Expo as an event on April 24 at 5 pm in Webb Center Ballroom with capacity for 80 | event_create
+could you move Winter Gala to April 30 | event_update
+could you create Alumni Meetup for July 1 at 6 pm in Rooftop Lounge for 60 attendees | event_create
+create a task called print signage | task_create
+hey add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees | event_create
+mark assign check-in staff completed | task_complete
+set up Winter Gala with 180 attendees, at Grand Hall, on December 3, at 7 pm | event_create
+track a task for confirm volunteers | task_create
+could you schedule Research Showcase for 120 guests in Library Atrium on September 18 at 1 pm | event_create
+would you schedule Tech Summit in Innovation Hall on May 10 at 2 pm with 150 guests | event_create
+when you can make Research Showcase happen on September 18 at 1 pm in Library Atrium for 120 people | event_create
+put confirm volunteers on my to-do list | task_create
+for Spring Expo, bump attendance to 160 | event_update
+set the venue on Spring Expo as Chartway Arena | event_update
+please add check AV equipment to the task list | task_create
+mark confirm parking completed | task_complete
+add a checklist item to assign check-in staff | task_create
+would you create Gaming Night for August 12 at 8 pm in Rec Room for 40 attendees | event_create
+move Leadership Forum to May 14 | event_update
+can we make Alumni Meetup happen on July 1 at 6 pm in Rooftop Lounge for 60 guests | event_create
+could you add a task for confirm catering | task_create
+can you set up Tech Summit at Innovation Hall for May 10 at 2 pm for 150 people | event_create
+make book DJ a new task | task_create
+spin up an event called Tech Summit for May 10, 2 pm, at Innovation Hall, with 150 people | event_create
+make Alumni Meetup happen at 9 am instead | event_update
+can you schedule Winter Gala in Grand Hall on December 3 at 7 pm with 180 guests | event_create
+can you add Tech Summit to the planner for May 10 at 2 pm in Innovation Hall for 150 people | event_create
+could you mark confirm volunteers complete | task_complete
+would you please rename Gaming Night to Gaming Night Updated | event_update
+can you make an event for Spring Expo, April 24, 5 pm, Webb Center Ballroom, and 80 guests | event_create
+would you please mark book DJ complete | task_complete
+can you make Gaming Night happen on August 12 at 8 pm in Rec Room for 40 people | event_create
+would you please schedule Tech Summit in Innovation Hall on May 10 at 2 pm with 150 guests | event_create
+could you schedule Winter Gala in Grand Hall on December 3 at 7 pm with 180 guests | event_create
+please make Alumni Meetup happen on July 1 at 6 pm in Rooftop Lounge for 60 people | event_create
+could you mark assign check-in staff complete | task_complete
+prepare badges has been completed | task_complete
+revise the description for Winter Gala to formal evening program | event_update
+i want to schedule Leadership Forum in Conference Center on October 9 at 4 pm for 90 people | event_create
+mark off confirm parking | task_complete
+create a to-do for send invitations | task_create
+could you create Research Showcase for September 18 at 1 pm in Library Atrium for 120 attendees | event_create
+add a checklist item to check AV equipment | task_create
+okay make Gaming Night happen on August 12 at 8 pm in Rec Room for 40 people | event_create
+set review agenda to finished | task_complete
+mark off book DJ | task_complete
+will you move Alumni Meetup to June 12 | event_update
+would you move Career Fair to June 12 | event_update
+hey add Career Fair on June 5 at 11 am at Student Center with 200 attendees | event_create
+i want a task for confirm parking | task_create
+change when Leadership Forum starts to 4:15 pm | event_update
+change Career Fair so it is in North Auditorium | event_update
+create Research Showcase as a campus event for September 18 at 1 pm at Library Atrium for 120 people | event_create
+set Gaming Night to 75 guests | event_update
+would you set up Leadership Forum at Conference Center for October 9 at 4 pm for 90 people | event_create
+log a task that says send invitations | task_create
+just saying what can you do | fallback
+can you make Winter Gala happen on December 3 at 7 pm in Grand Hall for 180 people | event_create
+make the description for Winter Gala outdoor networking event | event_update
+change Gaming Night so the new date is August 20 | event_update
+make Winter Gala happen at 9 am instead | event_update
 add a task to confirm catering | task_create
-create a task called book DJ | task_create
-add task finalize venue contract | task_create
-create a task send invitations | task_create
-add a task to confirm volunteers | task_create
-create a task called review agenda | task_create
-add task prepare badges | task_create
-create a task order decorations | task_create
-add a task to confirm catering | task_create
-create a task called book DJ | task_create
-add task finalize venue contract | task_create
-create a task send invitations | task_create
-add a task to confirm volunteers | task_create
-create a task called review agenda | task_create
-add task prepare badges | task_create
-create a task order decorations | task_create
-add a task to confirm catering | task_create
-create a task called book DJ | task_create
-add task finalize venue contract | task_create
-create a task send invitations | task_create
-add a task to confirm volunteers | task_create
-create a task called review agenda | task_create
-add task prepare badges | task_create
-create a task order decorations | task_create
-add a task to confirm catering | task_create
-create a task called book DJ | task_create
-add task finalize venue contract | task_create
-create a task send invitations | task_create
-add a task to confirm volunteers | task_create
-create a task called review agenda | task_create
-add task prepare badges | task_create
-create a task order decorations | task_create
-add a task to confirm catering | task_create
-create a task called book DJ | task_create
-add task finalize venue contract | task_create
-create a task send invitations | task_create
-add a task to confirm volunteers | task_create
-create a task called review agenda | task_create
-add task prepare badges | task_create
-create a task order decorations | task_create
-mark confirm catering as done | task_complete
-complete book DJ | task_complete
-mark send invitations completed | task_complete
-mark finalize venue contract as done | task_complete
-complete review agenda | task_complete
-mark order decorations completed | task_complete
-mark confirm catering as done | task_complete
-complete book DJ | task_complete
-mark send invitations completed | task_complete
-mark finalize venue contract as done | task_complete
-complete review agenda | task_complete
-mark order decorations completed | task_complete
-mark confirm catering as done | task_complete
-complete book DJ | task_complete
-mark send invitations completed | task_complete
-mark finalize venue contract as done | task_complete
-complete review agenda | task_complete
-mark order decorations completed | task_complete
-mark confirm catering as done | task_complete
-complete book DJ | task_complete
-mark send invitations completed | task_complete
-mark finalize venue contract as done | task_complete
-complete review agenda | task_complete
-mark order decorations completed | task_complete
-mark confirm catering as done | task_complete
-complete book DJ | task_complete
-mark send invitations completed | task_complete
-mark finalize venue contract as done | task_complete
-complete review agenda | task_complete
-mark order decorations completed | task_complete
-hello | fallback
-what can you do | fallback
-hi there | fallback
-help me | fallback
-how are you | fallback
-thanks | fallback
-good morning | fallback
+would you please set up Leadership Forum at Conference Center for October 9 at 4 pm for 90 people | event_create
+change when Tech Summit starts to noon | event_update
+create Research Showcase with a start time of 1 pm on September 18 in Library Atrium for 120 people | event_create
+check off check AV equipment | task_complete
+help me set up Winter Gala at Grand Hall on December 3 at 7 pm with 180 attendees | event_create
+i want to schedule Tech Summit in Innovation Hall on May 10 at 2 pm for 150 people | event_create
+complete confirm parking | task_complete
+set up Spring Expo with 80 attendees, at Webb Center Ballroom, on April 24, at 5 pm | event_create
+please add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees | event_create
+finish send invitations | task_complete
+make Leadership Forum happen at midnight instead | event_update
+switch the venue for Leadership Forum to Chartway Arena | event_update
+finalize venue contract is done | task_complete
+would you add a task for print signage | task_create
+in Rec Room, schedule Gaming Night on August 12 for 8 pm with 40 attendees | event_create
+for Leadership Forum, move it to June 12 at noon | event_update
+would you move Leadership Forum to June 12 | event_update
+i need a task for order decorations | task_create
+make a reminder task to check AV equipment | task_create
+would you please rename Spring Expo to Spring Expo Updated | event_update
+i need a task for confirm parking | task_create
+put together an event named Career Fair for June 5 at 11 am in Student Center with 200 attendees | event_create
+could you mark send invitations complete | task_complete
+spin up an event called Career Fair for June 5, 11 am, at Student Center, with 200 people | event_create
+will you set up Research Showcase at Library Atrium for September 18 at 1 pm for 120 people | event_create
+add a checklist item to finalize venue contract | task_create
+please create the task print signage | task_create
+update Alumni Meetup so it starts at 3 pm | event_update
+when you can make Spring Expo happen on April 24 at 5 pm in Webb Center Ballroom for 80 people | event_create
+increase the guest count for Gaming Night to 220 | event_update
+would you move Tech Summit to April 30 | event_update
+hey schedule Winter Gala for 180 guests in Grand Hall on December 3 at 7 pm | event_create
+prepare badges is done | task_complete
+could you add Career Fair on June 5 at 11 am at Student Center with 200 attendees | event_create
+could you add a task for finalize venue contract | task_create
+increase the guest count for Research Showcase to 95 | event_update
+would you add a task for send invitations | task_create
+move Gaming Night over to Student Plaza and set it for 9 am | event_update
+can you create Spring Expo for April 24 at 5 pm in Webb Center Ballroom for 80 attendees | event_create
+for Gaming Night, move it to May 14 at 9 am | event_update
+for Spring Expo, move it to May 14 at 9 am | event_update
+i want a task for finalize venue contract | task_create
+make the description for Alumni Meetup outdoor networking event | event_update
+please schedule Alumni Meetup for 60 guests in Rooftop Lounge on July 1 at 6 pm | event_create
+can you add task order decorations | task_create
+will you set up Tech Summit at Innovation Hall for May 10 at 2 pm for 150 people | event_create
+mark the task order decorations as complete | task_complete
+could you set up Leadership Forum at Conference Center for October 9 at 4 pm for 90 people | event_create
+will you schedule Winter Gala in Grand Hall on December 3 at 7 pm with 180 guests | event_create
+make check AV equipment a new task | task_create
+will you schedule Alumni Meetup in Rooftop Lounge on July 1 at 6 pm with 60 guests | event_create
+create Winter Gala as a campus event for December 3 at 7 pm at Grand Hall for 180 people | event_create
+update Research Showcase so it starts at 9 am | event_update
+track a task for confirm catering | task_create
+create Spring Expo with a start time of 5 pm on April 24 in Webb Center Ballroom for 80 people | event_create
+finish book DJ | task_complete
+quickly add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees | event_create
+set book DJ to finished | task_complete
+when you can schedule Winter Gala for 180 guests in Grand Hall on December 3 at 7 pm | event_create
+create Tech Summit with a start time of 2 pm on May 10 in Innovation Hall for 150 people | event_create
 tell me more | fallback
-hello | fallback
-what can you do | fallback
-hi there | fallback
-help me | fallback
-how are you | fallback
-thanks | fallback
+would you please add a task for assign check-in staff | task_create
+change Career Fair so the new date is August 20 | event_update
+would you please set up Tech Summit at Innovation Hall for May 10 at 2 pm for 150 people | event_create
+change Research Showcase so it is in Harbor Center | event_update
+will you rename Spring Expo to Spring Expo Updated | event_update
+okay schedule Research Showcase for 120 guests in Library Atrium on September 18 at 1 pm | event_create
+i need an event called Leadership Forum scheduled for October 9 at 4 pm in Conference Center for 90 people | event_create
+build out Career Fair as an event on June 5 at 11 am in Student Center with capacity for 200 | event_create
+track a task for check AV equipment | task_create
+okay add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees | event_create
+could you set up Spring Expo for April 24 at 5 pm at Webb Center Ballroom with room for 80 guests | event_create
+set order decorations to finished | task_complete
+schedule an event: Research Showcase, September 18, 1 pm, Library Atrium, 120 attendees | event_create
+help me set up Career Fair at Student Center on June 5 at 11 am with 200 attendees | event_create
+just saying can you help me | fallback
+could you schedule Gaming Night in Rec Room on August 12 at 8 pm with 40 guests | event_create
+draft an event named Gaming Night on August 12 at 8 pm in Rec Room for roughly 40 people | event_create
+change the location of Winter Gala to Chartway Arena | event_update
+start planning Tech Summit on May 10 at 2 pm in the Innovation Hall for 150 people | event_create
+can we make Spring Expo happen on April 24 at 5 pm in Webb Center Ballroom for 80 guests | event_create
+in Student Center, schedule Career Fair on June 5 for 11 am with 200 attendees | event_create
+log a task that says finalize venue contract | task_create
+can you add a task for confirm parking | task_create
+put send invitations on my to-do list | task_create
+can you schedule Gaming Night in Rec Room on August 12 at 8 pm with 40 guests | event_create
+can you rename Gaming Night to Gaming Night Updated | event_update
+could you rename Career Fair to Career Fair Updated | event_update
+launch an event record for Alumni Meetup on July 1 at 6 pm at Rooftop Lounge for 60 attendees | event_create
+set check AV equipment to finished | task_complete
+would you set up Research Showcase at Library Atrium for September 18 at 1 pm for 120 people | event_create
+can you make an event for Gaming Night, August 12, 8 pm, Rec Room, and 40 guests | event_create
+create a booking for Winter Gala on December 3 at 7 pm inside Grand Hall with 180 guests | event_create
+make the description for Spring Expo community outreach event | event_update
+i need an event called Spring Expo scheduled for April 24 at 5 pm in Webb Center Ballroom for 80 people | event_create
+put together an event named Spring Expo for April 24 at 5 pm in Webb Center Ballroom with 80 attendees | event_create
+in Conference Center, schedule Leadership Forum on October 9 for 4 pm with 90 attendees | event_create
+can you make Spring Expo happen on April 24 at 5 pm in Webb Center Ballroom for 80 people | event_create
+revise the description for Leadership Forum to sponsor mixer | event_update
+for Career Fair, move it to July 8 at 3 pm | event_update
+will you create Career Fair for June 5 at 11 am in Student Center for 200 attendees | event_create
+would you please rename Winter Gala to Winter Gala Updated | event_update
+open a new event for Leadership Forum on October 9 at 4 pm in Conference Center for 90 attendees | event_create
+would you rename Leadership Forum to Leadership Forum Updated | event_update
+just saying thanks for the help | fallback
+i want a task for print signage | task_create
+for June 5 at 11 am, create Career Fair in Student Center with 200 guests | event_create
 good morning | fallback
-tell me more | fallback
-hello | fallback
-what can you do | fallback
-hi there | fallback
-help me | fallback
-how are you | fallback
-thanks | fallback
-good morning | fallback
-tell me more | fallback
-hello | fallback
-what can you do | fallback
-hi there | fallback
-help me | fallback
-how are you | fallback
-thanks | fallback
-good morning | fallback
-tell me more | fallback
-hello | fallback
-what can you do | fallback
-hi there | fallback
-help me | fallback
-how are you | fallback
-thanks | fallback
-good morning | fallback
-tell me more | fallback
+could you set up Gaming Night at Rec Room for August 12 at 8 pm for 40 people | event_create
+i'm planning Gaming Night; set it for August 12 at 8 pm in Rec Room for 40 people | event_create
+could you rename Spring Expo to Spring Expo Updated | event_update
+make the description for Leadership Forum community outreach event | event_update
+draft an event named Winter Gala on December 3 at 7 pm in Grand Hall for roughly 180 people | event_create
+spin up an event called Spring Expo for April 24, 5 pm, at Webb Center Ballroom, with 80 people | event_create
+add a checklist item to prepare badges | task_create
+put finalize venue contract on my to-do list | task_create
+could you schedule Research Showcase in Library Atrium on September 18 at 1 pm with 120 guests | event_create
+for Research Showcase, switch it to Main Hall | event_update
+change the details for Winter Gala to August 20 at noon | event_update
+i'd like Tech Summit added for May 10 at 2 pm in Innovation Hall for 150 attendees | event_create
+can you move Winter Gala to July 8 | event_update
+put together an event named Winter Gala for December 3 at 7 pm in Grand Hall with 180 attendees | event_create
+change the location of Research Showcase to Student Plaza | event_update
+set up Leadership Forum with 90 attendees, at Conference Center, on October 9, at 4 pm | event_create
+would you schedule Research Showcase in Library Atrium on September 18 at 1 pm with 120 guests | event_create
+for Tech Summit, move it to July 8 at noon | event_update
+can you schedule Spring Expo in Webb Center Ballroom on April 24 at 5 pm with 80 guests | event_create
+add a checklist item to confirm parking | task_create
+please get Gaming Night on the books for August 12, 8 pm, Rec Room, 40 guests | event_create
+register a new event named Leadership Forum for October 9 at 4 pm in Conference Center for 90 attendees | event_create
+check off confirm parking | task_complete
+could you set up Winter Gala at Grand Hall for December 3 at 7 pm for 180 people | event_create
+quickly make Gaming Night happen on August 12 at 8 pm in Rec Room for 40 people | event_create
+can you help me | fallback
+i'm trying to host Gaming Night in Rec Room on August 12 at 8 pm for 40 guests | event_create
+change the details for Career Fair to August 20 at 3 pm | event_update
+quickly schedule Research Showcase for 120 guests in Library Atrium on September 18 at 1 pm | event_create
+could you schedule Alumni Meetup for 60 guests in Rooftop Lounge on July 1 at 6 pm | event_create
+okay add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees | event_create
+okay schedule Career Fair for 200 guests in Student Center on June 5 at 11 am | event_create
+okay add Career Fair on June 5 at 11 am at Student Center with 200 attendees | event_create
+mark check AV equipment as done | task_complete
+for April 24 at 5 pm, create Spring Expo in Webb Center Ballroom with 80 guests | event_create
+i'm planning Leadership Forum; set it for October 9 at 4 pm in Conference Center for 90 people | event_create
+put together an event named Tech Summit for May 10 at 2 pm in Innovation Hall with 150 attendees | event_create
+can you mark confirm parking complete | task_complete
+can you schedule Winter Gala for 180 guests in Grand Hall on December 3 at 7 pm | event_create
+would you please move Career Fair to July 8 | event_update
+change the location of Spring Expo to Harbor Center | event_update
+create a task called send invitations | task_create
+could you schedule Tech Summit for 150 guests in Innovation Hall on May 10 at 2 pm | event_create
+i need a task for confirm volunteers | task_create
+set the venue on Leadership Forum as Chartway Arena | event_update
+move Winter Gala to April 30 | event_update
+help me set up Leadership Forum at Conference Center on October 9 at 4 pm with 90 attendees | event_create
+at 4 pm on October 9, set up Leadership Forum in Conference Center for 90 people | event_create
+can you schedule Spring Expo for 80 guests in Webb Center Ballroom on April 24 at 5 pm | event_create
+would you please move Gaming Night to April 30 | event_update
+for me make Research Showcase happen on September 18 at 1 pm in Library Atrium for 120 people | event_create
+can you move Tech Summit to May 14 | event_update
+okay add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees | event_create
+mark the task confirm parking as complete | task_complete
+can you move Research Showcase to June 12 | event_update
+mark confirm volunteers as done | task_complete
+would you please create Spring Expo for April 24 at 5 pm in Webb Center Ballroom for 80 attendees | event_create
+i want to schedule Research Showcase in Library Atrium on September 18 at 1 pm for 120 people | event_create
+could you set up Tech Summit at Innovation Hall for May 10 at 2 pm for 150 people | event_create
+set up Tech Summit with 150 attendees, at Innovation Hall, on May 10, at 2 pm | event_create
+i want to schedule Alumni Meetup in Rooftop Lounge on July 1 at 6 pm for 60 people | event_create
+please make Tech Summit happen on May 10 at 2 pm in Innovation Hall for 150 people | event_create
+mark the task review agenda as complete | task_complete
+quickly add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees | event_create
+would you mark book DJ complete | task_complete
+adjust Winter Gala to May 14 | event_update
+set an event up for me called Spring Expo at Webb Center Ballroom on April 24 starting at 5 pm for 80 people | event_create
+mark send invitations as done | task_complete
+hi | fallback
+create a task called check AV equipment | task_create
+please create an event named Leadership Forum on October 9 at 4 pm in Conference Center for 90 attendees | event_create
+can you add a task for book DJ | task_create
+create Leadership Forum as a campus event for October 9 at 4 pm at Conference Center for 90 people | event_create
+put print signage on my to-do list | task_create
+rename Career Fair to Career Fair Plus | event_update
+change Research Showcase so the new date is June 12 | event_update
+hey schedule Gaming Night for 40 guests in Rec Room on August 12 at 8 pm | event_create
+create a task called book DJ | task_create
+build out Alumni Meetup as an event on July 1 at 6 pm in Rooftop Lounge with capacity for 60 | event_create
+check AV equipment is done | task_complete
+let me create Spring Expo for April 24 at 5 pm in Webb Center Ballroom with about 80 attendees | event_create
+would you please rename Leadership Forum to Leadership Forum Updated | event_update
+track a task for assign check-in staff | task_create
+can you make an event for Research Showcase, September 18, 1 pm, Library Atrium, and 120 guests | event_create
+could you set up Tech Summit for May 10 at 2 pm at Innovation Hall with room for 150 guests | event_create
+put assign check-in staff on my to-do list | task_create
+just saying how are you | fallback
+quickly make Spring Expo happen on April 24 at 5 pm in Webb Center Ballroom for 80 people | event_create
+create a task called review agenda | task_create
+assign check-in staff is done | task_complete
+just saying good morning | fallback
+finish check AV equipment | task_complete
+can you mark confirm catering complete | task_complete
+can you add Career Fair to the planner for June 5 at 11 am in Student Center for 200 people | event_create
+can you set up Spring Expo at Webb Center Ballroom for April 24 at 5 pm for 80 people | event_create
+track a task for prepare badges | task_create
+would you please schedule Alumni Meetup in Rooftop Lounge on July 1 at 6 pm with 60 guests | event_create
+could you set up Career Fair for June 5 at 11 am at Student Center with room for 200 guests | event_create
+hey add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees | event_create
+close out book DJ | task_complete
+set prepare badges to finished | task_complete
+i'm planning Alumni Meetup; set it for July 1 at 6 pm in Rooftop Lounge for 60 people | event_create
+would you rename Alumni Meetup to Alumni Meetup Updated | event_update
+could you create Leadership Forum for October 9 at 4 pm in Conference Center for 90 attendees | event_create
+put confirm catering on my to-do list | task_create
+for Tech Summit, rename it Tech Summit Revised | event_update
+please put Research Showcase on the calendar for September 18 at 1 pm in Library Atrium with 120 guests | event_create
+at 1 pm on September 18, set up Research Showcase in Library Atrium for 120 people | event_create
+mark off prepare badges | task_complete
+add assign check-in staff as a task | task_create
+for me add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees | event_create
+could you create Tech Summit for May 10 at 2 pm in Innovation Hall for 150 attendees | event_create
+could you move Spring Expo to June 12 | event_update
+make the description for Tech Summit outdoor networking event | event_update
+can you schedule Tech Summit for 150 guests in Innovation Hall on May 10 at 2 pm | event_create
+launch an event record for Spring Expo on April 24 at 5 pm at Webb Center Ballroom for 80 attendees | event_create
+would you please add a task for order decorations | task_create
+please add an event called Leadership Forum scheduled in Conference Center on October 9 at 4 pm for 90 | event_create
+i need an event called Winter Gala scheduled for December 3 at 7 pm in Grand Hall for 180 people | event_create
+mark check AV equipment completed | task_complete
+change Leadership Forum so the new date is August 20 | event_update
+will you mark send invitations complete | task_complete
+just saying good evening | fallback
+print signage has been completed | task_complete
+draft an event named Tech Summit on May 10 at 2 pm in Innovation Hall for roughly 150 people | event_create
+switch the venue for Spring Expo to Student Plaza | event_update
+quickly add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees | event_create
+please add an event called Gaming Night scheduled in Rec Room on August 12 at 8 pm for 40 | event_create
+create a to-do for order decorations | task_create
+make a new event titled Alumni Meetup happening July 1 at 6 pm at Rooftop Lounge with 60 attendees | event_create
+i want a task for assign check-in staff | task_create
+finalize venue contract has been completed | task_complete
+can you create Tech Summit for May 10 at 2 pm in Innovation Hall for 150 attendees | event_create
+create a booking for Research Showcase on September 18 at 1 pm inside Library Atrium with 120 guests | event_create
+would you please move Tech Summit to September 22 | event_update
+hey make Winter Gala happen on December 3 at 7 pm in Grand Hall for 180 people | event_create
+can you schedule Tech Summit in Innovation Hall on May 10 at 2 pm with 150 guests | event_create
+book DJ is done | task_complete
+put review agenda on my to-do list | task_create
+mark prepare badges as done | task_complete
+Spring Expo needs to be created for April 24 in Webb Center Ballroom at 5 pm for 80 people | event_create
+please create the task confirm parking | task_create
+please get Research Showcase on the books for September 18, 1 pm, Library Atrium, 120 guests | event_create
+register a new event named Spring Expo for April 24 at 5 pm in Webb Center Ballroom for 80 attendees | event_create
+make a reminder task to assign check-in staff | task_create
+can you add Gaming Night to the planner for August 12 at 8 pm in Rec Room for 40 people | event_create
+complete prepare badges | task_complete
+mark print signage as done | task_complete
+schedule an event: Gaming Night, August 12, 8 pm, Rec Room, 40 attendees | event_create
+make Spring Expo happen at noon instead | event_update
+please schedule Research Showcase for about 120 attendees in Library Atrium on September 18 at 1 pm | event_create
+will you schedule Spring Expo in Webb Center Ballroom on April 24 at 5 pm with 80 guests | event_create
+log a task that says print signage | task_create
+mark the task finalize venue contract as complete | task_complete
+push Alumni Meetup back to 9 am on July 8 | event_update
+complete finalize venue contract | task_complete
+mark print signage completed | task_complete
+just saying hey there | fallback
+would you move Spring Expo to June 12 | event_update
+track a task for print signage | task_create
+will you mark review agenda complete | task_complete
+would you mark confirm parking complete | task_complete
+book an event called Career Fair for June 5 around 11 am in Student Center for 200 guests | event_create
+please add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees | event_create
+would you please create Tech Summit for May 10 at 2 pm in Innovation Hall for 150 attendees | event_create
+i need to host Tech Summit at Innovation Hall for 150 people on May 10 at 2 pm | event_create
+close out check AV equipment | task_complete
+schedule an event: Alumni Meetup, July 1, 6 pm, Rooftop Lounge, 60 attendees | event_create
+could you make Winter Gala happen on December 3 at 7 pm in Grand Hall for 180 people | event_create
+add confirm parking as a task | task_create
+can you mark assign check-in staff complete | task_complete
+could you add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees | event_create
+for Research Showcase, rename it Research Showcase Revised | event_update
+will you schedule Leadership Forum in Conference Center on October 9 at 4 pm with 90 guests | event_create
+for Research Showcase, move it to April 30 at noon | event_update
+move Spring Expo to August 20 | event_update
+reschedule Leadership Forum for June 12 at 6:30 pm | event_update
+with 60 guests, create Alumni Meetup at Rooftop Lounge on July 1 at 6 pm | event_create
+put together an event named Research Showcase for September 18 at 1 pm in Library Atrium with 120 attendees | event_create
+can you add task prepare badges | task_create
+could you add a task for send invitations | task_create
+make a new event titled Spring Expo happening April 24 at 5 pm at Webb Center Ballroom with 80 attendees | event_create
+hey make Tech Summit happen on May 10 at 2 pm in Innovation Hall for 150 people | event_create
+reschedule Research Showcase for June 12 at noon | event_update
+rename Winter Gala to Winter Gala Plus | event_update
+create Leadership Forum with a start time of 4 pm on October 9 in Conference Center for 90 people | event_create
+quickly make Alumni Meetup happen on July 1 at 6 pm in Rooftop Lounge for 60 people | event_create
+make a reminder task to confirm catering | task_create
+make a new event titled Gaming Night happening August 12 at 8 pm at Rec Room with 40 attendees | event_create
+i'd like Leadership Forum added for October 9 at 4 pm in Conference Center for 90 attendees | event_create
+would you please add a task for confirm catering | task_create
+please add order decorations to the task list | task_create
+create a to-do for check AV equipment | task_create
+i want a task for review agenda | task_create
+please create the task review agenda | task_create
+change Leadership Forum so it is in North Auditorium | event_update
+send invitations is done | task_complete
+would you add a task for assign check-in staff | task_create
+Alumni Meetup needs to be created for July 1 in Rooftop Lounge at 6 pm for 60 people | event_create
+would you create Spring Expo for April 24 at 5 pm in Webb Center Ballroom for 80 attendees | event_create
+will you mark prepare badges complete | task_complete
+hey make Alumni Meetup happen on July 1 at 6 pm in Rooftop Lounge for 60 people | event_create
+hey add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees | event_create
+adjust Alumni Meetup to August 20 | event_update
+just saying what is this app for | fallback
+can you add a task for review agenda | task_create
+create a to-do for assign check-in staff | task_create
+for me make Winter Gala happen on December 3 at 7 pm in Grand Hall for 180 people | event_create
+could you rename Winter Gala to Winter Gala Updated | event_update
+would you please move Leadership Forum to May 14 | event_update
+create Gaming Night with a start time of 8 pm on August 12 in Rec Room for 40 people | event_create
+create a booking for Gaming Night on August 12 at 8 pm inside Rec Room with 40 guests | event_create
+i'm trying to host Research Showcase in Library Atrium on September 18 at 1 pm for 120 guests | event_create
+at 6 pm on July 1, set up Alumni Meetup in Rooftop Lounge for 60 people | event_create
+would you rename Winter Gala to Winter Gala Updated | event_update
+at 7 pm on December 3, set up Winter Gala in Grand Hall for 180 people | event_create
+can you make Alumni Meetup happen on July 1 at 6 pm in Rooftop Lounge for 60 people | event_create
+please put Tech Summit on the calendar for May 10 at 2 pm in Innovation Hall with 150 guests | event_create
+close out confirm parking | task_complete
+please create the task order decorations | task_create
+mark finalize venue contract as done | task_complete
+can you create Winter Gala for December 3 at 7 pm in Grand Hall for 180 attendees | event_create
+finish prepare badges | task_complete
+create a task called confirm volunteers | task_create
+would you please create Leadership Forum for October 9 at 4 pm in Conference Center for 90 attendees | event_create
+help me set up Spring Expo at Webb Center Ballroom on April 24 at 5 pm with 80 attendees | event_create
+add a checklist item to order decorations | task_create
+could you schedule Career Fair in Student Center on June 5 at 11 am with 200 guests | event_create
+close out prepare badges | task_complete
+draft an event named Leadership Forum on October 9 at 4 pm in Conference Center for roughly 90 people | event_create
+would you please schedule Gaming Night in Rec Room on August 12 at 8 pm with 40 guests | event_create
+start planning Gaming Night on August 12 at 8 pm in the Rec Room for 40 people | event_create
+confirm parking is done | task_complete
+please create an event named Tech Summit on May 10 at 2 pm in Innovation Hall for 150 attendees | event_create
+add order decorations as a task | task_create
+mark prepare badges completed | task_complete
+i need to host Leadership Forum at Conference Center for 90 people on October 9 at 4 pm | event_create
+change Tech Summit so it is in North Auditorium | event_update
+track a task for order decorations | task_create
+quickly make Tech Summit happen on May 10 at 2 pm in Innovation Hall for 150 people | event_create
+will you set up Spring Expo at Webb Center Ballroom for April 24 at 5 pm for 80 people | event_create
+can you set up Gaming Night at Rec Room for August 12 at 8 pm for 40 people | event_create
+would you please create Research Showcase for September 18 at 1 pm in Library Atrium for 120 attendees | event_create
+start planning Career Fair on June 5 at 11 am in the Student Center for 200 people | event_create
+for me make Alumni Meetup happen on July 1 at 6 pm in Rooftop Lounge for 60 people | event_create
+please make Spring Expo happen on April 24 at 5 pm in Webb Center Ballroom for 80 people | event_create
+put prepare badges on my to-do list | task_create
+would you please move Research Showcase to May 14 | event_update
+add finalize venue contract as a task | task_create
+schedule Spring Expo for April 24 at 5 pm over in Webb Center Ballroom with 80 guests | event_create
+mark off assign check-in staff | task_complete
+start planning Alumni Meetup on July 1 at 6 pm in the Rooftop Lounge for 60 people | event_create
+for Tech Summit, bump attendance to 160 | event_update
+complete order decorations | task_complete
+adjust Spring Expo to September 22 | event_update
+make sure Research Showcase is scheduled at Library Atrium on September 18 starting at 1 pm for 120 | event_create
+i'd like Spring Expo added for April 24 at 5 pm in Webb Center Ballroom for 80 attendees | event_create
+quickly add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees | event_create
+for Alumni Meetup, bump attendance to 88 | event_update
+will you add a task for prepare badges | task_create
+push Career Fair back to 3 pm on April 30 | event_update
+hey add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees | event_create
+could you make Spring Expo happen on April 24 at 5 pm in Webb Center Ballroom for 80 people | event_create
+can we make Gaming Night happen on August 12 at 8 pm in Rec Room for 40 guests | event_create
+okay add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees | event_create
+when you can schedule Leadership Forum for 90 guests in Conference Center on October 9 at 4 pm | event_create
+quickly schedule Alumni Meetup for 60 guests in Rooftop Lounge on July 1 at 6 pm | event_create
+will you create Tech Summit for May 10 at 2 pm in Innovation Hall for 150 attendees | event_create
+make finalize venue contract a new task | task_create
+with 200 guests, create Career Fair at Student Center on June 5 at 11 am | event_create
+will you mark check AV equipment complete | task_complete
+for me add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees | event_create
+would you please schedule Winter Gala in Grand Hall on December 3 at 7 pm with 180 guests | event_create
+i need a task for assign check-in staff | task_create
+could you rename Leadership Forum to Leadership Forum Updated | event_update
+would you please mark order decorations complete | task_complete
+create Winter Gala with a start time of 7 pm on December 3 in Grand Hall for 180 people | event_create
+would you schedule Alumni Meetup in Rooftop Lounge on July 1 at 6 pm with 60 guests | event_create
+can you mark order decorations complete | task_complete
+could you schedule Career Fair for 200 guests in Student Center on June 5 at 11 am | event_create
+can you make Tech Summit happen on May 10 at 2 pm in Innovation Hall for 150 people | event_create
+for me schedule Research Showcase for 120 guests in Library Atrium on September 18 at 1 pm | event_create
+when you can schedule Gaming Night for 40 guests in Rec Room on August 12 at 8 pm | event_create
+schedule an event: Winter Gala, December 3, 7 pm, Grand Hall, 180 attendees | event_create
+make a reminder task to confirm volunteers | task_create
+launch an event record for Leadership Forum on October 9 at 4 pm at Conference Center for 90 attendees | event_create
+make the description for Career Fair community outreach event | event_update
+would you rename Research Showcase to Research Showcase Updated | event_update
+just saying i have a question | fallback
+reschedule Tech Summit for June 12 at 9 am | event_update
+order decorations is done | task_complete
+when you can schedule Tech Summit for 150 guests in Innovation Hall on May 10 at 2 pm | event_create
+would you add a task for review agenda | task_create
+would you please mark assign check-in staff complete | task_complete
+for Spring Expo, rename it Spring Expo Revised | event_update
+will you add a task for order decorations | task_create
+would you please set up Career Fair at Student Center for June 5 at 11 am for 200 people | event_create
+set Alumni Meetup to 120 guests | event_update
+create a to-do for print signage | task_create
+increase the guest count for Spring Expo to 120 | event_update
+can you create Alumni Meetup for July 1 at 6 pm in Rooftop Lounge for 60 attendees | event_create
+hey schedule Leadership Forum for 90 guests in Conference Center on October 9 at 4 pm | event_create
+i'd like Gaming Night added for August 12 at 8 pm in Rec Room for 40 attendees | event_create
+could you set up Winter Gala for December 3 at 7 pm at Grand Hall with room for 180 guests | event_create
+can we make Winter Gala happen on December 3 at 7 pm in Grand Hall for 180 guests | event_create
+can you add a task for confirm volunteers | task_create
+please add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees | event_create
+can you add a task for order decorations | task_create
+would you create Tech Summit for May 10 at 2 pm in Innovation Hall for 150 attendees | event_create
+mark finalize venue contract completed | task_complete
+can you add task review agenda | task_create
+create a to-do for prepare badges | task_create
+complete review agenda | task_complete
+spin up an event called Leadership Forum for October 9, 4 pm, at Conference Center, with 90 people | event_create
+okay schedule Alumni Meetup for 60 guests in Rooftop Lounge on July 1 at 6 pm | event_create
+make print signage a new task | task_create
+will you add a task for confirm volunteers | task_create
+would you create Alumni Meetup for July 1 at 6 pm in Rooftop Lounge for 60 attendees | event_create
+please make Leadership Forum happen on October 9 at 4 pm in Conference Center for 90 people | event_create
+please schedule Career Fair for about 200 attendees in Student Center on June 5 at 11 am | event_create
+will you add a task for confirm catering | task_create
+okay schedule Winter Gala for 180 guests in Grand Hall on December 3 at 7 pm | event_create
+i need to host Spring Expo at Webb Center Ballroom for 80 people on April 24 at 5 pm | event_create
+rename Alumni Meetup to Alumni Meetup Plus | event_update
+can you add task confirm parking | task_create
+mark order decorations as done | task_complete
+please get Career Fair on the books for June 5, 11 am, Student Center, 200 guests | event_create
+can you mark confirm volunteers complete | task_complete
+log a task that says order decorations | task_create
+change when Research Showcase starts to 4:15 pm | event_update
+would you please move Alumni Meetup to July 8 | event_update
+would you create Winter Gala for December 3 at 7 pm in Grand Hall for 180 attendees | event_create
+for me make Tech Summit happen on May 10 at 2 pm in Innovation Hall for 150 people | event_create
+could you add a task for order decorations | task_create
+edit Career Fair so the attendance is 120 | event_update
+would you mark confirm volunteers complete | task_complete
+when you can make Leadership Forum happen on October 9 at 4 pm in Conference Center for 90 people | event_create
+will you add a task for send invitations | task_create
+set an event up for me called Leadership Forum at Conference Center on October 9 starting at 4 pm for 90 people | event_create
+draft an event named Spring Expo on April 24 at 5 pm in Webb Center Ballroom for roughly 80 people | event_create
+mark the task prepare badges as complete | task_complete
+will you mark book DJ complete | task_complete
+mark the task confirm catering as complete | task_complete
+for Leadership Forum, rename it Leadership Forum Revised | event_update
+quickly schedule Gaming Night for 40 guests in Rec Room on August 12 at 8 pm | event_create
+register a new event named Career Fair for June 5 at 11 am in Student Center for 200 attendees | event_create
+Research Showcase needs to be created for September 18 in Library Atrium at 1 pm for 120 people | event_create
+confirm volunteers has been completed | task_complete
+could you rename Research Showcase to Research Showcase Updated | event_update
+can you make an event for Leadership Forum, October 9, 4 pm, Conference Center, and 90 guests | event_create
+can you make an event for Winter Gala, December 3, 7 pm, Grand Hall, and 180 guests | event_create
+would you schedule Leadership Forum in Conference Center on October 9 at 4 pm with 90 guests | event_create
+add book DJ as a task | task_create
+create a task called confirm catering | task_create
+can you add task send invitations | task_create
+change the details for Spring Expo to June 12 at 9 am | event_update
+please schedule Winter Gala for 180 guests in Grand Hall on December 3 at 7 pm | event_create
+spin up an event called Research Showcase for September 18, 1 pm, at Library Atrium, with 120 people | event_create
+will you mark finalize venue contract complete | task_complete
+when you can schedule Spring Expo for 80 guests in Webb Center Ballroom on April 24 at 5 pm | event_create
+add a task to finalize venue contract | task_create
+okay make Leadership Forum happen on October 9 at 4 pm in Conference Center for 90 people | event_create
+for me make Spring Expo happen on April 24 at 5 pm in Webb Center Ballroom for 80 people | event_create
+could you rename Tech Summit to Tech Summit Updated | event_update
+when you can make Alumni Meetup happen on July 1 at 6 pm in Rooftop Lounge for 60 people | event_create
+will you mark print signage complete | task_complete
+let me create Leadership Forum for October 9 at 4 pm in Conference Center with about 90 attendees | event_create
+set Winter Gala to 95 guests | event_update
+quickly schedule Leadership Forum for 90 guests in Conference Center on October 9 at 4 pm | event_create
+i want a task for confirm catering | task_create
+will you add a task for confirm parking | task_create
+could you make Career Fair happen on June 5 at 11 am in Student Center for 200 people | event_create
+i'm trying to host Winter Gala in Grand Hall on December 3 at 7 pm for 180 guests | event_create
+reschedule Career Fair for August 20 at noon | event_update
+hey add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees | event_create
+okay make Research Showcase happen on September 18 at 1 pm in Library Atrium for 120 people | event_create
+change Winter Gala so the new date is June 12 | event_update
+for Gaming Night, bump attendance to 135 | event_update
+hey make Spring Expo happen on April 24 at 5 pm in Webb Center Ballroom for 80 people | event_create
+finish print signage | task_complete
+open a new event for Alumni Meetup on July 1 at 6 pm in Rooftop Lounge for 60 attendees | event_create
+reschedule Gaming Night for August 20 at 3 pm | event_update
+create a task called order decorations | task_create
+confirm volunteers is done | task_complete
+would you please schedule Spring Expo in Webb Center Ballroom on April 24 at 5 pm with 80 guests | event_create
+add review agenda as a task | task_create
+could you schedule Winter Gala for 180 guests in Grand Hall on December 3 at 7 pm | event_create
+would you mark order decorations complete | task_complete
+can you add Research Showcase to the planner for September 18 at 1 pm in Library Atrium for 120 people | event_create
+when you can make Career Fair happen on June 5 at 11 am in Student Center for 200 people | event_create
+for me schedule Spring Expo for 80 guests in Webb Center Ballroom on April 24 at 5 pm | event_create
+schedule Gaming Night for August 12 at 8 pm over in Rec Room with 40 guests | event_create
+please add book DJ to the task list | task_create
+for Alumni Meetup, move it to July 8 at noon | event_update
+edit Research Showcase so the attendance is 95 | event_update
+spin up an event called Winter Gala for December 3, 7 pm, at Grand Hall, with 180 people | event_create
+set print signage to finished | task_complete
+open a new event for Research Showcase on September 18 at 1 pm in Library Atrium for 120 attendees | event_create
+change Spring Expo so the new date is April 30 | event_update
+add check AV equipment as a task | task_create
+help me set up Alumni Meetup at Rooftop Lounge on July 1 at 6 pm with 60 attendees | event_create
+can you make Leadership Forum happen on October 9 at 4 pm in Conference Center for 90 people | event_create
+book an event called Leadership Forum for October 9 around 4 pm in Conference Center for 90 guests | event_create
+add a task to check AV equipment | task_create
+close out confirm volunteers | task_complete
+for me schedule Leadership Forum for 90 guests in Conference Center on October 9 at 4 pm | event_create
+add a task to send invitations | task_create
+create a booking for Alumni Meetup on July 1 at 6 pm inside Rooftop Lounge with 60 guests | event_create
+will you rename Tech Summit to Tech Summit Updated | event_update
+could you mark print signage complete | task_complete
+make a new event titled Leadership Forum happening October 9 at 4 pm at Conference Center with 90 attendees | event_create
+could you add a task for assign check-in staff | task_create
+rename Spring Expo to Spring Expo Plus | event_update
+would you please mark send invitations complete | task_complete
+create a booking for Spring Expo on April 24 at 5 pm inside Webb Center Ballroom with 80 guests | event_create
+please schedule Career Fair for 200 guests in Student Center on June 5 at 11 am | event_create
+check off finalize venue contract | task_complete
+edit Winter Gala so the attendance is 75 | event_update
+will you mark assign check-in staff complete | task_complete
+okay add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees | event_create
