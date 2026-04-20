@@ -1,21 +1,5 @@
-
-"""
-AI simulation harness for Spartan Shield Saver.
-
-Purpose:
-- Simulate dozens of event-creation and event-update requests
-- Reuse your real interpreter logic
-- Track misclassifications and crashes
-- Write a readable report
-
-How to run:
-    python test_ai_simulation.py
-
-Place this file in your Backend/ folder.
-"""
-
 from __future__ import annotations
-
+from pathlib import Path
 from copy import deepcopy
 from datetime import datetime, timedelta
 from collections import Counter, defaultdict

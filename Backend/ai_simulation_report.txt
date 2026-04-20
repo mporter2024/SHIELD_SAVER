@@ -1,0 +1,230 @@
+AI Simulation Report
+================================================================================
+Total cases: 52
+Passed: 52
+Failed: 0
+
+Returned action counts:
+  - event_update: 18
+  - event_create: 15
+  - fallback: 6
+  - event_create_collecting: 5
+  - event_update_no_changes: 3
+  - task_create: 3
+  - task_complete: 2
+
+[CREATION] 20/20 passed
+PASS | create_1 | input: create an event called Spring Expo 2026 #1 on April 26, 2026 at 5:30 pm at Webb Center Ballroom for 40 people
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Spring Expo 2026 #1', 'date': '2026-04-26', 'start_datetime': '2026-04-26T17:30:00', 'location': 'Webb Center Ballroom', 'guest_count': 40}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Spring Expo 2026 #1', 'date': '2026-04-26', 'start_datetime': '2026-04-26T17:30:00', 'location': 'Webb Center Ballroom', 'guest_count': 40}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_2 | input: plan an event called Cybersecurity Mixer 2027 #2 for 47 people on April 27, 2026 at 6 pm in Student Center Ballroom
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Cybersecurity Mixer 2027 #2', 'date': '2026-04-27', 'start_datetime': '2026-04-27T18:00:00', 'location': '6 pm in Student Center Ballroom', 'guest_count': 47}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Cybersecurity Mixer 2027 #2', 'date': '2026-04-27', 'start_datetime': '2026-04-27T18:00:00', 'location': '6 pm in Student Center Ballroom', 'guest_count': 47}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_3 | input: i want to create Alumni Networking Night 2028 #3 on April 28, 2026 at 7 pm at Engineering Auditorium for about 54 people
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create_collecting
+  result:   {'type': 'event_create_collecting', 'draft': {'date': '2026-04-28', 'start_datetime': '2026-04-28T19:00:00', 'location': '7 pm at Engineering Auditorium', 'guest_count': 54}, 'missing_fields': ['title'], 'reply': 'I’ve got date as 2026-04-28, start time as 2026-04-28T19:00:00, location as 7 pm at Engineering Auditorium, guest count as 54. I still need the event title.', 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': 'title', 'pending_event_draft': {'date': '2026-04-28', 'start_datetime': '2026-04-28T19:00:00', 'location': '7 pm at Engineering Auditorium', 'guest_count': 54}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_4 | input: help me plan an event called Fundraiser Gala 2026 #4 at Library Conference Room on April 29, 2026 at 5 pm for 61 guests
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Fundraiser Gala 2026 #4', 'date': '2026-04-29', 'start_datetime': '2026-04-29T17:00:00', 'location': 'Library Conference Room', 'guest_count': 61}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Fundraiser Gala 2026 #4', 'date': '2026-04-29', 'start_datetime': '2026-04-29T17:00:00', 'location': 'Library Conference Room', 'guest_count': 61}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_5 | input: create an event called STEM Workshop 2027 #5 on April 30, 2026 at 6:30 pm at Campus Lawn for 68 people
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'STEM Workshop 2027 #5', 'date': '2026-04-30', 'start_datetime': '2026-04-30T18:30:00', 'location': 'Campus Lawn', 'guest_count': 68}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'STEM Workshop 2027 #5', 'date': '2026-04-30', 'start_datetime': '2026-04-30T18:30:00', 'location': 'Campus Lawn', 'guest_count': 68}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_6 | input: plan an event called Career Fair 2028 #6 for 75 people on May 1, 2026 at 7 pm in Dining Hall Annex
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Career Fair 2028 #6', 'date': '2026-05-01', 'start_datetime': '2026-05-01T19:00:00', 'location': '7 pm in Dining Hall Annex', 'guest_count': 75}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Career Fair 2028 #6', 'date': '2026-05-01', 'start_datetime': '2026-05-01T19:00:00', 'location': '7 pm in Dining Hall Annex', 'guest_count': 75}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_7 | input: i want to create Leadership Summit 2026 #7 on May 2, 2026 at 5 pm at Norfolk Hall for about 82 people
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create_collecting
+  result:   {'type': 'event_create_collecting', 'draft': {'date': '2026-05-02', 'start_datetime': '2026-05-02T17:00:00', 'location': '5 pm at Norfolk Hall', 'guest_count': 82}, 'missing_fields': ['title'], 'reply': 'I’ve got date as 2026-05-02, start time as 2026-05-02T17:00:00, location as 5 pm at Norfolk Hall, guest count as 82. I still need the event title.', 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': 'title', 'pending_event_draft': {'date': '2026-05-02', 'start_datetime': '2026-05-02T17:00:00', 'location': '5 pm at Norfolk Hall', 'guest_count': 82}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_8 | input: help me plan an event called Volunteer Appreciation Event 2027 #8 at Innovation Lab on May 3, 2026 at 6 pm for 89 guests
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Volunteer Appreciation Event 2027 #8', 'date': '2026-05-03', 'start_datetime': '2026-05-03T18:00:00', 'location': 'Innovation Lab', 'guest_count': 89}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Volunteer Appreciation Event 2027 #8', 'date': '2026-05-03', 'start_datetime': '2026-05-03T18:00:00', 'location': 'Innovation Lab', 'guest_count': 89}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_9 | input: create an event called Student Showcase 2028 #9 on May 4, 2026 at 7:30 pm at Webb Center Ballroom for 96 people
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Student Showcase 2028 #9', 'date': '2026-05-04', 'start_datetime': '2026-05-04T19:30:00', 'location': 'Webb Center Ballroom', 'guest_count': 96}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Student Showcase 2028 #9', 'date': '2026-05-04', 'start_datetime': '2026-05-04T19:30:00', 'location': 'Webb Center Ballroom', 'guest_count': 96}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_10 | input: plan an event called Tech Panel 2026 #10 for 103 people on May 5, 2026 at 5 pm in Student Center Ballroom
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Tech Panel 2026 #10', 'date': '2026-05-05', 'start_datetime': '2026-05-05T17:00:00', 'location': '5 pm in Student Center Ballroom', 'guest_count': 103}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Tech Panel 2026 #10', 'date': '2026-05-05', 'start_datetime': '2026-05-05T17:00:00', 'location': '5 pm in Student Center Ballroom', 'guest_count': 103}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_11 | input: i want to create Spring Expo 2027 #11 on May 6, 2026 at 6 pm at Engineering Auditorium for about 110 people
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create_collecting
+  result:   {'type': 'event_create_collecting', 'draft': {'date': '2026-05-06', 'start_datetime': '2026-05-06T18:00:00', 'location': '6 pm at Engineering Auditorium', 'guest_count': 110}, 'missing_fields': ['title'], 'reply': 'I’ve got date as 2026-05-06, start time as 2026-05-06T18:00:00, location as 6 pm at Engineering Auditorium, guest count as 110. I still need the event title.', 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': 'title', 'pending_event_draft': {'date': '2026-05-06', 'start_datetime': '2026-05-06T18:00:00', 'location': '6 pm at Engineering Auditorium', 'guest_count': 110}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_12 | input: help me plan an event called Cybersecurity Mixer 2028 #12 at Library Conference Room on May 7, 2026 at 7 pm for 117 guests
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Cybersecurity Mixer 2028 #12', 'date': '2026-05-07', 'start_datetime': '2026-05-07T19:00:00', 'location': 'Library Conference Room', 'guest_count': 117}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Cybersecurity Mixer 2028 #12', 'date': '2026-05-07', 'start_datetime': '2026-05-07T19:00:00', 'location': 'Library Conference Room', 'guest_count': 117}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_13 | input: create an event called Alumni Networking Night 2026 #13 on May 8, 2026 at 5:30 pm at Campus Lawn for 124 people
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Alumni Networking Night 2026 #13', 'date': '2026-05-08', 'start_datetime': '2026-05-08T17:30:00', 'location': 'Campus Lawn', 'guest_count': 124}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Alumni Networking Night 2026 #13', 'date': '2026-05-08', 'start_datetime': '2026-05-08T17:30:00', 'location': 'Campus Lawn', 'guest_count': 124}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_14 | input: plan an event called Fundraiser Gala 2027 #14 for 131 people on May 9, 2026 at 6 pm in Dining Hall Annex
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Fundraiser Gala 2027 #14', 'date': '2026-05-09', 'start_datetime': '2026-05-09T18:00:00', 'location': '6 pm in Dining Hall Annex', 'guest_count': 131}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Fundraiser Gala 2027 #14', 'date': '2026-05-09', 'start_datetime': '2026-05-09T18:00:00', 'location': '6 pm in Dining Hall Annex', 'guest_count': 131}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_15 | input: i want to create STEM Workshop 2028 #15 on May 10, 2026 at 7 pm at Norfolk Hall for about 138 people
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create_collecting
+  result:   {'type': 'event_create_collecting', 'draft': {'date': '2026-05-10', 'start_datetime': '2026-05-10T19:00:00', 'location': '7 pm at Norfolk Hall', 'guest_count': 138}, 'missing_fields': ['title'], 'reply': 'I’ve got date as 2026-05-10, start time as 2026-05-10T19:00:00, location as 7 pm at Norfolk Hall, guest count as 138. I still need the event title.', 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': 'title', 'pending_event_draft': {'date': '2026-05-10', 'start_datetime': '2026-05-10T19:00:00', 'location': '7 pm at Norfolk Hall', 'guest_count': 138}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_16 | input: help me plan an event called Career Fair 2026 #16 at Innovation Lab on May 11, 2026 at 5 pm for 145 guests
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Career Fair 2026 #16', 'date': '2026-05-11', 'start_datetime': '2026-05-11T17:00:00', 'location': 'Innovation Lab', 'guest_count': 145}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Career Fair 2026 #16', 'date': '2026-05-11', 'start_datetime': '2026-05-11T17:00:00', 'location': 'Innovation Lab', 'guest_count': 145}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_17 | input: create an event called Leadership Summit 2027 #17 on May 12, 2026 at 6:30 pm at Webb Center Ballroom for 152 people
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Leadership Summit 2027 #17', 'date': '2026-05-12', 'start_datetime': '2026-05-12T18:30:00', 'location': 'Webb Center Ballroom', 'guest_count': 152}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Leadership Summit 2027 #17', 'date': '2026-05-12', 'start_datetime': '2026-05-12T18:30:00', 'location': 'Webb Center Ballroom', 'guest_count': 152}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_18 | input: plan an event called Volunteer Appreciation Event 2028 #18 for 159 people on May 13, 2026 at 7 pm in Student Center Ballroom
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Volunteer Appreciation Event 2028 #18', 'date': '2026-05-13', 'start_datetime': '2026-05-13T19:00:00', 'location': '7 pm in Student Center Ballroom', 'guest_count': 159}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Volunteer Appreciation Event 2028 #18', 'date': '2026-05-13', 'start_datetime': '2026-05-13T19:00:00', 'location': '7 pm in Student Center Ballroom', 'guest_count': 159}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_19 | input: i want to create Student Showcase 2026 #19 on May 14, 2026 at 5 pm at Engineering Auditorium for about 166 people
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create_collecting
+  result:   {'type': 'event_create_collecting', 'draft': {'date': '2026-05-14', 'start_datetime': '2026-05-14T17:00:00', 'location': '5 pm at Engineering Auditorium', 'guest_count': 166}, 'missing_fields': ['title'], 'reply': 'I’ve got date as 2026-05-14, start time as 2026-05-14T17:00:00, location as 5 pm at Engineering Auditorium, guest count as 166. I still need the event title.', 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': 'title', 'pending_event_draft': {'date': '2026-05-14', 'start_datetime': '2026-05-14T17:00:00', 'location': '5 pm at Engineering Auditorium', 'guest_count': 166}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | create_20 | input: help me plan an event called Tech Panel 2027 #20 at Library Conference Room on May 15, 2026 at 6 pm for 173 guests
+  expected: ['event_create', 'event_create_collecting']
+  actual:   event_create
+  result:   {'type': 'event_create', 'draft': {'title': 'Tech Panel 2027 #20', 'date': '2026-05-15', 'start_datetime': '2026-05-15T18:00:00', 'location': 'Library Conference Room', 'guest_count': 173}, 'reply': None, 'state': {'last_event_id': None, 'last_task_id': None, 'active_flow': 'event_create', 'awaiting_field': None, 'pending_event_draft': {'title': 'Tech Panel 2027 #20', 'date': '2026-05-15', 'start_datetime': '2026-05-15T18:00:00', 'location': 'Library Conference Room', 'guest_count': 173}, 'last_intent': 'event_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+
+[UPDATE] 24/24 passed
+PASS | update_1 | input: change it to 6:30 pm
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 1, 'title': 'Spring Expo 2026 #1', 'date': '2026-04-26', 'start_datetime': '2026-04-26T17:30:00', 'location': 'Webb Center Ballroom', 'description': 'Networking event', 'guest_count': 40}, 'changes': {'_parsed_time_only': '18:30:00'}, 'reply': None, 'state': {'last_event_id': 1, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'_parsed_time_only': '18:30:00'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_2 | input: update it to 7 pm
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 2, 'title': 'Cybersecurity Mixer 2027 #2', 'date': '2026-04-27', 'start_datetime': '2026-04-27T18:00:00', 'location': 'Student Center Ballroom', 'description': 'Fundraising event', 'guest_count': 47}, 'changes': {'_parsed_time_only': '19:00:00'}, 'reply': None, 'state': {'last_event_id': 2, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'_parsed_time_only': '19:00:00'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_3 | input: set it to 6 pm
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 3, 'title': 'Alumni Networking Night 2028 #3', 'date': '2026-04-28', 'start_datetime': '2026-04-28T19:00:00', 'location': 'Engineering Auditorium', 'description': 'Student leadership program', 'guest_count': 54}, 'changes': {'_parsed_time_only': '18:00:00'}, 'reply': None, 'state': {'last_event_id': 3, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'_parsed_time_only': '18:00:00'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_4 | input: actually make it 86 people
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 4, 'title': 'Fundraiser Gala 2026 #4', 'date': '2026-04-29', 'start_datetime': '2026-04-29T17:00:00', 'location': 'Library Conference Room', 'description': 'Tech discussion event', 'guest_count': 61}, 'changes': {'guest_count': 86}, 'reply': None, 'state': {'last_event_id': 4, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'guest_count': 86}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_5 | input: change the location to Innovation Lab
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 5, 'title': 'STEM Workshop 2027 #5', 'date': '2026-04-30', 'start_datetime': '2026-04-30T18:30:00', 'location': 'Campus Lawn', 'description': 'Workshop for students', 'guest_count': 68}, 'changes': {'location': 'Innovation Lab'}, 'reply': None, 'state': {'last_event_id': 5, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'location': 'Innovation Lab'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_6 | input: call it Career Fair 2028 #6 Revised
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 6, 'title': 'Career Fair 2028 #6', 'date': '2026-05-01', 'start_datetime': '2026-05-01T19:00:00', 'location': 'Dining Hall Annex', 'description': 'Community outreach event', 'guest_count': 75}, 'changes': {'title': 'Career Fair 2028 #6 Revised'}, 'reply': None, 'state': {'last_event_id': 6, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'title': 'Career Fair 2028 #6 Revised'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_7 | input: reschedule it to May 5, 2026 at 6:30 pm
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 7, 'title': 'Leadership Summit 2026 #7', 'date': '2026-05-02', 'start_datetime': '2026-05-02T17:00:00', 'location': 'Norfolk Hall', 'description': 'Networking event', 'guest_count': 82}, 'changes': {'date': '2026-05-05', 'start_datetime': '2026-05-05T18:30:00'}, 'reply': None, 'state': {'last_event_id': 7, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'date': '2026-05-05', 'start_datetime': '2026-05-05T18:30:00'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_8 | input: move it to 7 pm
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 8, 'title': 'Volunteer Appreciation Event 2027 #8', 'date': '2026-05-03', 'start_datetime': '2026-05-03T18:00:00', 'location': 'Innovation Lab', 'description': 'Fundraising event', 'guest_count': 89}, 'changes': {'_parsed_time_only': '19:00:00'}, 'reply': None, 'state': {'last_event_id': 8, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'_parsed_time_only': '19:00:00'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_9 | input: make it 121 guests
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 9, 'title': 'Student Showcase 2028 #9', 'date': '2026-05-04', 'start_datetime': '2026-05-04T19:30:00', 'location': 'Webb Center Ballroom', 'description': 'Student leadership program', 'guest_count': 96}, 'changes': {'guest_count': 121}, 'reply': None, 'state': {'last_event_id': 9, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'guest_count': 121}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_10 | input: push it back a little
+  expected: ['event_update', 'event_update_no_changes', 'fallback']
+  actual:   fallback
+  result:   {'type': 'fallback', 'reply': None, 'state': {'last_event_id': 10, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': None, 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_11 | input: make it bigger
+  expected: ['event_update', 'event_update_no_changes', 'fallback']
+  actual:   event_update_no_changes
+  result:   {'type': 'event_update_no_changes', 'target_event': {'id': 11, 'title': 'Spring Expo 2027 #11', 'date': '2026-05-06', 'start_datetime': '2026-05-06T18:00:00', 'location': 'Engineering Auditorium', 'description': 'Workshop for students', 'guest_count': 110}, 'reply': "I found 'Spring Expo 2027 #11', but I couldn’t tell what you wanted to change.", 'state': {'last_event_id': 11, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': None, 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_12 | input: switch to something cheaper
+  expected: ['event_update', 'event_update_no_changes', 'fallback']
+  actual:   fallback
+  result:   {'type': 'fallback', 'reply': None, 'state': {'last_event_id': 12, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': None, 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_13 | input: change it to 6:30 pm
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 13, 'title': 'Alumni Networking Night 2026 #13', 'date': '2026-05-08', 'start_datetime': '2026-05-08T17:30:00', 'location': 'Campus Lawn', 'description': 'Networking event', 'guest_count': 124}, 'changes': {'_parsed_time_only': '18:30:00'}, 'reply': None, 'state': {'last_event_id': 13, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'_parsed_time_only': '18:30:00'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_14 | input: update it to 7 pm
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 14, 'title': 'Fundraiser Gala 2027 #14', 'date': '2026-05-09', 'start_datetime': '2026-05-09T18:00:00', 'location': 'Dining Hall Annex', 'description': 'Fundraising event', 'guest_count': 131}, 'changes': {'_parsed_time_only': '19:00:00'}, 'reply': None, 'state': {'last_event_id': 14, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'_parsed_time_only': '19:00:00'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_15 | input: set it to 6 pm
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 15, 'title': 'STEM Workshop 2028 #15', 'date': '2026-05-10', 'start_datetime': '2026-05-10T19:00:00', 'location': 'Norfolk Hall', 'description': 'Student leadership program', 'guest_count': 138}, 'changes': {'_parsed_time_only': '18:00:00'}, 'reply': None, 'state': {'last_event_id': 15, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'_parsed_time_only': '18:00:00'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_16 | input: actually make it 170 people
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 16, 'title': 'Career Fair 2026 #16', 'date': '2026-05-11', 'start_datetime': '2026-05-11T17:00:00', 'location': 'Innovation Lab', 'description': 'Tech discussion event', 'guest_count': 145}, 'changes': {'guest_count': 170}, 'reply': None, 'state': {'last_event_id': 16, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'guest_count': 170}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_17 | input: change the location to Library Conference Room
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 17, 'title': 'Leadership Summit 2027 #17', 'date': '2026-05-12', 'start_datetime': '2026-05-12T18:30:00', 'location': 'Webb Center Ballroom', 'description': 'Workshop for students', 'guest_count': 152}, 'changes': {'location': 'Library Conference Room'}, 'reply': None, 'state': {'last_event_id': 17, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'location': 'Library Conference Room'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_18 | input: call it Volunteer Appreciation Event 2028 #18 Revised
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 18, 'title': 'Volunteer Appreciation Event 2028 #18', 'date': '2026-05-13', 'start_datetime': '2026-05-13T19:00:00', 'location': 'Student Center Ballroom', 'description': 'Community outreach event', 'guest_count': 159}, 'changes': {'title': 'Volunteer Appreciation Event 2028 #18 Revised'}, 'reply': None, 'state': {'last_event_id': 18, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'title': 'Volunteer Appreciation Event 2028 #18 Revised'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_19 | input: reschedule it to May 17, 2026 at 6:30 pm
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 19, 'title': 'Student Showcase 2026 #19', 'date': '2026-05-14', 'start_datetime': '2026-05-14T17:00:00', 'location': 'Engineering Auditorium', 'description': 'Networking event', 'guest_count': 166}, 'changes': {'date': '2026-05-17', 'start_datetime': '2026-05-17T18:30:00'}, 'reply': None, 'state': {'last_event_id': 19, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'date': '2026-05-17', 'start_datetime': '2026-05-17T18:30:00'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_20 | input: move it to 7 pm
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 20, 'title': 'Tech Panel 2027 #20', 'date': '2026-05-15', 'start_datetime': '2026-05-15T18:00:00', 'location': 'Library Conference Room', 'description': 'Fundraising event', 'guest_count': 173}, 'changes': {'_parsed_time_only': '19:00:00'}, 'reply': None, 'state': {'last_event_id': 20, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'_parsed_time_only': '19:00:00'}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_21 | input: make it 205 guests
+  expected: ['event_update']
+  actual:   event_update
+  result:   {'type': 'event_update', 'target_event': {'id': 21, 'title': 'Spring Expo 2028 #21', 'date': '2026-05-16', 'start_datetime': '2026-05-16T19:30:00', 'location': 'Campus Lawn', 'description': 'Student leadership program', 'guest_count': 180}, 'changes': {'guest_count': 205}, 'reply': None, 'state': {'last_event_id': 21, 'last_task_id': None, 'active_flow': 'event_update', 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'event_update', 'last_changes': {'guest_count': 205}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_22 | input: push it back a little
+  expected: ['event_update', 'event_update_no_changes', 'fallback']
+  actual:   fallback
+  result:   {'type': 'fallback', 'reply': None, 'state': {'last_event_id': 22, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': None, 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_23 | input: make it bigger
+  expected: ['event_update', 'event_update_no_changes', 'fallback']
+  actual:   event_update_no_changes
+  result:   {'type': 'event_update_no_changes', 'target_event': {'id': 23, 'title': 'Alumni Networking Night 2027 #23', 'date': '2026-05-18', 'start_datetime': '2026-05-18T18:00:00', 'location': 'Norfolk Hall', 'description': 'Workshop for students', 'guest_count': 194}, 'reply': "I found 'Alumni Networking Night 2027 #23', but I couldn’t tell what you wanted to change.", 'state': {'last_event_id': 23, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': None, 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | update_24 | input: switch to something cheaper
+  expected: ['event_update', 'event_update_no_changes', 'fallback']
+  actual:   fallback
+  result:   {'type': 'fallback', 'reply': None, 'state': {'last_event_id': 24, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': None, 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+
+[TASK] 5/5 passed
+PASS | task_1 | input: remind me to call the caterer
+  expected: ['task_create']
+  actual:   task_create
+  result:   {'type': 'task_create', 'task': {'title': 'call the caterer', 'status': 'pending'}, 'reply': None, 'state': {'last_event_id': 1, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'task_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | task_2 | input: i need to send invitations
+  expected: ['task_create']
+  actual:   task_create
+  result:   {'type': 'task_create', 'task': {'title': 'send invitations', 'status': 'pending'}, 'reply': None, 'state': {'last_event_id': 1, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'task_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | task_3 | input: we should confirm the venue
+  expected: ['task_create']
+  actual:   task_create
+  result:   {'type': 'task_create', 'task': {'title': 'confirm the venue', 'status': 'pending'}, 'reply': None, 'state': {'last_event_id': 1, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'task_create', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | task_4 | input: mark invitations done
+  expected: ['task_complete', 'task_complete_not_found']
+  actual:   task_complete
+  result:   {'type': 'task_complete', 'task': {'title': 'invitations', 'status': 'completed'}, 'target_task': {'id': 2, 'event_id': 1, 'title': 'Send invitations', 'completed': 0}, 'reply': None, 'state': {'last_event_id': 1, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'task_complete', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | task_5 | input: finished call the caterer
+  expected: ['task_complete', 'task_complete_not_found']
+  actual:   task_complete
+  result:   {'type': 'task_complete', 'task': {'title': 'call the caterer', 'status': 'completed'}, 'target_task': {'id': 1, 'event_id': 1, 'title': 'Call the caterer', 'completed': 0}, 'reply': None, 'state': {'last_event_id': 1, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': 'task_complete', 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+
+[AMBIGUOUS] 3/3 passed
+PASS | ambiguous_1 | input: fix it
+  expected: ['event_update_no_changes', 'fallback']
+  actual:   fallback
+  result:   {'type': 'fallback', 'reply': None, 'state': {'last_event_id': 1, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': None, 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | ambiguous_2 | input: do that
+  expected: ['fallback']
+  actual:   fallback
+  result:   {'type': 'fallback', 'reply': None, 'state': {'last_event_id': 1, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': None, 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
+PASS | ambiguous_3 | input: make it better
+  expected: ['event_update_no_changes', 'fallback']
+  actual:   event_update_no_changes
+  result:   {'type': 'event_update_no_changes', 'target_event': {'id': 1, 'title': 'Spring Expo 2026 #1', 'date': '2026-04-26', 'start_datetime': '2026-04-26T17:30:00', 'location': 'Webb Center Ballroom', 'description': 'Networking event', 'guest_count': 40}, 'reply': "I found 'Spring Expo 2026 #1', but I couldn’t tell what you wanted to change.", 'state': {'last_event_id': 1, 'last_task_id': None, 'active_flow': None, 'awaiting_field': None, 'pending_event_draft': {}, 'last_intent': None, 'last_changes': {}, 'pending_followup': None, 'planning_context': {}}}
