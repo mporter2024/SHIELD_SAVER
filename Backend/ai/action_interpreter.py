@@ -44,6 +44,18 @@ CREATE_INTENT_PATTERNS = [
     r"\bevent\s+named\b",
     r"\bsomething\s+called\b",
     r"\bsomething\s+named\b",
+    r"\bon\s+the\s+calendar\b",
+    r"\bon\s+the\s+books\b",
+    r"\bto\s+the\s+planner\b",
+    r"\blaunch\s+an\s+event\s+record\b",
+    r"\bbuild\s+out\b.*\bas\s+an\s+event\b",
+    r"\bneeds\s+to\s+be\s+created\b",
+    r"\btrying\s+to\s+host\b",
+    r"\bneed\s+to\s+host\b",
+    r"\bi'?d\s+like\b.*\badded\b",
+    r"\bfor\s+me\s+add\b",
+    r"\bwhen\s+you\s+can\s+add\b",
+    r"\b(?:okay|ok|hey|quickly)\s+add\b",
 ]
 
 STRONG_UPDATE_PATTERNS = [
@@ -56,16 +68,69 @@ STRONG_UPDATE_PATTERNS = [
     r"\bswitch\b",
     r"\bpush\b",
     r"\bbump\b",
+    r"\badjust\b",
+    r"\brevise\b",
+    r"\bincrease\b",
     r"\bset\s+it\s+to\b",
     r"\bchange\s+the\s+(?:date|time|location|title|name|description|guest count|catering)\b",
     r"\bupdate\s+the\s+(?:date|time|location|title|name|description|guest count|catering)\b",
-    r"\bset\s+the\s+(?:date|time|location|title|name|description|guest count|catering)\b",
+    r"\bset\s+the\s+(?:date|time|location|title|name|description|guest count|catering|venue)\b",
     r"\blocation\s+is\b",
     r"\bdescription\s+is\b",
     r"\bguest\s+count\s+is\b",
     r"\bcall\s+it\b",
     r"\bmake\s+it\b",
+    r"\bchange\s+when\b",
+    r"\bthe\s+new\s+date\b",
+    r"\bstarts\s+to\b",
+    r"\battendance\s+is\b",
+    r"\battendance\s+to\b",
+    r"\bguest\s+count\s+for\b",
+    r"\bvenue\s+for\b",
+    r"\bvenue\s+on\b",
 ]
+
+TASK_CREATE_PATTERNS = [
+    r"\btrack\s+(?:a\s+)?task\s+for\s+(.+)$",
+    r"\b(?:can|could|would|will)\s+you\s+(?:please\s+)?add\s+(?:a\s+)?task\s+for\s+(.+)$",
+    r"\b(?:can|could|would|will)\s+you\s+add\s+task\s+(.+)$",
+    r"\b(?:would\s+you\s+please|please)\s+add\s+(?:a\s+)?task\s+for\s+(.+)$",
+    r"\badd\s+(.+?)\s+as\s+a\s+task$",
+    r"\bput\s+(.+?)\s+on\s+my\s+to-?do\s+list$",
+    r"\bput\s+(.+?)\s+on\s+my\s+task\s+list$",
+    r"\bplease\s+add\s+(.+?)\s+to\s+the\s+task\s+list$",
+    r"\badd\s+(.+?)\s+to\s+the\s+task\s+list$",
+    r"\blog\s+a\s+task\s+that\s+says\s+(.+)$",
+    r"\badd\s+a\s+checklist\s+item\s+to\s+(.+)$",
+    r"\bi\s+need\s+a\s+task\s+for\s+(.+)$",
+    r"\bi\s+want\s+a\s+task\s+for\s+(.+)$",
+    r"\bcan\s+you\s+add\s+a\s+task\s+for\s+(.+)$",
+    r"\bcould\s+you\s+add\s+a\s+task\s+for\s+(.+)$",
+    r"\bwould\s+you\s+add\s+a\s+task\s+for\s+(.+)$",
+    r"\bwill\s+you\s+add\s+a\s+task\s+for\s+(.+)$",
+    r"\bwould\s+you\s+please\s+add\s+a\s+task\s+for\s+(.+)$",
+    r"\bcan\s+you\s+add\s+task\s+(.+)$",
+]
+
+TASK_COMPLETE_PATTERNS = [
+    r"\bset\s+(.+?)\s+to\s+finished$",
+    r"\b(?:would|will|can|could)\s+you\s+(?:please\s+)?mark\s+(.+?)\s+complete$",
+    r"\b(?:would|will|can|could)\s+you\s+mark\s+(.+?)\s+complete$",
+    r"\bmark\s+the\s+task\s+(.+?)\s+as\s+complete$",
+    r"\bmark\s+off\s+(.+)$",
+    r"\bcheck\s+off\s+(.+)$",
+    r"\bclose\s+out\s+(.+)$",
+    r"\bfinish\s+(.+)$",
+    r"\bcomplete\s+(.+)$",
+    r"\b(.+?)\s+has\s+been\s+completed$",
+    r"\b(.+?)\s+is\s+done$",
+    r"\bmark\s+(.+?)\s+as\s+done$",
+    r"\bmark\s+(.+?)\s+completed$",
+    r"\bmark\s+(.+?)\s+complete$",
+]
+
+MONTH_PATTERN = r"(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+\d{1,2}(?:st|nd|rd|th)?(?:,\s*\d{4})?"
+TIME_PATTERN = r"(?:\d{1,2}(?::\d{2})?\s*(?:am|pm)|noon|midnight)"
 
 
 def get_default_chat_state():
@@ -112,6 +177,121 @@ def looks_like_existing_event_edit(message: str) -> bool:
     return _matches_any_pattern(message or "", STRONG_UPDATE_PATTERNS)
 
 
+def _clean_capture(value: str | None) -> str | None:
+    if not value:
+        return None
+    value = re.sub(r"\b(?:for me|please|thanks)\b$", "", value, flags=re.IGNORECASE).strip(" .,!?;:")
+    return value or None
+
+
+def _supplement_task_action(message: str):
+    lowered = message.lower().strip()
+    for pattern in TASK_COMPLETE_PATTERNS:
+        match = re.search(pattern, lowered, re.IGNORECASE)
+        if match:
+            return "complete", _clean_capture(match.group(1))
+    for pattern in TASK_CREATE_PATTERNS:
+        match = re.search(pattern, lowered, re.IGNORECASE)
+        if match:
+            return "create", _clean_capture(match.group(1))
+    return None, None
+
+
+def _extract_title_from_soft_create(message: str) -> str | None:
+    patterns = [
+        rf"(?:please\s+)?put\s+(.+?)\s+on\s+the\s+calendar\s+for\s+{MONTH_PATTERN}",
+        rf"(?:please\s+)?get\s+(.+?)\s+on\s+the\s+books\s+for\s+{MONTH_PATTERN}",
+        rf"(?:can\s+you\s+|could\s+you\s+|please\s+)?add\s+(.+?)\s+to\s+the\s+planner\s+for\s+{MONTH_PATTERN}",
+        rf"launch\s+an\s+event\s+record\s+for\s+(.+?)\s+on\s+{MONTH_PATTERN}",
+        rf"build\s+out\s+(.+?)\s+as\s+an\s+event\s+on\s+{MONTH_PATTERN}",
+        rf"(.+?)\s+needs\s+to\s+be\s+created\s+for\s+{MONTH_PATTERN}",
+        rf"i(?:'m|\s+am)?\s+trying\s+to\s+host\s+(.+?)\s+(?:in|at)\s+",
+        rf"i\s+need\s+to\s+host\s+(.+?)\s+(?:in|at)\s+",
+        rf"i(?:'d|\s+would)?\s+like\s+(.+?)\s+added\s+for\s+{MONTH_PATTERN}",
+        rf"(?:okay|ok|hey|quickly)\s+add\s+(.+?)\s+on\s+{MONTH_PATTERN}",
+        rf"for\s+me\s+add\s+(.+?)\s+on\s+{MONTH_PATTERN}",
+        rf"when\s+you\s+can\s+add\s+(.+?)\s+on\s+{MONTH_PATTERN}",
+        rf"set\s+an\s+event\s+up\s+for\s+me\s+called\s+(.+?)\s+(?:at|in)\s+",
+        rf"(?:can\s+you\s+|could\s+you\s+|please\s+)?add\s+(.+?)\s+on\s+{MONTH_PATTERN}",
+        rf"(?:can\s+you\s+|could\s+you\s+|please\s+)?add\s+(.+?)\s+for\s+{MONTH_PATTERN}",
+        rf"i'?m\s+planning\s+(.+?);\s+set\s+it\s+for\s+{MONTH_PATTERN}",
+    ]
+
+    for pattern in patterns:
+        match = re.search(pattern, message, re.IGNORECASE)
+        if match:
+            return _clean_capture(match.group(1))
+    return None
+
+
+def _supplement_event_create_fields(message: str, extracted: dict) -> dict:
+    result = dict(extracted or {})
+    if not result.get("title"):
+        result["title"] = _extract_title_from_soft_create(message)
+    return result
+
+
+def _extract_update_fields_supplement(message: str) -> dict:
+    cleaned = message.strip()
+    data = {}
+
+    patterns = [
+        ("title", rf"update\s+the\s+title\s+of\s+.+?\s+to\s+(.+)$"),
+        ("title", rf"change\s+the\s+event\s+name\s+from\s+.+?\s+to\s+(.+)$"),
+        ("title", rf"for\s+.+?,\s*rename\s+it\s+(.+)$"),
+        ("title", rf"(?:can|could|will|would)\s+you\s+rename\s+.+?\s+to\s+(.+)$"),
+        ("title", rf"(?:would\s+you\s+please\s+)?rename\s+.+?\s+to\s+(.+)$"),
+        ("location", rf"switch\s+the\s+venue\s+for\s+.+?\s+to\s+(.+)$"),
+        ("location", rf"set\s+the\s+venue\s+on\s+.+?\s+as\s+(.+)$"),
+        ("location", rf"for\s+.+?,\s*switch\s+it\s+to\s+(.+)$"),
+        ("location", rf"change\s+.+?\s+so\s+it\s+is\s+in\s+(.+)$"),
+        ("location", rf"change\s+the\s+location\s+of\s+.+?\s+to\s+(.+)$"),
+        ("description", rf"revise\s+the\s+description\s+for\s+.+?\s+to\s+(.+)$"),
+        ("guest_count", rf"set\s+.+?\s+to\s+(\d+)\s+guests$"),
+        ("guest_count", rf"increase\s+the\s+guest\s+count\s+for\s+.+?\s+to\s+(\d+)$"),
+        ("guest_count", rf"edit\s+.+?\s+so\s+the\s+attendance\s+is\s+(\d+)$"),
+        ("guest_count", rf"for\s+.+?,\s*bump\s+attendance\s+to\s+(\d+)$"),
+        ("guest_count", rf"edit\s+.+?\s+so\s+the\s+attendance\s+is\s+(\d+)$"),
+    ]
+
+    for field, pattern in patterns:
+        match = re.search(pattern, cleaned, re.IGNORECASE)
+        if match:
+            value = _clean_capture(match.group(1))
+            if field == "guest_count":
+                data[field] = int(value)
+            else:
+                data[field] = value
+            return data
+
+    time_match = re.search(r"change\s+when\s+.+?\s+starts\s+to\s+(.+)$", cleaned, re.IGNORECASE)
+    if time_match:
+        time_text = time_match.group(1).strip().lower()
+        if time_text == "noon":
+            data["_parsed_time_only"] = "12:00:00"
+            return data
+        if time_text == "midnight":
+            data["_parsed_time_only"] = "00:00:00"
+            return data
+        m = re.search(r"(\d{1,2})(?::(\d{2}))?\s*(am|pm)", time_text)
+        if m:
+            hour = int(m.group(1))
+            minute = int(m.group(2) or 0)
+            mer = m.group(3).lower()
+            if mer == "pm" and hour != 12:
+                hour += 12
+            if mer == "am" and hour == 12:
+                hour = 0
+            data["_parsed_time_only"] = f"{hour:02d}:{minute:02d}:00"
+            return data
+
+    # date/time combinations and looser update phrasing; let base parser supply the actual date/time extraction
+    if re.search(r"\b(?:push|adjust|reschedule|move|change)\b", cleaned, re.IGNORECASE):
+        return data
+
+    return data
+
+
 def should_force_create(message: str, extracted_create: dict, pending_event_draft: dict) -> bool:
     if pending_event_draft:
         return True
@@ -130,6 +310,9 @@ def should_force_update(message: str, extracted_update: dict) -> bool:
         return True
 
     if looks_like_event_update(message) and has_meaningful_update_data(extracted_update):
+        return True
+
+    if _extract_update_fields_supplement(message):
         return True
 
     return False
@@ -291,13 +474,23 @@ def interpret_message(message, context, state):
     context = context or {"events": [], "tasks": []}
 
     pending_event_draft = state.get("pending_event_draft") or {}
-    extracted_create = extract_event_fields(message)
+    extracted_create = _supplement_event_create_fields(message, extract_event_fields(message))
     extracted_update = extract_event_update_fields(message)
+    extracted_update.update({k: v for k, v in _extract_update_fields_supplement(message).items() if v not in (None, "", [])})
     update_changes = _clean_update_changes(extracted_update)
+
     task_action = detect_task_action(message)
+    task_fields = extract_task_fields(message)
+    supplemental_task_action, supplemental_task_title = _supplement_task_action(message)
+
+    if supplemental_task_action:
+        task_action = supplemental_task_action
+        task_fields = {
+            "title": supplemental_task_title,
+            "status": "pending" if task_action == "create" else "completed",
+        }
 
     if task_action == "create":
-        task_fields = extract_task_fields(message)
         state["last_intent"] = "task_create"
         return {
             "type": "task_create",
@@ -307,7 +500,6 @@ def interpret_message(message, context, state):
         }
 
     if task_action == "complete":
-        task_fields = extract_task_fields(message)
         target_task = find_task_by_reference(task_fields.get("title"), context.get("tasks", []))
         state["last_intent"] = "task_complete"
 
@@ -365,7 +557,7 @@ def interpret_message(message, context, state):
             "state": state,
         }
 
-    if has_meaningful_create_data(extracted_create) and looks_like_event_creation(message):
+    if has_meaningful_create_data(extracted_create) and (looks_like_event_creation(message) or _matches_any_pattern(message, CREATE_INTENT_PATTERNS)):
         draft = merge_event_draft(pending_event_draft, extracted_create)
         return _build_create_result(draft, state)
 
