@@ -1,67 +1,7 @@
 [
   {
-    "input": "track a task for finalize venue contract",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "update the title of Career Fair to Career Fair Plus",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "switch the venue for Research Showcase to Harbor Center",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "set the venue on Tech Summit as North Auditorium",
-    "expected_action": "event_update"
-  },
-  {
     "input": "push Leadership Forum back to 6:30 pm on April 30",
     "expected_action": "event_update"
-  },
-  {
-    "input": "can you add a task for check AV equipment",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "set confirm parking to finished",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "would you mark send invitations complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "change the event name from Spring Expo to Spring Expo Plus",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "set the venue on Gaming Night as North Auditorium",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "track a task for send invitations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "launch an event record for Gaming Night on August 12 at 8 pm at Rec Room for 40 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "for Gaming Night, rename it Gaming Night Revised",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "would you please add a task for print signage",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "review agenda is done",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "will you mark confirm parking complete",
-    "expected_action": "task_complete"
   },
   {
     "input": "can you rename Winter Gala to Winter Gala Updated",
@@ -72,84 +12,24 @@
     "expected_action": "event_update"
   },
   {
-    "input": "close out send invitations",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "set an event up for me called Research Showcase at Library Atrium on September 18 starting at 1 pm for 120 people",
     "expected_action": "event_create"
-  },
-  {
-    "input": "when you can add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "could you add a task for confirm parking",
-    "expected_action": "task_create"
   },
   {
     "input": "i need to host Research Showcase at Library Atrium for 120 people on September 18 at 1 pm",
     "expected_action": "event_create"
   },
   {
-    "input": "would you add a task for confirm parking",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "add print signage as a task",
-    "expected_action": "task_create"
-  },
-  {
     "input": "mark off check AV equipment",
     "expected_action": "task_complete"
-  },
-  {
-    "input": "i'm trying to host Leadership Forum in Conference Center on October 9 at 4 pm for 90 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "will you add a task for review agenda",
-    "expected_action": "task_create"
   },
   {
     "input": "can you rename Leadership Forum to Leadership Forum Updated",
     "expected_action": "event_update"
   },
   {
-    "input": "would you please add a task for confirm parking",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "would you add a task for confirm volunteers",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "can you add Alumni Meetup to the planner for July 1 at 6 pm in Rooftop Lounge for 60 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "put order decorations on my to-do list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "please add confirm volunteers to the task list",
-    "expected_action": "task_create"
-  },
-  {
     "input": "would you please mark prepare badges complete",
     "expected_action": "task_complete"
-  },
-  {
-    "input": "put check AV equipment on my to-do list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "set the venue on Alumni Meetup as Main Hall",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "track a task for confirm parking",
-    "expected_action": "task_create"
   },
   {
     "input": "rename Leadership Forum to Leadership Forum Plus",
@@ -157,10 +37,6 @@
   },
   {
     "input": "for Leadership Forum, bump attendance to 160",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "for Career Fair, rename it Career Fair Revised",
     "expected_action": "event_update"
   },
   {
@@ -172,72 +48,16 @@
     "expected_action": "task_complete"
   },
   {
-    "input": "would you please add a task for check AV equipment",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "Tech Summit needs to be created for May 10 in Innovation Hall at 2 pm for 150 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "mark the task confirm volunteers as complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "would you please add a task for prepare badges",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "for me add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "could you mark order decorations complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "i want a task for check AV equipment",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "i want a task for send invitations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "would you please add a task for send invitations",
-    "expected_action": "task_create"
-  },
-  {
     "input": "could you add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees",
     "expected_action": "event_create"
-  },
-  {
-    "input": "could you add a task for check AV equipment",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "can you mark book DJ complete",
-    "expected_action": "task_complete"
   },
   {
     "input": "i need to host Career Fair at Student Center for 200 people on June 5 at 11 am",
     "expected_action": "event_create"
   },
   {
-    "input": "could you mark book DJ complete",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "for Winter Gala, rename it Winter Gala Revised",
     "expected_action": "event_update"
-  },
-  {
-    "input": "please put Career Fair on the calendar for June 5 at 11 am in Student Center with 200 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "would you please mark review agenda complete",
-    "expected_action": "task_complete"
   },
   {
     "input": "would you mark print signage complete",
@@ -248,120 +68,16 @@
     "expected_action": "event_update"
   },
   {
-    "input": "could you mark finalize venue contract complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "for Career Fair, switch it to Main Hall",
-    "expected_action": "event_update"
-  },
-  {
     "input": "reschedule Winter Gala for September 22 at 4:15 pm",
     "expected_action": "event_update"
-  },
-  {
-    "input": "change the event name from Gaming Night to Gaming Night Plus",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "can you add task print signage",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "please put Spring Expo on the calendar for April 24 at 5 pm in Webb Center Ballroom with 80 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "switch the venue for Tech Summit to Student Plaza",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "set Spring Expo to 75 guests",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "when you can add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "could you mark confirm parking complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "i need a task for check AV equipment",
-    "expected_action": "task_create"
   },
   {
     "input": "for Leadership Forum, switch it to North Auditorium",
     "expected_action": "event_update"
   },
   {
-    "input": "change the event name from Research Showcase to Research Showcase Plus",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "when you can add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "i want a task for order decorations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "update the title of Gaming Night to Gaming Night Plus",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "please get Leadership Forum on the books for October 9, 4 pm, Conference Center, 90 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "log a task that says assign check-in staff",
-    "expected_action": "task_create"
-  },
-  {
     "input": "would you mark prepare badges complete",
     "expected_action": "task_complete"
-  },
-  {
-    "input": "set confirm catering to finished",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "can you add Leadership Forum to the planner for October 9 at 4 pm in Conference Center for 90 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "edit Tech Summit so the attendance is 220",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "log a task that says confirm parking",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "please add confirm parking to the task list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "log a task that says review agenda",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "send invitations has been completed",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "can you add a task for prepare badges",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "mark off confirm volunteers",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "would you add a task for finalize venue contract",
-    "expected_action": "task_create"
   },
   {
     "input": "complete print signage",
@@ -372,80 +88,12 @@
     "expected_action": "event_create"
   },
   {
-    "input": "set Career Fair to 120 guests",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "i'd like Winter Gala added for December 3 at 7 pm in Grand Hall for 180 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "change when Career Fair starts to 9 am",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "would you please mark finalize venue contract complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "mark off finalize venue contract",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "add a checklist item to confirm catering",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "build out Tech Summit as an event on May 10 at 2 pm in Innovation Hall with capacity for 150",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "would you please add a task for confirm volunteers",
-    "expected_action": "task_create"
-  },
-  {
     "input": "for Winter Gala, switch it to Harbor Center",
     "expected_action": "event_update"
   },
   {
-    "input": "can you add task book DJ",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "mark off send invitations",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "add a checklist item to confirm volunteers",
-    "expected_action": "task_create"
-  },
-  {
     "input": "switch the venue for Winter Gala to Harbor Center",
     "expected_action": "event_update"
-  },
-  {
-    "input": "would you please mark confirm catering complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "please get Alumni Meetup on the books for July 1, 6 pm, Rooftop Lounge, 60 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "switch the venue for Gaming Night to Main Hall",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "can you add task check AV equipment",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "for Spring Expo, switch it to Harbor Center",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "please put Alumni Meetup on the calendar for July 1 at 6 pm in Rooftop Lounge with 60 guests",
-    "expected_action": "event_create"
   },
   {
     "input": "could you mark check AV equipment complete",
@@ -454,22 +102,6 @@
   {
     "input": "move Leadership Forum over to Chartway Arena and set it for midnight",
     "expected_action": "event_update"
-  },
-  {
-    "input": "track a task for review agenda",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "will you add a task for finalize venue contract",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "please get Winter Gala on the books for December 3, 7 pm, Grand Hall, 180 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "add a checklist item to send invitations",
-    "expected_action": "task_create"
   },
   {
     "input": "set an event up for me called Career Fair at Student Center on June 5 starting at 11 am for 200 people",
@@ -496,24 +128,12 @@
     "expected_action": "event_create"
   },
   {
-    "input": "add prepare badges as a task",
-    "expected_action": "task_create"
-  },
-  {
     "input": "mark the task check AV equipment as complete",
     "expected_action": "task_complete"
   },
   {
-    "input": "switch the venue for Career Fair to Main Hall",
-    "expected_action": "event_update"
-  },
-  {
     "input": "move Winter Gala over to Harbor Center and set it for 3 pm",
     "expected_action": "event_update"
-  },
-  {
-    "input": "i want a task for prepare badges",
-    "expected_action": "task_create"
   },
   {
     "input": "i need to host Gaming Night at Rec Room for 40 people on August 12 at 8 pm",
@@ -524,59 +144,15 @@
     "expected_action": "event_create"
   },
   {
-    "input": "set finalize venue contract to finished",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "could you add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees",
     "expected_action": "event_create"
-  },
-  {
-    "input": "launch an event record for Career Fair on June 5 at 11 am at Student Center for 200 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "increase the guest count for Tech Summit to 140",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "please add send invitations to the task list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "would you add a task for prepare badges",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "please put Winter Gala on the calendar for December 3 at 7 pm in Grand Hall with 180 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "can you add task assign check-in staff",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "mark the task send invitations as complete",
-    "expected_action": "task_complete"
   },
   {
     "input": "set an event up for me called Alumni Meetup at Rooftop Lounge on July 1 starting at 6 pm for 60 people",
     "expected_action": "event_create"
   },
   {
-    "input": "revise the description for Spring Expo to community outreach event",
-    "expected_action": "event_update"
-  },
-  {
     "input": "change the location of Leadership Forum to Main Hall",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "can you add a task for send invitations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "increase the guest count for Alumni Meetup to 75",
     "expected_action": "event_update"
   },
   {
@@ -584,16 +160,8 @@
     "expected_action": "event_update"
   },
   {
-    "input": "would you add a task for book DJ",
-    "expected_action": "task_create"
-  },
-  {
     "input": "can you add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees",
     "expected_action": "event_create"
-  },
-  {
-    "input": "review agenda has been completed",
-    "expected_action": "task_complete"
   },
   {
     "input": "check off print signage",
@@ -608,14 +176,6 @@
     "expected_action": "event_create"
   },
   {
-    "input": "can you add a task for confirm catering",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "i need a task for print signage",
-    "expected_action": "task_create"
-  },
-  {
     "input": "would you mark check AV equipment complete",
     "expected_action": "task_complete"
   },
@@ -624,64 +184,12 @@
     "expected_action": "task_complete"
   },
   {
-    "input": "add send invitations as a task",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "when you can add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "i need a task for confirm catering",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "for me add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "when you can add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "change Spring Expo so it is in Main Hall",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "put confirm parking on my to-do list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "i want a task for confirm volunteers",
-    "expected_action": "task_create"
-  },
-  {
     "input": "edit Leadership Forum so the attendance is 175",
     "expected_action": "event_update"
   },
   {
-    "input": "will you mark confirm catering complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "add a checklist item to review agenda",
-    "expected_action": "task_create"
-  },
-  {
     "input": "can you add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees",
     "expected_action": "event_create"
-  },
-  {
-    "input": "when you can add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "i need a task for review agenda",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "could you add a task for review agenda",
-    "expected_action": "task_create"
   },
   {
     "input": "check AV equipment has been completed",
@@ -696,26 +204,6 @@
     "expected_action": "event_create"
   },
   {
-    "input": "build out Gaming Night as an event on August 12 at 8 pm in Rec Room with capacity for 40",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "put book DJ on my to-do list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "for Alumni Meetup, switch it to Student Plaza",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "mark the task book DJ as complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "can you mark send invitations complete",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "please add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees",
     "expected_action": "event_create"
   },
@@ -724,52 +212,12 @@
     "expected_action": "event_update"
   },
   {
-    "input": "change when Alumni Meetup starts to 3 pm",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "could you add a task for print signage",
-    "expected_action": "task_create"
-  },
-  {
     "input": "set an event up for me called Tech Summit at Innovation Hall on May 10 starting at 2 pm for 150 people",
     "expected_action": "event_create"
   },
   {
-    "input": "for Tech Summit, switch it to North Auditorium",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "can you add task finalize venue contract",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "set Research Showcase to 95 guests",
-    "expected_action": "event_update"
-  },
-  {
     "input": "can you add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees",
     "expected_action": "event_create"
-  },
-  {
-    "input": "close out order decorations",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "hey add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "please add print signage to the task list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "revise the description for Alumni Meetup to community outreach event",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "revise the description for Tech Summit to sponsor mixer",
-    "expected_action": "event_update"
   },
   {
     "input": "i'm planning Winter Gala; set it for December 3 at 7 pm in Grand Hall for 180 people",
@@ -780,31 +228,7 @@
     "expected_action": "task_complete"
   },
   {
-    "input": "launch an event record for Winter Gala on December 3 at 7 pm at Grand Hall for 180 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "edit Spring Expo so the attendance is 120",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "add confirm volunteers as a task",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "please add finalize venue contract to the task list",
-    "expected_action": "task_create"
-  },
-  {
     "input": "would you please move Winter Gala to July 8",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "confirm catering has been completed",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "for Alumni Meetup, rename it Alumni Meetup Revised",
     "expected_action": "event_update"
   },
   {
@@ -812,47 +236,7 @@
     "expected_action": "task_complete"
   },
   {
-    "input": "please add review agenda to the task list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "change the event name from Alumni Meetup to Alumni Meetup Plus",
-    "expected_action": "event_update"
-  },
-  {
     "input": "check off prepare badges",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "could you add a task for confirm volunteers",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "Leadership Forum needs to be created for October 9 in Conference Center at 4 pm for 90 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "adjust Research Showcase to June 12",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "would you please add a task for review agenda",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "please add assign check-in staff to the task list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "build out Leadership Forum as an event on October 9 at 4 pm in Conference Center with capacity for 90",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "set the venue on Career Fair as Main Hall",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "mark off confirm catering",
     "expected_action": "task_complete"
   },
   {
@@ -860,52 +244,12 @@
     "expected_action": "event_update"
   },
   {
-    "input": "i need a task for send invitations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "Winter Gala needs to be created for December 3 in Grand Hall at 7 pm for 180 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "build out Winter Gala as an event on December 3 at 7 pm in Grand Hall with capacity for 180",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "please get Tech Summit on the books for May 10, 2 pm, Innovation Hall, 150 guests",
-    "expected_action": "event_create"
-  },
-  {
     "input": "print signage is done",
     "expected_action": "task_complete"
   },
   {
-    "input": "add a checklist item to book DJ",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "quickly add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "i need a task for prepare badges",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "i'm trying to host Career Fair in Student Center on June 5 at 11 am for 200 guests",
-    "expected_action": "event_create"
-  },
-  {
     "input": "push Winter Gala back to 9 am on April 30",
     "expected_action": "event_update"
-  },
-  {
-    "input": "switch the venue for Alumni Meetup to Main Hall",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "would you mark confirm catering complete",
-    "expected_action": "task_complete"
   },
   {
     "input": "update Leadership Forum so it starts at 6:30 pm",
@@ -914,18 +258,6 @@
   {
     "input": "can you add Career Fair on June 5 at 11 am at Student Center with 200 attendees",
     "expected_action": "event_create"
-  },
-  {
-    "input": "update the title of Research Showcase to Research Showcase Plus",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "would you mark review agenda complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "would you add a task for check AV equipment",
-    "expected_action": "task_create"
   },
   {
     "input": "please add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees",
@@ -940,36 +272,8 @@
     "expected_action": "event_create"
   },
   {
-    "input": "when you can add Career Fair on June 5 at 11 am at Student Center with 200 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "for Gaming Night, switch it to Harbor Center",
-    "expected_action": "event_update"
-  },
-  {
     "input": "will you rename Leadership Forum to Leadership Forum Updated",
     "expected_action": "event_update"
-  },
-  {
-    "input": "will you add a task for print signage",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "set the venue on Research Showcase as Student Plaza",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "Career Fair needs to be created for June 5 in Student Center at 11 am for 200 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "log a task that says confirm catering",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "close out confirm catering",
-    "expected_action": "task_complete"
   },
   {
     "input": "update the title of Winter Gala to Winter Gala Plus",
@@ -980,80 +284,12 @@
     "expected_action": "event_update"
   },
   {
-    "input": "i want a task for book DJ",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "close out finalize venue contract",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "set send invitations to finished",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "for me add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "increase the guest count for Career Fair to 120",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "would you mark finalize venue contract complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "please get Spring Expo on the books for April 24, 5 pm, Webb Center Ballroom, 80 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "edit Gaming Night so the attendance is 95",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "will you add a task for book DJ",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "would you add a task for order decorations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "revise the description for Research Showcase to sponsor mixer",
-    "expected_action": "event_update"
-  },
-  {
     "input": "mark off print signage",
     "expected_action": "task_complete"
   },
   {
-    "input": "when you can add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "can you add Winter Gala to the planner for December 3 at 7 pm in Grand Hall for 180 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "would you add a task for confirm catering",
-    "expected_action": "task_create"
-  },
-  {
     "input": "could you add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees",
     "expected_action": "event_create"
-  },
-  {
-    "input": "could you mark review agenda complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "please put Gaming Night on the calendar for August 12 at 8 pm in Rec Room with 40 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "can you add task confirm volunteers",
-    "expected_action": "task_create"
   },
   {
     "input": "change the event name from Leadership Forum to Leadership Forum Plus",
@@ -1088,43 +324,11 @@
     "expected_action": "event_create"
   },
   {
-    "input": "can you mark review agenda complete",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "assign check-in staff has been completed",
     "expected_action": "task_complete"
   },
   {
-    "input": "set confirm volunteers to finished",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "will you add a task for assign check-in staff",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "i'd like Research Showcase added for September 18 at 1 pm in Library Atrium for 120 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "log a task that says book DJ",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "i need a task for finalize venue contract",
-    "expected_action": "task_create"
-  },
-  {
     "input": "increase the guest count for Winter Gala to 120",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "launch an event record for Research Showcase on September 18 at 1 pm at Library Atrium for 120 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "change when Spring Expo starts to 4:15 pm",
     "expected_action": "event_update"
   },
   {
@@ -1132,56 +336,16 @@
     "expected_action": "event_create"
   },
   {
-    "input": "can you add Spring Expo to the planner for April 24 at 5 pm in Webb Center Ballroom for 80 people",
-    "expected_action": "event_create"
-  },
-  {
     "input": "please add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees",
     "expected_action": "event_create"
-  },
-  {
-    "input": "could you mark confirm catering complete",
-    "expected_action": "task_complete"
   },
   {
     "input": "mark the task print signage as complete",
     "expected_action": "task_complete"
   },
   {
-    "input": "set Tech Summit to 95 guests",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "for me add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "okay add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees",
-    "expected_action": "event_create"
-  },
-  {
     "input": "increase the guest count for Leadership Forum to 175",
     "expected_action": "event_update"
-  },
-  {
-    "input": "change Gaming Night so it is in Chartway Arena",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "for me add Career Fair on June 5 at 11 am at Student Center with 200 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "can you mark finalize venue contract complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "close out review agenda",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "order decorations has been completed",
-    "expected_action": "task_complete"
   },
   {
     "input": "could you add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees",
@@ -1190,34 +354,6 @@
   {
     "input": "will you move Leadership Forum to June 12",
     "expected_action": "event_update"
-  },
-  {
-    "input": "log a task that says prepare badges",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "revise the description for Gaming Night to student showcase",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "adjust Career Fair to August 20",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "change Alumni Meetup so it is in Chartway Arena",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "adjust Gaming Night to July 8",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "could you add a task for book DJ",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "would you please add a task for book DJ",
-    "expected_action": "task_create"
   },
   {
     "input": "finish assign check-in staff",
@@ -1232,63 +368,11 @@
     "expected_action": "event_create"
   },
   {
-    "input": "Gaming Night needs to be created for August 12 in Rec Room at 8 pm for 40 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "can you add a task for assign check-in staff",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "update the title of Tech Summit to Tech Summit Plus",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "will you add a task for check AV equipment",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "mark off review agenda",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "book DJ has been completed",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "launch an event record for Tech Summit on May 10 at 2 pm at Innovation Hall for 150 attendees",
-    "expected_action": "event_create"
-  },
-  {
     "input": "for Winter Gala, bump attendance to 160",
     "expected_action": "event_update"
   },
   {
-    "input": "can you add a task for print signage",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "quickly add Career Fair on June 5 at 11 am at Student Center with 200 attendees",
-    "expected_action": "event_create"
-  },
-  {
     "input": "can you mark prepare badges complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "i'd like Alumni Meetup added for July 1 at 6 pm in Rooftop Lounge for 60 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "i'm trying to host Tech Summit in Innovation Hall on May 10 at 2 pm for 150 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "i'd like Career Fair added for June 5 at 11 am in Student Center for 200 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "will you mark order decorations complete",
     "expected_action": "task_complete"
   },
   {
@@ -1296,47 +380,7 @@
     "expected_action": "event_update"
   },
   {
-    "input": "change when Gaming Night starts to 3 pm",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "would you please mark confirm parking complete",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "can you add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "mark off order decorations",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "can you add a task for finalize venue contract",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "okay add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "please add confirm catering to the task list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "could you add a task for prepare badges",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "build out Research Showcase as an event on September 18 at 1 pm in Library Atrium with capacity for 120",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "change the event name from Career Fair to Career Fair Plus",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "i'm trying to host Alumni Meetup in Rooftop Lounge on July 1 at 6 pm for 60 guests",
     "expected_action": "event_create"
   },
   {
@@ -1344,20 +388,8 @@
     "expected_action": "event_update"
   },
   {
-    "input": "i'm trying to host Spring Expo in Webb Center Ballroom on April 24 at 5 pm for 80 guests",
-    "expected_action": "event_create"
-  },
-  {
     "input": "would you please mark print signage complete",
     "expected_action": "task_complete"
-  },
-  {
-    "input": "revise the description for Career Fair to student showcase",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "i need a task for book DJ",
-    "expected_action": "task_create"
   },
   {
     "input": "i need to host Winter Gala at Grand Hall for 180 people on December 3 at 7 pm",
@@ -1372,107 +404,19 @@
     "expected_action": "event_update"
   },
   {
-    "input": "please put Leadership Forum on the calendar for October 9 at 4 pm in Conference Center with 90 guests",
-    "expected_action": "event_create"
-  },
-  {
     "input": "complete check AV equipment",
     "expected_action": "task_complete"
-  },
-  {
-    "input": "log a task that says confirm volunteers",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "edit Alumni Meetup so the attendance is 75",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "change the event name from Tech Summit to Tech Summit Plus",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "will you mark confirm volunteers complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "quickly add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "log a task that says check AV equipment",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "please add prepare badges to the task list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "update the title of Spring Expo to Spring Expo Plus",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "would you please add a task for finalize venue contract",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "quickly add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "update the title of Alumni Meetup to Alumni Meetup Plus",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "can you add task confirm catering",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "track a task for book DJ",
-    "expected_action": "task_create"
   },
   {
     "input": "could you move Leadership Forum to August 20",
     "expected_action": "event_update"
   },
   {
-    "input": "hey add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "confirm parking has been completed",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "confirm catering is done",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "would you mark assign check-in staff complete",
     "expected_action": "task_complete"
   },
   {
-    "input": "would you please mark confirm volunteers complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "for me add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "add a checklist item to print signage",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "add confirm catering as a task",
-    "expected_action": "task_create"
-  },
-  {
     "input": "please add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "build out Spring Expo as an event on April 24 at 5 pm in Webb Center Ballroom with capacity for 80",
     "expected_action": "event_create"
   },
   {
@@ -1480,52 +424,12 @@
     "expected_action": "event_update"
   },
   {
-    "input": "hey add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees",
-    "expected_action": "event_create"
-  },
-  {
     "input": "mark assign check-in staff completed",
     "expected_action": "task_complete"
   },
   {
-    "input": "track a task for confirm volunteers",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "put confirm volunteers on my to-do list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "set the venue on Spring Expo as Chartway Arena",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "please add check AV equipment to the task list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "add a checklist item to assign check-in staff",
-    "expected_action": "task_create"
-  },
-  {
     "input": "move Leadership Forum to May 14",
     "expected_action": "event_update"
-  },
-  {
-    "input": "could you add a task for confirm catering",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "can you add Tech Summit to the planner for May 10 at 2 pm in Innovation Hall for 150 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "could you mark confirm volunteers complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "would you please mark book DJ complete",
-    "expected_action": "task_complete"
   },
   {
     "input": "could you mark assign check-in staff complete",
@@ -1540,44 +444,8 @@
     "expected_action": "event_update"
   },
   {
-    "input": "mark off confirm parking",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "add a checklist item to check AV equipment",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "set review agenda to finished",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "mark off book DJ",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "hey add Career Fair on June 5 at 11 am at Student Center with 200 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "i want a task for confirm parking",
-    "expected_action": "task_create"
-  },
-  {
     "input": "change when Leadership Forum starts to 4:15 pm",
     "expected_action": "event_update"
-  },
-  {
-    "input": "change Career Fair so it is in North Auditorium",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "set Gaming Night to 75 guests",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "log a task that says send invitations",
-    "expected_action": "task_create"
   },
   {
     "input": "check off check AV equipment",
@@ -1592,39 +460,11 @@
     "expected_action": "event_update"
   },
   {
-    "input": "finalize venue contract is done",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "would you add a task for print signage",
-    "expected_action": "task_create"
-  },
-  {
     "input": "for Leadership Forum, move it to June 12 at noon",
     "expected_action": "event_update"
   },
   {
     "input": "would you move Leadership Forum to June 12",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "i need a task for order decorations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "i need a task for confirm parking",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "could you mark send invitations complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "add a checklist item to finalize venue contract",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "increase the guest count for Gaming Night to 220",
     "expected_action": "event_update"
   },
   {
@@ -1636,84 +476,8 @@
     "expected_action": "event_create"
   },
   {
-    "input": "could you add a task for finalize venue contract",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "increase the guest count for Research Showcase to 95",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "would you add a task for send invitations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "i want a task for finalize venue contract",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "can you add task order decorations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "mark the task order decorations as complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "track a task for confirm catering",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "quickly add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "set book DJ to finished",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "would you please add a task for assign check-in staff",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "change Research Showcase so it is in Harbor Center",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "build out Career Fair as an event on June 5 at 11 am in Student Center with capacity for 200",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "track a task for check AV equipment",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "okay add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "set order decorations to finished",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "change the location of Winter Gala to Chartway Arena",
     "expected_action": "event_update"
-  },
-  {
-    "input": "log a task that says finalize venue contract",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "can you add a task for confirm parking",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "put send invitations on my to-do list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "launch an event record for Alumni Meetup on July 1 at 6 pm at Rooftop Lounge for 60 attendees",
-    "expected_action": "event_create"
   },
   {
     "input": "set check AV equipment to finished",
@@ -1732,56 +496,16 @@
     "expected_action": "event_update"
   },
   {
-    "input": "i want a task for print signage",
-    "expected_action": "task_create"
-  },
-  {
     "input": "i'm planning Gaming Night; set it for August 12 at 8 pm in Rec Room for 40 people",
     "expected_action": "event_create"
-  },
-  {
-    "input": "add a checklist item to prepare badges",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "put finalize venue contract on my to-do list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "for Research Showcase, switch it to Main Hall",
-    "expected_action": "event_update"
   },
   {
     "input": "change the details for Winter Gala to August 20 at noon",
     "expected_action": "event_update"
   },
   {
-    "input": "i'd like Tech Summit added for May 10 at 2 pm in Innovation Hall for 150 attendees",
-    "expected_action": "event_create"
-  },
-  {
     "input": "can you move Winter Gala to July 8",
     "expected_action": "event_update"
-  },
-  {
-    "input": "add a checklist item to confirm parking",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "please get Gaming Night on the books for August 12, 8 pm, Rec Room, 40 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "i'm trying to host Gaming Night in Rec Room on August 12 at 8 pm for 40 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "okay add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "okay add Career Fair on June 5 at 11 am at Student Center with 200 attendees",
-    "expected_action": "event_create"
   },
   {
     "input": "mark check AV equipment as done",
@@ -1792,14 +516,6 @@
     "expected_action": "event_create"
   },
   {
-    "input": "can you mark confirm parking complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "i need a task for confirm volunteers",
-    "expected_action": "task_create"
-  },
-  {
     "input": "set the venue on Leadership Forum as Chartway Arena",
     "expected_action": "event_update"
   },
@@ -1808,43 +524,11 @@
     "expected_action": "event_update"
   },
   {
-    "input": "okay add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "mark the task confirm parking as complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "mark the task review agenda as complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "quickly add Tech Summit on May 10 at 2 pm at Innovation Hall with 150 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "would you mark book DJ complete",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "adjust Winter Gala to May 14",
     "expected_action": "event_update"
   },
   {
     "input": "set an event up for me called Spring Expo at Webb Center Ballroom on April 24 starting at 5 pm for 80 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "can you add a task for book DJ",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "put print signage on my to-do list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "build out Alumni Meetup as an event on July 1 at 6 pm in Rooftop Lounge with capacity for 60",
     "expected_action": "event_create"
   },
   {
@@ -1856,39 +540,11 @@
     "expected_action": "event_update"
   },
   {
-    "input": "track a task for assign check-in staff",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "put assign check-in staff on my to-do list",
-    "expected_action": "task_create"
-  },
-  {
     "input": "assign check-in staff is done",
     "expected_action": "task_complete"
   },
   {
     "input": "finish check AV equipment",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "can you mark confirm catering complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "can you add Career Fair to the planner for June 5 at 11 am in Student Center for 200 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "track a task for prepare badges",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "hey add Alumni Meetup on July 1 at 6 pm at Rooftop Lounge with 60 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "close out book DJ",
     "expected_action": "task_complete"
   },
   {
@@ -1900,36 +556,8 @@
     "expected_action": "event_create"
   },
   {
-    "input": "put confirm catering on my to-do list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "for Tech Summit, rename it Tech Summit Revised",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "please put Research Showcase on the calendar for September 18 at 1 pm in Library Atrium with 120 guests",
-    "expected_action": "event_create"
-  },
-  {
     "input": "mark off prepare badges",
     "expected_action": "task_complete"
-  },
-  {
-    "input": "add assign check-in staff as a task",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "for me add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "launch an event record for Spring Expo on April 24 at 5 pm at Webb Center Ballroom for 80 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "would you please add a task for order decorations",
-    "expected_action": "task_create"
   },
   {
     "input": "mark check AV equipment completed",
@@ -1940,52 +568,12 @@
     "expected_action": "event_update"
   },
   {
-    "input": "will you mark send invitations complete",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "print signage has been completed",
     "expected_action": "task_complete"
   },
   {
-    "input": "switch the venue for Spring Expo to Student Plaza",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "quickly add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "i want a task for assign check-in staff",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "finalize venue contract has been completed",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "book DJ is done",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "put review agenda on my to-do list",
-    "expected_action": "task_create"
-  },
-  {
     "input": "mark prepare badges as done",
     "expected_action": "task_complete"
-  },
-  {
-    "input": "Spring Expo needs to be created for April 24 in Webb Center Ballroom at 5 pm for 80 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "please get Research Showcase on the books for September 18, 1 pm, Library Atrium, 120 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "can you add Gaming Night to the planner for August 12 at 8 pm in Rec Room for 40 people",
-    "expected_action": "event_create"
   },
   {
     "input": "complete prepare badges",
@@ -1996,27 +584,7 @@
     "expected_action": "task_complete"
   },
   {
-    "input": "log a task that says print signage",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "mark the task finalize venue contract as complete",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "mark print signage completed",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "track a task for print signage",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "will you mark review agenda complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "would you mark confirm parking complete",
     "expected_action": "task_complete"
   },
   {
@@ -2032,10 +600,6 @@
     "expected_action": "task_complete"
   },
   {
-    "input": "add confirm parking as a task",
-    "expected_action": "task_create"
-  },
-  {
     "input": "can you mark assign check-in staff complete",
     "expected_action": "task_complete"
   },
@@ -2044,72 +608,20 @@
     "expected_action": "event_create"
   },
   {
-    "input": "for Research Showcase, rename it Research Showcase Revised",
-    "expected_action": "event_update"
-  },
-  {
     "input": "reschedule Leadership Forum for June 12 at 6:30 pm",
     "expected_action": "event_update"
-  },
-  {
-    "input": "can you add task prepare badges",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "could you add a task for send invitations",
-    "expected_action": "task_create"
   },
   {
     "input": "rename Winter Gala to Winter Gala Plus",
     "expected_action": "event_update"
   },
   {
-    "input": "i'd like Leadership Forum added for October 9 at 4 pm in Conference Center for 90 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "would you please add a task for confirm catering",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "please add order decorations to the task list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "i want a task for review agenda",
-    "expected_action": "task_create"
-  },
-  {
     "input": "change Leadership Forum so it is in North Auditorium",
     "expected_action": "event_update"
   },
   {
-    "input": "send invitations is done",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "would you add a task for assign check-in staff",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "Alumni Meetup needs to be created for July 1 in Rooftop Lounge at 6 pm for 60 people",
-    "expected_action": "event_create"
-  },
-  {
     "input": "will you mark prepare badges complete",
     "expected_action": "task_complete"
-  },
-  {
-    "input": "hey add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "adjust Alumni Meetup to August 20",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "can you add a task for review agenda",
-    "expected_action": "task_create"
   },
   {
     "input": "could you rename Winter Gala to Winter Gala Updated",
@@ -2120,40 +632,16 @@
     "expected_action": "event_update"
   },
   {
-    "input": "i'm trying to host Research Showcase in Library Atrium on September 18 at 1 pm for 120 guests",
-    "expected_action": "event_create"
-  },
-  {
     "input": "would you rename Winter Gala to Winter Gala Updated",
     "expected_action": "event_update"
-  },
-  {
-    "input": "please put Tech Summit on the calendar for May 10 at 2 pm in Innovation Hall with 150 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "close out confirm parking",
-    "expected_action": "task_complete"
   },
   {
     "input": "finish prepare badges",
     "expected_action": "task_complete"
   },
   {
-    "input": "add a checklist item to order decorations",
-    "expected_action": "task_create"
-  },
-  {
     "input": "close out prepare badges",
     "expected_action": "task_complete"
-  },
-  {
-    "input": "confirm parking is done",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "add order decorations as a task",
-    "expected_action": "task_create"
   },
   {
     "input": "mark prepare badges completed",
@@ -2164,172 +652,28 @@
     "expected_action": "event_create"
   },
   {
-    "input": "change Tech Summit so it is in North Auditorium",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "track a task for order decorations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "put prepare badges on my to-do list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "add finalize venue contract as a task",
-    "expected_action": "task_create"
-  },
-  {
     "input": "mark off assign check-in staff",
     "expected_action": "task_complete"
-  },
-  {
-    "input": "adjust Spring Expo to September 22",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "i'd like Spring Expo added for April 24 at 5 pm in Webb Center Ballroom for 80 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "quickly add Gaming Night on August 12 at 8 pm at Rec Room with 40 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "will you add a task for prepare badges",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "hey add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "okay add Winter Gala on December 3 at 7 pm at Grand Hall with 180 attendees",
-    "expected_action": "event_create"
   },
   {
     "input": "will you mark check AV equipment complete",
     "expected_action": "task_complete"
   },
   {
-    "input": "for me add Spring Expo on April 24 at 5 pm at Webb Center Ballroom with 80 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "i need a task for assign check-in staff",
-    "expected_action": "task_create"
-  },
-  {
     "input": "could you rename Leadership Forum to Leadership Forum Updated",
     "expected_action": "event_update"
-  },
-  {
-    "input": "would you please mark order decorations complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "can you mark order decorations complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "launch an event record for Leadership Forum on October 9 at 4 pm at Conference Center for 90 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "order decorations is done",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "would you add a task for review agenda",
-    "expected_action": "task_create"
   },
   {
     "input": "would you please mark assign check-in staff complete",
     "expected_action": "task_complete"
   },
   {
-    "input": "for Spring Expo, rename it Spring Expo Revised",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "will you add a task for order decorations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "set Alumni Meetup to 120 guests",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "increase the guest count for Spring Expo to 120",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "i'd like Gaming Night added for August 12 at 8 pm in Rec Room for 40 attendees",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "can you add a task for confirm volunteers",
-    "expected_action": "task_create"
-  },
-  {
     "input": "please add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees",
     "expected_action": "event_create"
   },
   {
-    "input": "can you add a task for order decorations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "can you add task review agenda",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "will you add a task for confirm volunteers",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "will you add a task for confirm catering",
-    "expected_action": "task_create"
-  },
-  {
     "input": "i need to host Spring Expo at Webb Center Ballroom for 80 people on April 24 at 5 pm",
     "expected_action": "event_create"
-  },
-  {
-    "input": "can you add task confirm parking",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "please get Career Fair on the books for June 5, 11 am, Student Center, 200 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "can you mark confirm volunteers complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "log a task that says order decorations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "change when Research Showcase starts to 4:15 pm",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "could you add a task for order decorations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "edit Career Fair so the attendance is 120",
-    "expected_action": "event_update"
-  },
-  {
-    "input": "would you mark confirm volunteers complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "will you add a task for send invitations",
-    "expected_action": "task_create"
   },
   {
     "input": "set an event up for me called Leadership Forum at Conference Center on October 9 starting at 4 pm for 90 people",
@@ -2340,36 +684,8 @@
     "expected_action": "task_complete"
   },
   {
-    "input": "will you mark book DJ complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "mark the task confirm catering as complete",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "for Leadership Forum, rename it Leadership Forum Revised",
     "expected_action": "event_update"
-  },
-  {
-    "input": "Research Showcase needs to be created for September 18 in Library Atrium at 1 pm for 120 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "confirm volunteers has been completed",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "add book DJ as a task",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "can you add task send invitations",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "will you mark finalize venue contract complete",
-    "expected_action": "task_complete"
   },
   {
     "input": "will you mark print signage complete",
@@ -2380,22 +696,6 @@
     "expected_action": "event_update"
   },
   {
-    "input": "i want a task for confirm catering",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "will you add a task for confirm parking",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "i'm trying to host Winter Gala in Grand Hall on December 3 at 7 pm for 180 guests",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "hey add Leadership Forum on October 9 at 4 pm at Conference Center with 90 attendees",
-    "expected_action": "event_create"
-  },
-  {
     "input": "change Winter Gala so the new date is June 12",
     "expected_action": "event_update"
   },
@@ -2404,51 +704,11 @@
     "expected_action": "task_complete"
   },
   {
-    "input": "confirm volunteers is done",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "add review agenda as a task",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "would you mark order decorations complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "can you add Research Showcase to the planner for September 18 at 1 pm in Library Atrium for 120 people",
-    "expected_action": "event_create"
-  },
-  {
-    "input": "please add book DJ to the task list",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "edit Research Showcase so the attendance is 95",
-    "expected_action": "event_update"
-  },
-  {
     "input": "set print signage to finished",
     "expected_action": "task_complete"
   },
   {
-    "input": "add check AV equipment as a task",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "close out confirm volunteers",
-    "expected_action": "task_complete"
-  },
-  {
     "input": "could you mark print signage complete",
-    "expected_action": "task_complete"
-  },
-  {
-    "input": "could you add a task for assign check-in staff",
-    "expected_action": "task_create"
-  },
-  {
-    "input": "would you please mark send invitations complete",
     "expected_action": "task_complete"
   },
   {
@@ -2458,9 +718,5 @@
   {
     "input": "will you mark assign check-in staff complete",
     "expected_action": "task_complete"
-  },
-  {
-    "input": "okay add Research Showcase on September 18 at 1 pm at Library Atrium with 120 attendees",
-    "expected_action": "event_create"
   }
 ]
