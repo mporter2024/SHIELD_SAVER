@@ -14,3 +14,6 @@ requests>=2.31,<3
 # --- (Future AI / ML Expansion) ---
 # pandas>=2.0,<3
 # scikit-learn>=1.5,<2
+
+
+#openpyxl>=3.0,<4

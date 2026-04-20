@@ -18,6 +18,7 @@ Output:
 
 from pathlib import Path
 from collections import Counter, defaultdict
+import json
 import sys
 import traceback
 
@@ -223,6 +224,29 @@ def write_report(results, output_path="ai_phrase_dataset_report.txt"):
     return output_path
 
 
+
+def write_regression_json(results, output_path="ai_phrase_regression_cases.json"):
+    failed_cases = []
+    seen = set()
+
+    for result in results:
+        if result["status"] != "FAIL":
+            continue
+
+        expected_action = sorted(result["expected_types"])[0] if result.get("expected_types") else "fallback"
+        entry = {
+            "input": result["message"],
+            "expected_action": expected_action,
+        }
+        key = (entry["input"], entry["expected_action"])
+        if key in seen:
+            continue
+        seen.add(key)
+        failed_cases.append(entry)
+
+    Path(output_path).write_text(json.dumps(failed_cases, indent=2), encoding="utf-8")
+    return output_path, len(failed_cases)
+
 def main():
     dataset_path = sys.argv[1] if len(sys.argv) > 1 else "ai_phrase_test_dataset.xlsx"
     cases = load_cases(dataset_path)
@@ -231,6 +255,7 @@ def main():
         return
     results = [run_case(case) for case in cases]
     report = write_report(results)
+    regression_json, regression_count = write_regression_json(results)
     counts = Counter(r["status"] for r in results)
     print("=" * 100)
     print("AI DATASET PARSER RUN COMPLETE")
@@ -240,6 +265,7 @@ def main():
     print(f"FAIL: {counts.get('FAIL', 0)}")
     print(f"ERROR: {counts.get('ERROR', 0)}")
     print(f"Report written to: {report}")
+    print(f"Regression JSON written to: {regression_json} ({regression_count} failed cases)")
     print("=" * 100)
 
 
