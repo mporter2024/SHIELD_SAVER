@@ -3,6 +3,7 @@ import re
 import sys
 from pathlib import Path
 
+from app import create_app
 from ai.unified_chatbot import UnifiedChatbot
 
 
@@ -193,22 +194,42 @@ def main():
 
     dataset_path = Path(sys.argv[1])
     cases = load_cases(dataset_path)
-    bot = UnifiedChatbot()
 
-    results = []
-    passed = 0
-    for idx, case in enumerate(cases, start=1):
-        result = run_case(bot, case)
-        results.append(result)
-        status = "PASS" if result["passed"] else "FAIL"
-        print(f"{status} [{idx}/{len(cases)}] {result['input']}")
-        print(f"  intent: {result['actual_intent']} | score: {result['score']}/{10}")
-        print(f"  response: {result['response']}")
-        if result["notes"]:
-            print(f"  notes: {'; '.join(result['notes'])}")
-        print()
-        if result["passed"]:
-            passed += 1
+    app = create_app()
+
+    with app.app_context():
+        bot = UnifiedChatbot()
+
+        results = []
+        passed = 0
+
+        for idx, case in enumerate(cases, start=1):
+            try:
+                result = run_case(bot, case)
+            except Exception as e:
+                result = {
+                    "input": case.get("input", ""),
+                    "response": "",
+                    "expected_intent": case.get("expected_intent"),
+                    "actual_intent": "error",
+                    "score": 0,
+                    "passing_score": case.get("passing_score", 7),
+                    "passed": False,
+                    "notes": [f"runner error: {e}"],
+                }
+
+            results.append(result)
+            status = "PASS" if result["passed"] else "FAIL"
+            print(f"{status} [{idx}/{len(cases)}] {result['input']}")
+            print(f"  intent: {result['actual_intent']} | score: {result['score']}/10")
+            if result["response"]:
+                print(f"  response: {result['response']}")
+            if result["notes"]:
+                print(f"  notes: {'; '.join(result['notes'])}")
+            print()
+
+            if result["passed"]:
+                passed += 1
 
     summary = {
         "total": len(results),

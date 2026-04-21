@@ -1,0 +1,1025 @@
+{
+  "total": 80,
+  "passed": 31,
+  "failed": 49,
+  "average_score": 5.42,
+  "results": [
+    {
+      "input": "How should I budget for an event?",
+      "response": "",
+      "expected_intent": "budgeting",
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "What\u2019s a good budget for a small event?",
+      "response": "",
+      "expected_intent": "budgeting",
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "I\u2019m planning a birthday party for 20 people, how should I budget?",
+      "response": "",
+      "expected_intent": "budgeting",
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "I have an event next month for 50 people, how much should I expect to spend?",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": "budgeting",
+      "actual_intent": "unclear",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected budgeting, got unclear",
+        "low keyword coverage (0/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "Free venue, how should I budget the rest?",
+      "response": "",
+      "expected_intent": "budgeting",
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "We\u2019re not renting a venue, what should my budget focus on?",
+      "response": "",
+      "expected_intent": "budgeting",
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "Low budget event ideas?",
+      "response": "",
+      "expected_intent": "budgeting",
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "Event at my house for 20 people, what should my budget look like?",
+      "response": "",
+      "expected_intent": "budgeting",
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "Budgeting for a networking event for 40 people?",
+      "response": "",
+      "expected_intent": "budgeting",
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "How can I cut costs for an event?",
+      "response": "",
+      "expected_intent": "budgeting",
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "What\u2019s a good event timeline?",
+      "response": "A good timeline for your event should move from setup decisions into booking, then confirmations, then event-day execution. A medium-sized event usually benefits from a clear week-by-week checklist rather than leaving all prep to the last few days. A simple sequence is: finalize basics, book space and food, confirm attendance and supplies, then run setup, event execution, and follow-up. When is the event happening? Once I know that, I can compress or expand the timeline for you.",
+      "expected_intent": "event_help",
+      "actual_intent": "timeline_help",
+      "score": 7,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "intent expected event_help, got timeline_help",
+        "partial keyword coverage (2/3)"
+      ]
+    },
+    {
+      "input": "I have an event next month for 50 people, what should my timeline look like?",
+      "response": "A good timeline for your event should move from setup decisions into booking, then confirmations, then event-day execution. A medium-sized event usually benefits from a clear week-by-week checklist rather than leaving all prep to the last few days. A simple sequence is: finalize basics, book space and food, confirm attendance and supplies, then run setup, event execution, and follow-up. When is the event happening? Once I know that, I can compress or expand the timeline for you.",
+      "expected_intent": "event_help",
+      "actual_intent": "timeline_help",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_help, got timeline_help",
+        "low keyword coverage (1/3)"
+      ]
+    },
+    {
+      "input": "What should I do a week before an event?",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": "event_help",
+      "actual_intent": "unclear",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_help, got unclear",
+        "low keyword coverage (0/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "What do I need on event day?",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": "event_help",
+      "actual_intent": "unclear",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_help, got unclear",
+        "low keyword coverage (0/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "How long does it take to plan an event?",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": "event_creation",
+      "actual_intent": "event_creation",
+      "score": 8,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "low keyword coverage (0/3)"
+      ]
+    },
+    {
+      "input": "Small event for 15 people, what should I do first?",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": "event_creation",
+      "actual_intent": "unclear",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_creation, got unclear",
+        "low keyword coverage (0/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "Networking event for 40 people, what should I prioritize?",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": "event_creation",
+      "actual_intent": "unclear",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_creation, got unclear",
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "Outdoor event for 30 people, any advice?",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": "event_creation",
+      "actual_intent": "unclear",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_creation, got unclear",
+        "low keyword coverage (0/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "I\u2019m not sure where to start with planning.",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": "event_creation",
+      "actual_intent": "event_creation",
+      "score": 9,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)"
+      ]
+    },
+    {
+      "input": "Can you guide me through event planning?",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": "event_creation",
+      "actual_intent": "event_creation",
+      "score": 8,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "low keyword coverage (1/3)"
+      ]
+    },
+    {
+      "input": "How do I plan an event from scratch?",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": "event_creation",
+      "actual_intent": "event_creation",
+      "score": 9,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)"
+      ]
+    },
+    {
+      "input": "How do I start planning an event?",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": "event_creation",
+      "actual_intent": "event_creation",
+      "score": 9,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)"
+      ]
+    },
+    {
+      "input": "What are the basics of event planning?",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": "event_creation",
+      "actual_intent": "event_creation",
+      "score": 10,
+      "passing_score": 7,
+      "passed": true,
+      "notes": []
+    },
+    {
+      "input": "I want to create something small",
+      "response": "Hi \u2014 you currently have 3 event(s) and 4 open task(s). Ask me about budget, timelines, venues, catering, or what to work on next.",
+      "expected_intent": "event_creation",
+      "actual_intent": "greeting",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_creation, got greeting",
+        "low keyword coverage (0/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "Help me plan an event",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": "event_creation",
+      "actual_intent": "event_creation",
+      "score": 10,
+      "passing_score": 7,
+      "passed": true,
+      "notes": []
+    },
+    {
+      "input": "I need help organizing an event",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": "event_creation",
+      "actual_intent": "unclear",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_creation, got unclear",
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "What should I focus on first when planning something?",
+      "response": "Hi \u2014 you currently have 3 event(s) and 4 open task(s). Ask me about budget, timelines, venues, catering, or what to work on next.",
+      "expected_intent": "event_creation",
+      "actual_intent": "greeting",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_creation, got greeting",
+        "low keyword coverage (0/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "I don\u2019t really know what I\u2019m doing, help",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": "event_creation",
+      "actual_intent": "unclear",
+      "score": 5,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_creation, got unclear",
+        "partial keyword coverage (2/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "I want something small but still nice",
+      "response": "Hi \u2014 you currently have 3 event(s) and 4 open task(s). Ask me about budget, timelines, venues, catering, or what to work on next.",
+      "expected_intent": "event_creation",
+      "actual_intent": "greeting",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_creation, got greeting",
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "Trying to plan something but I keep overthinking it",
+      "response": "Hi \u2014 you currently have 3 event(s) and 4 open task(s). Ask me about budget, timelines, venues, catering, or what to work on next.",
+      "expected_intent": "event_creation",
+      "actual_intent": "greeting",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_creation, got greeting",
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "What food should I get for a small event?",
+      "response": "For your event, catering decisions usually come down to guest count, serving style, and how much you want to spend per person. Some options that fit your current info are: Gourmet Bites (plated, $20/person); Bella Festa Catering (buffet, $18/person); Smoke & Spice BBQ (buffet, $16/person). If you want to keep costs down, food format usually matters more than cuisine. Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
+      "expected_intent": "event_help",
+      "actual_intent": "catering_help",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_help, got catering_help",
+        "low keyword coverage (1/3)"
+      ]
+    },
+    {
+      "input": "Small event for 15 people, what kind of food should I get?",
+      "response": "For your event, catering decisions usually come down to guest count, serving style, and how much you want to spend per person. Some options that fit your current info are: Gourmet Bites (plated, $20/person); Bella Festa Catering (buffet, $18/person); Smoke & Spice BBQ (buffet, $16/person). If you want to keep costs down, food format usually matters more than cuisine. Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
+      "expected_intent": "event_help",
+      "actual_intent": "catering_help",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_help, got catering_help",
+        "low keyword coverage (1/3)"
+      ]
+    },
+    {
+      "input": "What about catering for my birthday dinner?",
+      "response": "For 'Birthday Dinner', catering decisions usually come down to guest count, serving style, and how much you want to spend per person. For about 15 guests, simple buffet or tray-based service is often easier to manage than fully plated service. If you want to keep costs down, food format usually matters more than cuisine. Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
+      "expected_intent": "event_help",
+      "actual_intent": "catering_help",
+      "score": 8,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "intent expected event_help, got catering_help"
+      ]
+    },
+    {
+      "input": "Can you suggest venues for an event?",
+      "response": "The best venue for your event depends mostly on headcount, budget, accessibility, and the kind of atmosphere you want. A few matches from your current data are: Harrison Opera House (1632 cap, $2,000); Harbor View Ballroom (300 cap, $2,200); Chrysler Hall (2500 cap, $2,500). Do you want me to focus more on affordability, atmosphere, or capacity?",
+      "expected_intent": "event_help",
+      "actual_intent": "event_help",
+      "score": 9,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)"
+      ]
+    },
+    {
+      "input": "How do I choose a good location?",
+      "response": "The best venue for your event depends mostly on headcount, budget, accessibility, and the kind of atmosphere you want. A few matches from your current data are: Harrison Opera House (1632 cap, $2,000); Harbor View Ballroom (300 cap, $2,200); Chrysler Hall (2500 cap, $2,500). Do you want me to focus more on affordability, atmosphere, or capacity?",
+      "expected_intent": "event_help",
+      "actual_intent": "event_help",
+      "score": 8,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "low keyword coverage (0/3)"
+      ]
+    },
+    {
+      "input": "Dinner event for 25 people, what should I plan for?",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": "event_help",
+      "actual_intent": "event_creation",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_help, got event_creation",
+        "low keyword coverage (0/3)"
+      ]
+    },
+    {
+      "input": "Graduation party for 20 guests, what do I need?",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": "event_help",
+      "actual_intent": "unclear",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_help, got unclear",
+        "low keyword coverage (0/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "Casual event for 15 people, what\u2019s a good plan?",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": "event_help",
+      "actual_intent": "event_creation",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_help, got event_creation",
+        "low keyword coverage (0/3)"
+      ]
+    },
+    {
+      "input": "Club meeting for 30 people, how do I organize it?",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": "event_help",
+      "actual_intent": "event_creation",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected event_help, got event_creation",
+        "low keyword coverage (1/3)"
+      ]
+    },
+    {
+      "input": "Workshop for 50 people, what should I budget?",
+      "response": "",
+      "expected_intent": "event_help",
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "What tasks should I have for an event?",
+      "response": "Across all events, you currently have 4 pending task(s). The next few worth handling are confirm catering, send invitations, finalize venue contract. I can narrow that down to a single event if you want.",
+      "expected_intent": "task_help",
+      "actual_intent": "task_help",
+      "score": 7,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "Build me a checklist for Spring Expo",
+      "response": "I can help you think through 'Spring Expo' from a few angles: budget, timeline, venue, catering, logistics, or task priorities. Tell me which part you want to work on and I will make the advice specific to that event.",
+      "expected_intent": "task_help",
+      "actual_intent": "unclear",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected task_help, got unclear",
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "What should I do next for Spring Expo?",
+      "response": "For 'Spring Expo', the next tasks I would prioritize are confirm catering, send invitations. You still have 2 incomplete task(s) tied to this event. I can also help you decide what should happen first if the list feels crowded.",
+      "expected_intent": "task_help",
+      "actual_intent": "task_help",
+      "score": 7,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "Give me a summary of Spring Expo",
+      "response": "Here is the current picture for 'Spring Expo'. It is scheduled for 2026-04-24. The location is Webb Center Ballroom. You are planning for about 80 guests. There are 2 task(s) tied to it, with 2 still open. I can also summarize the budget or next actions for this event if that would help.",
+      "expected_intent": "event_summary",
+      "actual_intent": "event_summary",
+      "score": 7,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "What\u2019s the status of my birthday dinner?",
+      "response": "Here is the current picture for 'Birthday Dinner'. It is scheduled for 2026-05-20. The location is Harbor Room. You are planning for about 15 guests. There are 2 task(s) tied to it, with 1 still open. I can also summarize the budget or next actions for this event if that would help.",
+      "expected_intent": "event_summary",
+      "actual_intent": "event_summary",
+      "score": 7,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "Help me schedule tasks for Tech Summit",
+      "response": "A good timeline for 'Tech Summit' should move from setup decisions into booking, then confirmations, then event-day execution. Because this is a larger event, venue, catering, staffing, and final headcount should be locked down earlier than usual. A simple sequence is: finalize basics, book space and food, confirm attendance and supplies, then run setup, event execution, and follow-up. Since you already have a date in mind (2026-05-10), I can help turn that into a countdown checklist next.",
+      "expected_intent": "task_help",
+      "actual_intent": "timeline_help",
+      "score": 5,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected task_help, got timeline_help",
+        "partial keyword coverage (2/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "What should I not forget for an event?",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": "task_help",
+      "actual_intent": "unclear",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected task_help, got unclear",
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "How do I organize tasks?",
+      "response": "Across all events, you currently have 4 pending task(s). The next few worth handling are confirm catering, send invitations, finalize venue contract. I can narrow that down to a single event if you want.",
+      "expected_intent": "task_help",
+      "actual_intent": "task_help",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (0/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "What should I do first, second, third?",
+      "response": "Hi \u2014 you currently have 3 event(s) and 4 open task(s). Ask me about budget, timelines, venues, catering, or what to work on next.",
+      "expected_intent": "task_help",
+      "actual_intent": "greeting",
+      "score": 4,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "intent expected task_help, got greeting",
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "Event planning help plus a quick overview of Spring Expo",
+      "response": "Here is the current picture for 'Spring Expo'. It is scheduled for 2026-04-24. The location is Webb Center Ballroom. You are planning for about 80 guests. There are 2 task(s) tied to it, with 2 still open. I can also summarize the budget or next actions for this event if that would help.",
+      "expected_intent": "event_summary",
+      "actual_intent": "event_summary",
+      "score": 7,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "help",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": null,
+      "actual_intent": "unclear",
+      "score": 8,
+      "passing_score": 6,
+      "passed": true,
+      "notes": [
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "event planning",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": null,
+      "actual_intent": "event_creation",
+      "score": 8,
+      "passing_score": 6,
+      "passed": true,
+      "notes": [
+        "low keyword coverage (0/1)"
+      ]
+    },
+    {
+      "input": "what now",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": null,
+      "actual_intent": "unclear",
+      "score": 8,
+      "passing_score": 6,
+      "passed": true,
+      "notes": [
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "ideas?",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": null,
+      "actual_intent": "unclear",
+      "score": 8,
+      "passing_score": 6,
+      "passed": true,
+      "notes": [
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "plan",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": null,
+      "actual_intent": "event_creation",
+      "score": 8,
+      "passing_score": 6,
+      "passed": true,
+      "notes": [
+        "low keyword coverage (0/1)"
+      ]
+    },
+    {
+      "input": "budget",
+      "response": "",
+      "expected_intent": null,
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 6,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "timeline",
+      "response": "A good timeline for your event should move from setup decisions into booking, then confirmations, then event-day execution. A medium-sized event usually benefits from a clear week-by-week checklist rather than leaving all prep to the last few days. A simple sequence is: finalize basics, book space and food, confirm attendance and supplies, then run setup, event execution, and follow-up. When is the event happening? Once I know that, I can compress or expand the timeline for you.",
+      "expected_intent": null,
+      "actual_intent": "timeline_help",
+      "score": 8,
+      "passing_score": 6,
+      "passed": true,
+      "notes": [
+        "low keyword coverage (0/1)"
+      ]
+    },
+    {
+      "input": "food",
+      "response": "For your event, catering decisions usually come down to guest count, serving style, and how much you want to spend per person. Some options that fit your current info are: Gourmet Bites (plated, $20/person); Bella Festa Catering (buffet, $18/person); Smoke & Spice BBQ (buffet, $16/person). If you want to keep costs down, food format usually matters more than cuisine. Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
+      "expected_intent": null,
+      "actual_intent": "catering_help",
+      "score": 8,
+      "passing_score": 6,
+      "passed": true,
+      "notes": [
+        "low keyword coverage (0/1)"
+      ]
+    },
+    {
+      "input": "venue",
+      "response": "The best venue for your event depends mostly on headcount, budget, accessibility, and the kind of atmosphere you want. A few matches from your current data are: Harrison Opera House (1632 cap, $2,000); Harbor View Ballroom (300 cap, $2,200); Chrysler Hall (2500 cap, $2,500). Do you want me to focus more on affordability, atmosphere, or capacity?",
+      "expected_intent": null,
+      "actual_intent": "event_help",
+      "score": 8,
+      "passing_score": 6,
+      "passed": true,
+      "notes": [
+        "low keyword coverage (0/1)"
+      ]
+    },
+    {
+      "input": "what can you help with?",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": null,
+      "actual_intent": "unclear",
+      "score": 8,
+      "passing_score": 6,
+      "passed": true,
+      "notes": [
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "I wanna throw something small",
+      "response": "Hi \u2014 you currently have 3 event(s) and 4 open task(s). Ask me about budget, timelines, venues, catering, or what to work on next.",
+      "expected_intent": null,
+      "actual_intent": "greeting",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (0/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "thinking about doing an event like 30 ppl",
+      "response": "Hi \u2014 you currently have 3 event(s) and 4 open task(s). Ask me about budget, timelines, venues, catering, or what to work on next.",
+      "expected_intent": null,
+      "actual_intent": "greeting",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "how much money should i expect",
+      "response": "",
+      "expected_intent": null,
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "what do i even need for this",
+      "response": "Hi \u2014 you currently have 3 event(s) and 4 open task(s). Ask me about budget, timelines, venues, catering, or what to work on next.",
+      "expected_intent": null,
+      "actual_intent": "greeting",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "idk where to start",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": null,
+      "actual_intent": "unclear",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "something simple for like 20 people",
+      "response": "Hi \u2014 you currently have 3 event(s) and 4 open task(s). Ask me about budget, timelines, venues, catering, or what to work on next.",
+      "expected_intent": null,
+      "actual_intent": "greeting",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "not tryna spend too much",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": null,
+      "actual_intent": "unclear",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "what should i do for food",
+      "response": "For your event, catering decisions usually come down to guest count, serving style, and how much you want to spend per person. Some options that fit your current info are: Gourmet Bites (plated, $20/person); Bella Festa Catering (buffet, $18/person); Smoke & Spice BBQ (buffet, $16/person). If you want to keep costs down, food format usually matters more than cuisine. Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
+      "expected_intent": null,
+      "actual_intent": "catering_help",
+      "score": 8,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "low keyword coverage (1/3)"
+      ]
+    },
+    {
+      "input": "how do i even plan this",
+      "response": "Hi \u2014 you currently have 3 event(s) and 4 open task(s). Ask me about budget, timelines, venues, catering, or what to work on next.",
+      "expected_intent": null,
+      "actual_intent": "greeting",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "just a small thing nothing crazy",
+      "response": "Hi \u2014 you currently have 3 event(s) and 4 open task(s). Ask me about budget, timelines, venues, catering, or what to work on next.",
+      "expected_intent": null,
+      "actual_intent": "greeting",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "what should i be doing rn",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": null,
+      "actual_intent": "unclear",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "event planning help pls",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": null,
+      "actual_intent": "event_creation",
+      "score": 9,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)"
+      ]
+    },
+    {
+      "input": "i need ideas for an event",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": null,
+      "actual_intent": "unclear",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "what\u2019s the easiest way to do this",
+      "response": "Across all events, you currently have 4 pending task(s). The next few worth handling are confirm catering, send invitations, finalize venue contract. I can narrow that down to a single event if you want.",
+      "expected_intent": null,
+      "actual_intent": "task_help",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (0/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "low effort event ideas",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": null,
+      "actual_intent": "unclear",
+      "score": 7,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "I want to plan a small event for like 20 people sometime in May, probably simple food, nothing too expensive",
+      "response": "For your event, catering decisions usually come down to guest count, serving style, and how much you want to spend per person. Some options that fit your current info are: Gourmet Bites (plated, $20/person); Bella Festa Catering (buffet, $18/person); Smoke & Spice BBQ (buffet, $16/person). If you want to keep costs down, food format usually matters more than cuisine. Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
+      "expected_intent": null,
+      "actual_intent": "catering_help",
+      "score": 9,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)"
+      ]
+    },
+    {
+      "input": "Planning something for 40 people next month, kinda stressed about budget",
+      "response": "",
+      "expected_intent": null,
+      "actual_intent": "error",
+      "score": 0,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "runner error: 'budget_contingency'"
+      ]
+    },
+    {
+      "input": "I need to organize a casual event but I don\u2019t want it to be complicated",
+      "response": "The fastest way to build a new event is to lock in the purpose, guest count, date, location, and budget first. What kind of event are you trying to host?",
+      "expected_intent": null,
+      "actual_intent": "event_creation",
+      "score": 8,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "low keyword coverage (0/3)"
+      ]
+    },
+    {
+      "input": "Thinking about doing a birthday dinner, maybe 15 people, not sure what to do",
+      "response": "For 'Birthday Dinner', the next tasks I would prioritize are book dessert tray. You still have 1 incomplete task(s) tied to this event. I can also help you decide what should happen first if the list feels crowded.",
+      "expected_intent": null,
+      "actual_intent": "task_help",
+      "score": 7,
+      "passing_score": 7,
+      "passed": true,
+      "notes": [
+        "partial keyword coverage (2/3)",
+        "missing follow-up question"
+      ]
+    },
+    {
+      "input": "Event for 30 people, I want it to be simple and affordable",
+      "response": "I can help with event creation, budgeting, venues, catering, timelines, and task planning. Tell me what part you are thinking through and I will guide you from there.",
+      "expected_intent": null,
+      "actual_intent": "unclear",
+      "score": 6,
+      "passing_score": 7,
+      "passed": false,
+      "notes": [
+        "low keyword coverage (1/3)",
+        "missing follow-up question"
+      ]
+    }
+  ]
+}

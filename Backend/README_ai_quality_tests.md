@@ -2,8 +2,7 @@
 
 This patch adds a second test runner for your chatbot's **response quality**.
 
-Your current `test_ai_phrase_dataset_runner.py` is still useful for action routing because it checks `interpret_message(...).type`.
-This new runner checks whether the chatbot's *reply* is actually helpful.
+
 
 ## Included files
 - `test_ai_quality_runner.py`
