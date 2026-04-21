@@ -1025,7 +1025,14 @@ def chat():
                 "action": "event_update_failed"
             }), 200
 
-        reply = chatbot.get_response(user_message, context=context)
+        reply = chatbot.get_response(
+            user_message,
+            context={
+                **context,
+                "chat_state": chat_state,
+                "planning_context": chat_state.get("planning_context", {}),
+            }
+        )
         chat_state["pending_followup"] = None
         _save_chat_state(chat_state)
 
