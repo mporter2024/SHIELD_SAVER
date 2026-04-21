@@ -1,9 +1,55 @@
 const CHATBOT_API_BASE = "http://127.0.0.1:5000";
-const CHAT_STORAGE_KEY = "shieldSaverChatHistory";
+const CHAT_STORAGE_KEY_PREFIX = "shieldSaverChatHistory";
+let currentChatStorageKey = `${CHAT_STORAGE_KEY_PREFIX}_guest`;
+
+function getStoredUser() {
+    try {
+        return JSON.parse(localStorage.getItem("user") || "null");
+    } catch (error) {
+        console.error("Failed to parse cached user:", error);
+        return null;
+    }
+}
+
+async function resolveChatUser() {
+    const cachedUser = getStoredUser();
+    if (cachedUser?.id) return cachedUser;
+
+    try {
+        const response = await fetch(`${CHATBOT_API_BASE}/api/users/me`, {
+            method: "GET",
+            credentials: "include"
+        });
+        const data = await response.json();
+
+        if (!response.ok || !data.user) {
+            return null;
+        }
+
+        localStorage.setItem("user", JSON.stringify(data.user));
+        return data.user;
+    } catch (error) {
+        console.error("Failed to resolve chat user:", error);
+        return null;
+    }
+}
+
+function getChatStorageKey(user) {
+    if (user?.id) {
+        return `${CHAT_STORAGE_KEY_PREFIX}_user_${user.id}`;
+    }
+
+    if (user?.email) {
+        const safeEmail = String(user.email).toLowerCase().replace(/[^a-z0-9]/g, "_");
+        return `${CHAT_STORAGE_KEY_PREFIX}_email_${safeEmail}`;
+    }
+
+    return `${CHAT_STORAGE_KEY_PREFIX}_guest`;
+}
 
 function getChatHistory() {
     try {
-        return JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY)) || [];
+        return JSON.parse(localStorage.getItem(currentChatStorageKey)) || [];
     } catch (error) {
         console.error("Failed to parse chat history:", error);
         return [];
@@ -11,7 +57,7 @@ function getChatHistory() {
 }
 
 function saveChatHistory(history) {
-    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(history));
+    localStorage.setItem(currentChatStorageKey, JSON.stringify(history));
 }
 
 function addMessageToHistory(sender, text) {
@@ -25,7 +71,7 @@ function addMessageToHistory(sender, text) {
 }
 
 function clearStoredChatHistory() {
-    localStorage.removeItem(CHAT_STORAGE_KEY);
+    localStorage.removeItem(currentChatStorageKey);
 }
 
 function createMessageElement(sender, text) {
@@ -172,12 +218,18 @@ async function clearChatHistory() {
     renderChatHistory();
 }
 
-function setupChatbot() {
+async function initializeChatStorageKey() {
+    const user = await resolveChatUser();
+    currentChatStorageKey = getChatStorageKey(user);
+}
+
+async function setupChatbot() {
     const sendBtn = document.getElementById("send-chat-btn");
     const clearBtn = document.getElementById("clear-chat-btn");
     const input = document.getElementById("chat-input");
     const chatForm = document.getElementById("chat-form");
 
+    await initializeChatStorageKey();
     renderChatHistory();
 
     if (sendBtn) {
@@ -208,4 +260,9 @@ function setupChatbot() {
 window.sendChatMessage = sendChatMessage;
 window.clearChatHistory = clearChatHistory;
 
-document.addEventListener("DOMContentLoaded", setupChatbot);
+document.addEventListener("DOMContentLoaded", () => {
+    setupChatbot().catch((error) => {
+        console.error("Chatbot setup failed:", error);
+        renderChatHistory();
+    });
+});
