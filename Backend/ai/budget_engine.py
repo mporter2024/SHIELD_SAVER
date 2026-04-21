@@ -222,8 +222,33 @@ def generate_budget_estimate(event: dict[str, Any]) -> dict[str, Any]:
     recommended_venue = matching_venue or _find_best_venue_for_event({**event, "guest_count": guest_count})
     recommended_caterer = _find_best_caterer_for_event({**event, "guest_count": guest_count})
 
-    if _to_float(estimate.get("venue_cost"), 0.0) <= 0 and recommended_venue:
-        estimate["venue_cost"] = _to_float(recommended_venue.get("estimated_cost"), 0.0)
+    location = (estimate.get("location") or "").strip()
+    venue_context = {
+        "source": "database" if matching_venue else "default",
+        "assumption": None,
+        "message": "",
+    }
+
+    if _to_float(estimate.get("venue_cost"), 0.0) <= 0:
+        if matching_venue:
+            estimate["venue_cost"] = _to_float(matching_venue.get("estimated_cost"), 0.0)
+            venue_context.update({
+                "source": "database",
+                "message": f"Matched venue database entry: {matching_venue.get('name', location)}.",
+            })
+        elif location:
+            estimate["venue_cost"] = 0.0
+            venue_context.update({
+                "source": "custom_location",
+                "assumption": "assumed_free",
+                "message": "This location is not in the venue database, so the venue cost was assumed to be $0. Update it manually if the space has a rental fee.",
+            })
+        elif recommended_venue:
+            estimate["venue_cost"] = _to_float(recommended_venue.get("estimated_cost"), 0.0)
+            venue_context.update({
+                "source": "recommendation",
+                "message": f"No venue was selected, so a typical venue estimate was used based on event size: {recommended_venue.get('name', 'Recommended venue') }.",
+            })
 
     if _to_float(estimate.get("food_cost_per_person"), 0.0) <= 0:
         if recommended_caterer and _to_float(recommended_caterer.get("cost_per_person"), 0.0) > 0:
@@ -259,6 +284,7 @@ def generate_budget_estimate(event: dict[str, Any]) -> dict[str, Any]:
         "recommended_venue": recommended_venue,
         "recommended_caterer": recommended_caterer,
         "style": style,
+        "venue_context": venue_context,
     }
 
 
@@ -268,10 +294,16 @@ def analyze_budget(event: dict[str, Any]) -> dict[str, Any]:
     ranges = _recommended_ranges(totals["guest_count"], style)
     warnings: list[str] = []
     suggestions: list[str] = []
+    location = (event.get("location") or "").strip()
+    matching_venue = _find_matching_venue(event)
 
     if totals["guest_count"] <= 0:
         warnings.append("Guest count is zero, so food and per-person estimates may be misleading.")
         suggestions.append("Add an expected guest count to make the budget smarter.")
+
+    if location and not matching_venue and totals["venue_cost"] <= 0:
+        warnings.append("This location is not in the venue database, so venue cost is currently assumed to be free.")
+        suggestions.append("If this location has a fee, enter a manual venue cost to make the total more realistic.")
 
     if totals["contingency_percent"] <= 0:
         warnings.append("No contingency has been added for surprise costs.")

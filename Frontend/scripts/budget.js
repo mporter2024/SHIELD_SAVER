@@ -204,7 +204,7 @@ async function loadInsights(eventId) {
   }
 }
 
-function renderInsights(data, recommendedVenue = null, recommendedCaterer = null) {
+function renderInsights(data, recommendedVenue = null, recommendedCaterer = null, venueContext = null) {
   const summary = data.summary || {};
   const health = data.health || {};
   document.getElementById("summary-health-label").textContent = health.label || "Not analyzed";
@@ -214,7 +214,11 @@ function renderInsights(data, recommendedVenue = null, recommendedCaterer = null
   if (summary.largest_category) {
     document.getElementById("summary-largest-category").textContent = summary.largest_category.charAt(0).toUpperCase() + summary.largest_category.slice(1);
   }
-  document.getElementById("budget-recommended-venue").textContent = recommendedVenue?.name || "—";
+  let venueLabel = recommendedVenue?.name || "—";
+  if (venueContext?.assumption === "assumed_free") {
+    venueLabel = `${venueContext.source === "custom_location" ? "Custom location" : venueLabel} (assumed free)`;
+  }
+  document.getElementById("budget-recommended-venue").textContent = venueLabel;
   document.getElementById("budget-recommended-caterer").textContent = recommendedCaterer?.name || "—";
 
   const warningsEl = document.getElementById("budget-warnings");
@@ -314,7 +318,7 @@ async function generateSmartBudget() {
     document.getElementById("misc-cost").value = event.misc_cost || 0;
     document.getElementById("contingency-percent").value = event.contingency_percent || 0;
     calculateBudget();
-    renderInsights(data.analysis || {}, data.recommended_venue, data.recommended_caterer);
+    renderInsights(data.analysis || {}, data.recommended_venue, data.recommended_caterer, data.venue_context);
     myEvents = await fetchMyEvents();
     statusEl.textContent = "Smart budget generated and saved to the event.";
   } catch (error) {
