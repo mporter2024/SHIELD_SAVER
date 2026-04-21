@@ -1,309 +1,330 @@
-from .planning_engine import get_venues, get_catering, estimate_budget
+import re
+from .planning_engine import search_venues, search_caterers, estimate_budget
 
 
-def _normalize(text):
-    return (text or "").strip().lower()
-
-
-def _event_tasks(selected_event, all_tasks):
+def get_event_tasks(selected_event, all_tasks):
     if not selected_event:
         return []
+
     event_id = selected_event.get("id")
-    return [task for task in all_tasks if int(task.get("event_id", 0)) == int(event_id)]
+    return [
+        task for task in all_tasks
+        if int(task.get("event_id", 0)) == int(event_id)
+    ]
 
 
-def _pending_tasks(tasks):
-    return [task for task in tasks if int(task.get("completed", 0)) == 0]
-
-
-def _guest_count(selected_event, text_lower):
+def _extract_guest_count(text, selected_event=None):
     if selected_event and selected_event.get("guest_count"):
         try:
             return int(selected_event.get("guest_count"))
-        except Exception:
-            return None
+        except (TypeError, ValueError):
+            pass
 
-    parts = text_lower.replace("guests", "people").replace("attendees", "people").split()
-    for i, token in enumerate(parts[:-1]):
-        if token.isdigit() and parts[i + 1] == "people":
-            return int(token)
+    match = re.search(r"(\d{1,4})\s*(people|guests|attendees|ppl)", text)
+    if match:
+        return int(match.group(1))
+
+    if "small" in text:
+        return 20
+    if "medium" in text:
+        return 75
+    if "large" in text:
+        return 200
     return None
 
 
-def _small_medium_large(guest_count):
-    if not guest_count:
-        return ""
-    if guest_count <= 25:
-        return "small"
-    if guest_count <= 75:
-        return "medium-sized"
-    return "larger"
+def _detect_budget_level(text):
+    if any(phrase in text for phrase in ["cheap", "low budget", "affordable", "not too expensive", "budget-friendly", "save money"]):
+        return "budget"
+    if any(phrase in text for phrase in ["formal", "upscale", "premium", "polished", "high-end"]):
+        return "premium"
+    if "mid" in text or "moderate" in text:
+        return "mid"
+    return None
 
 
-def _event_type(text_lower, selected_event=None):
-    title = _normalize(selected_event.get("title")) if selected_event else ""
-    source = f"{text_lower} {title}".strip()
-    for phrase, label in [
-        ("networking", "networking event"),
-        ("birthday", "birthday event"),
-        ("dinner", "dinner event"),
-        ("graduation", "graduation event"),
-        ("outdoor", "outdoor event"),
-        ("club meeting", "club meeting"),
-        ("workshop", "workshop"),
-        ("casual", "casual event"),
-    ]:
-        if phrase in source:
-            return label
-    return "event"
+def _detect_service_type(text):
+    if any(word in text for word in ["tray", "trays", "pickup", "boxed"]):
+        return "trays"
+    if "buffet" in text:
+        return "buffet"
+    if "plated" in text or "formal" in text:
+        return "plated"
+    return None
 
 
-def _budget_reply(text_lower, selected_event=None):
-    estimate = estimate_budget(selected_event or {})
-    guest_count = _guest_count(selected_event, text_lower) or estimate.get("attendance") or 50
-    venue_known = bool(selected_event and selected_event.get("location"))
-    free_venue_hint = any(
-        p in text_lower
-        for p in ["free venue", "not renting", "my house", "at home", "classroom", "school building", "free location"]
-    )
-
-    if free_venue_hint:
-        estimate["venue"] = 0
-
-    size_text = _small_medium_large(guest_count)
-    opener = f"For a {size_text} event" if size_text else "For an event like this"
-    if selected_event and selected_event.get("title"):
-        opener = f"For '{selected_event['title']}'"
-
-    lines = [
-        f"{opener}, I would split the budget into venue, food, and flexible extras like supplies, decor, and contingency.",
-    ]
-
-    if free_venue_hint:
-        lines.append("Since the venue sounds free, you can shift more of the budget into food, guest experience, or a small backup buffer.")
-    elif venue_known:
-        lines.append("Your venue cost matters a lot because location and food are usually the two biggest drivers of total cost.")
-    else:
-        lines.append("The first thing I would lock in is whether the venue is free or paid, because that changes the rest of the budget quickly.")
-
-    lines.append(
-        f"A rough starting point for about {guest_count} people is venue around ${estimate['venue']:.0f}, food around ${estimate['food']:.0f}, and about ${estimate['misc']:.0f} for misc costs, for a total near ${estimate['total']:.0f}."
-    )
-
-    if any(p in text_lower for p in ["cheap", "cut costs", "save money", "low budget", "affordable", "not too expensive"]):
-        lines.append("The easiest ways to cut costs are using a free or low-cost location, simplifying the food format, and keeping decorations or extras minimal.")
-
-    lines.append("Do you want me to make this more conservative, more polished, or as low-cost as possible?")
-    return " ".join(lines)
+def _detect_cuisine(text):
+    options = ["bbq", "italian", "mexican", "mediterranean", "indian", "seafood", "american", "korean"]
+    for option in options:
+        if option in text:
+            return option
+    return None
 
 
-def _timeline_reply(text_lower, selected_event=None):
-    guest_count = _guest_count(selected_event, text_lower)
-    size_text = _small_medium_large(guest_count)
-
-    lines = [
-        "A good event timeline usually moves from core decisions into bookings, then confirmations, then event-day setup and follow-up.",
-    ]
-
-    if guest_count:
-        lines.append(f"Since this looks like a {size_text} event for about {guest_count} people, I would avoid leaving food, space, and final headcount until the last few days.")
-
-    if "week before" in text_lower:
-        lines.append("A week before the event, focus on final headcount, vendor confirmations, supplies, and a simple event-day checklist.")
-    elif "event day" in text_lower:
-        lines.append("On event day, the essentials are setup items, contact info for any vendors, signage or materials, and a short run-of-show so nothing gets missed.")
-    elif "how long does it take" in text_lower:
-        lines.append("For a simple event, a few weeks can be enough, but anything with vendors, invitations, or a larger guest list usually benefits from more lead time.")
-    else:
-        lines.append("A simple structure is: finalize basics, book venue and food, confirm attendance and materials, then handle setup, execution, and follow-up.")
-
-    lines.append("When is the event happening? I can turn this into a shorter countdown if you already have a date.")
-    return " ".join(lines)
+def _detect_venue_type(text):
+    if any(word in text for word in ["restaurant", "dinner"]):
+        return "restaurant"
+    if any(word in text for word in ["ballroom", "banquet"]):
+        return "ballroom"
+    if any(word in text for word in ["classroom", "meeting room"]):
+        return "classroom"
+    if any(word in text for word in ["theater", "theatre"]):
+        return "theater"
+    if "arena" in text:
+        return "arena"
+    if "outdoor" in text or "park" in text:
+        return "outdoor"
+    return None
 
 
-def _creation_reply(text_lower, selected_event=None):
-    guest_count = _guest_count(selected_event, text_lower)
-    size_text = _small_medium_large(guest_count)
-    lines = ["The best place to start is with the core details: purpose, guest count, date, location, and spending limit."]
-
-    if guest_count:
-        lines.append(f"Because this sounds like a {size_text} event for about {guest_count} people, I would focus first on the date and location, then food and a short checklist.")
-    else:
-        lines.append("Once those basics are set, the rest becomes much easier to break into venue, food, tasks, promotion, and day-of logistics.")
-
-    if any(p in text_lower for p in ["small", "simple", "nothing crazy", "low effort"]):
-        lines.append("If you want to keep it simple, aim for a manageable guest count, an easy location, and food that does not require complicated setup.")
-
-    lines.append("What kind of event are you trying to host?")
-    return " ".join(lines)
+def _detect_indoor_outdoor(text):
+    if "outdoor" in text:
+        return "outdoor"
+    if "indoor" in text:
+        return "indoor"
+    return None
 
 
-def _task_reply(text_lower, context, selected_event=None):
-    tasks = context.get("tasks", [])
-    events = context.get("events", [])
-    event_tasks = _event_tasks(selected_event, tasks)
-    pending = _pending_tasks(event_tasks if selected_event else tasks)
-
-    if any(p in text_lower for p in ["first second third", "what should i do first second third", "what should i do first"]):
-        return (
-            "A simple order is: first lock in the date and location, second confirm food and guest communication, and third build a short setup and day-of checklist. "
-            "Do you want me to turn that into a checklist for one specific event?"
-        )
-
+def _context_snapshot(text, selected_event=None):
+    location = None
     if selected_event:
-        if pending:
-            task_list = ", ".join(task.get("title", "task") for task in pending[:3])
-            return (
-                f"For '{selected_event['title']}', the next tasks I would prioritize are {task_list}. "
-                f"You still have {len(pending)} incomplete task(s) tied to this event. "
-                "Do you want a simple first-second-third order for them?"
-            )
-        return (
-            f"'{selected_event['title']}' does not have any open tasks right now. "
-            "A good next step would be reviewing event-day logistics, confirmations, and anything easy to overlook. "
-            "Do you want me to suggest a checklist?"
-        )
-
-    if any(p in text_lower for p in ["checklist", "not forget", "event day", "week before"]):
-        return (
-            "A solid checklist usually includes venue or location confirmation, food, guest communication, supplies, setup, and a short event-day plan. "
-            "Do you want me to turn that into a more specific checklist for one event?"
-        )
-
-    if pending:
-        task_list = ", ".join(task.get("title", "task") for task in pending[:3])
-        return (
-            f"Across all events, you currently have {len(pending)} pending task(s). The next few worth handling are {task_list}. "
-            "Do you want me to narrow that down to one event?"
-        )
-
-    if events:
-        return "You do not have open tasks right now, but I can help build a checklist for one of your events. Which event do you want to focus on?"
-
-    return "You do not have tasks yet, but I can help build a starter checklist. What type of event are you planning?"
+        location = selected_event.get("location")
+    return {
+        "guest_count": _extract_guest_count(text, selected_event),
+        "budget_level": _detect_budget_level(text),
+        "service_type": _detect_service_type(text),
+        "cuisine": _detect_cuisine(text),
+        "venue_type": _detect_venue_type(text),
+        "indoor_outdoor": _detect_indoor_outdoor(text),
+        "location_area": location,
+    }
 
 
-def _event_help_reply(text_lower, context, selected_event=None):
-    guest_count = _guest_count(selected_event, text_lower)
-    size_text = _small_medium_large(guest_count) or "manageable"
-    event_type = _event_type(text_lower, selected_event)
+def _summarize_caterer(option):
+    bits = [option.get("name", "Unknown caterer")]
+    cuisine = option.get("cuisine")
+    service = option.get("service_type") or option.get("type")
+    price = option.get("cost_per_person")
+    reason = None
+    reasons = option.get("reasons") or []
+    if reasons:
+        reason = reasons[0]
 
-    if any(p in text_lower for p in ["venue", "location"]):
-        venues = get_venues()[:3]
-        venue_names = ", ".join(v.get("name", "Venue") for v in venues) if venues else "a few venue options"
-        return (
-            "A good location should fit your guest count, budget, accessibility needs, and the atmosphere you want. "
-            f"A few options from your data are {venue_names}. "
-            "Do you want me to focus more on affordability, capacity, or overall feel?"
-        )
+    details = []
+    if cuisine:
+        details.append(cuisine)
+    if service:
+        details.append(service)
+    if price not in (None, ""):
+        details.append(f"${price}/person")
 
-    if any(p in text_lower for p in ["food", "catering"]):
-        caterers = get_catering()[:3]
-        if selected_event and selected_event.get("title"):
-            prefix = f"For '{selected_event['title']}', "
-        else:
-            prefix = "For an event like this, "
-        if caterers:
-            options = "; ".join(
-                f"{c.get('name')} ({c.get('type')}, ${c.get('cost_per_person')}/person)" for c in caterers
-            )
-            return (
-                prefix
-                + "food decisions usually come down to guest count, serving style, and how much you want to spend per person. "
-                + f"Some good options are {options}. "
-                + "Do you want the food to feel inexpensive, polished, or somewhere in the middle?"
-            )
-        return prefix + "food choices usually come down to buffet, trays, boxed meals, or plated service. What feel are you going for?"
+    summary = " — ".join([bits[0], ", ".join(details)]) if details else bits[0]
+    if reason:
+        summary += f" ({reason})"
+    return summary
 
-    if any(p in text_lower for p in ["timeline", "schedule", "week before", "event day"]):
-        return _timeline_reply(text_lower, selected_event)
 
-    if any(p in text_lower for p in ["prioritize", "plan for", "what do i need", "good plan", "organize it", "any advice"]):
-        detail = [
-            f"For a {size_text} {event_type}, I would focus first on locking in the date and location, then food, then a short task list so the event stays easy to manage.",
-        ]
-        if "networking" in event_type:
-            detail.append("For networking specifically, flow, check-in, name tags, and enough space for people to move around matter more than heavy decorations.")
-        elif "outdoor" in event_type:
-            detail.append("For an outdoor setup, the biggest things to plan for are weather backup, seating, and whether food or equipment needs extra setup time.")
-        elif "graduation" in event_type or "birthday" in event_type or "dinner" in event_type:
-            detail.append("For a more personal gathering, guest comfort, food timing, and a simple order of events usually matter more than making it elaborate.")
-        elif "club meeting" in event_type or "workshop" in event_type:
-            detail.append("For a meeting-style event, the most important pieces are the room setup, timing, materials, and making the purpose of the event clear.")
-        detail.append("Do you already have a date and location, or are you still deciding those?")
-        return " ".join(detail)
+def _summarize_venue(option):
+    name = option.get("name", "Unknown venue")
+    venue_type = option.get("venue_type") or option.get("type")
+    capacity = option.get("capacity")
+    cost = option.get("estimated_cost") or option.get("cost")
+    reasons = option.get("reasons") or []
 
+    details = []
+    if venue_type:
+        details.append(venue_type)
+    if capacity:
+        details.append(f"capacity {capacity}")
+    if cost not in (None, ""):
+        details.append(f"about ${cost}")
+
+    summary = f"{name} — {', '.join(details)}" if details else name
+    if reasons:
+        summary += f" ({reasons[0]})"
+    return summary
+
+
+def _generic_catering_reply():
     return (
-        "A good event plan usually covers the basics first, then venue, food, tasks, and day-of logistics. "
-        "Do you already have a date and rough guest count, or are you still deciding those?"
+        "Catering usually comes down to event size, budget, and how polished you want the food to feel. "
+        "For smaller casual events, trays are usually easiest. For medium groups, buffet service is often the safest choice. "
+        "For more formal events, plated service feels more polished. About how many people are you expecting?"
     )
 
 
-def _summary_reply(context, selected_event=None):
-    events = context.get("events", [])
-    tasks = context.get("tasks", [])
-    if selected_event:
-        event_tasks = _event_tasks(selected_event, tasks)
-        pending = _pending_tasks(event_tasks)
-        return (
-            f"Here is the current picture for '{selected_event['title']}'. It is scheduled for {selected_event.get('date', 'not set')}. "
-            f"The location is {selected_event.get('location', 'not set')}. You are planning for about {selected_event.get('guest_count', 'unknown')} guests. "
-            f"There are {len(event_tasks)} task(s) tied to it, with {len(pending)} still open. "
-            "Do you want a budget summary or the next recommended actions?"
-        )
-
-    pending = _pending_tasks(tasks)
-    if events:
-        next_event = events[0]
-        return (
-            f"You currently have {len(events)} event(s) and {len(pending)} open task(s). "
-            f"The next event in your list is '{next_event.get('title', 'Untitled Event')}'. "
-            "Do you want a summary of that event or help deciding what to work on next?"
-        )
-
-    return "You do not have events yet. If you want, I can help you sketch out a new one from scratch."
-
-
-def _unclear_reply(context):
-    if context.get("events"):
-        return (
-            "I can help with planning, budgeting, food, venues, tasks, or a summary of one of your events. "
-            "What part are you thinking through right now?"
-        )
+def _generic_venue_reply():
     return (
-        "I can help you figure out the first steps, budget, venue, food, or checklist for an event. "
-        "What kind of event are you trying to plan?"
+        "The best venue depends mostly on guest count, budget, and the kind of atmosphere you want. "
+        "For smaller events, simple spaces are usually easier and cheaper. For medium events, halls or ballrooms tend to work well. "
+        "For larger events, you need capacity and parking to matter more. About how many people are you expecting?"
+    )
+
+
+def _tailored_catering_reply(text, selected_event=None):
+    prefs = _context_snapshot(text, selected_event)
+    has_context = any([prefs.get("guest_count"), prefs.get("budget_level"), prefs.get("service_type"), prefs.get("cuisine")])
+    if not has_context:
+        return _generic_catering_reply()
+
+    options = search_caterers(prefs, limit=3)
+    if not options:
+        return (
+            "I can narrow catering down once I know a little more about the event. "
+            "Do you want something casual and budget-friendly, or something more polished?"
+        )
+
+    count = prefs.get("guest_count")
+    opener = "For this event, I would narrow it down to a few options"
+    if count:
+        opener = f"For about {count} guests, I would narrow it down to a few options"
+
+    formatted = "\n".join(f"• {_summarize_caterer(option)}" for option in options)
+
+    follow_up = "Do you want the food to feel more casual, more polished, or as affordable as possible?"
+    if prefs.get("service_type") == "trays":
+        follow_up = "Do you want me to keep this tray-based and budget-friendly, or compare it to buffet options?"
+    elif prefs.get("budget_level") == "premium":
+        follow_up = "Do you want me to keep this more formal, or bring in a couple more mid-range options too?"
+
+    return f"{opener}:\n{formatted}\n\n{follow_up}"
+
+
+def _tailored_venue_reply(text, selected_event=None):
+    prefs = _context_snapshot(text, selected_event)
+    has_context = any([prefs.get("guest_count"), prefs.get("budget_level"), prefs.get("venue_type"), prefs.get("indoor_outdoor")])
+    if not has_context:
+        return _generic_venue_reply()
+
+    options = search_venues(prefs, limit=3)
+    if not options:
+        return (
+            "I can narrow venue options down once I know a little more about the event. "
+            "Do you want something smaller and affordable, or something more polished?"
+        )
+
+    count = prefs.get("guest_count")
+    opener = "For this kind of event, these venues look like the best fit"
+    if count:
+        opener = f"For about {count} guests, these venues look like the best fit"
+
+    formatted = "\n".join(f"• {_summarize_venue(option)}" for option in options)
+    follow_up = "Do you want me to narrow this down by affordability, vibe, or capacity?"
+    if prefs.get("indoor_outdoor") == "outdoor":
+        follow_up = "Do you want to keep this focused on outdoor-friendly spaces, or compare them to indoor backups too?"
+
+    return f"{opener}:\n{formatted}\n\n{follow_up}"
+
+
+def _budget_reply(selected_event=None):
+    result = estimate_budget(selected_event)
+    return (
+        f"A simple starting budget is venue around ${result['venue']}, food around ${result['food']}, and misc costs around ${result['misc']}. "
+        f"That puts the total near ${result['total']}. Do you want me to make this more budget-friendly or more polished?"
     )
 
 
 def get_response(intent, text, context=None, selected_event=None, confidence=None):
-    text_lower = _normalize(text)
+    text_lower = text.lower()
     context = context or {"events": [], "tasks": []}
+
+    events = context.get("events", [])
+    tasks = context.get("tasks", [])
+
+    total_events = len(events)
+    total_tasks = len(tasks)
+    completed_tasks = sum(1 for task in tasks if int(task.get("completed", 0)) == 1)
+    pending_tasks = total_tasks - completed_tasks
+
+    event_tasks = get_event_tasks(selected_event, tasks)
+    pending_event_tasks = [task for task in event_tasks if int(task.get("completed", 0)) == 0]
+
+    if intent == "unclear":
+        return "I can help with planning, budget, venues, catering, tasks, or a summary of one of your events. What part are you thinking through right now?"
+
+    if "venue" in text_lower or "location" in text_lower:
+        return _tailored_venue_reply(text_lower, selected_event)
+
+    if "catering" in text_lower or "food" in text_lower:
+        return _tailored_catering_reply(text_lower, selected_event)
+
+    if "budget" in text_lower or "estimate" in text_lower or intent == "budgeting":
+        return _budget_reply(selected_event)
 
     if intent == "greeting":
         if selected_event:
             return (
-                f"Hi — I can help you think through '{selected_event['title']}' from a few angles like budget, timeline, food, or tasks. "
-                "What do you want to work on first?"
+                f"Hi! I can help with '{selected_event['title']}'. "
+                f"Do you want to talk through budget, venue, catering, timeline, or next tasks?"
             )
+        if events:
+            return (
+                f"Hi! You currently have {total_events} event(s) and {pending_tasks} pending task(s). "
+                f"What part do you want to work through first?"
+            )
+        return "Hi! I can help you plan an event, estimate a budget, compare venues, or look at catering. What do you want to start with?"
+
+    if intent == "event_creation":
         return (
-            "Hi — I can help with event planning, budgeting, venues, catering, timelines, and task planning. "
-            "What part do you want to work through first?"
+            "The best place to start is with the core details: purpose, guest count, date, location, and spending limit. "
+            "Once those basics are set, the rest gets much easier. What kind of event are you trying to host?"
         )
 
-    if intent == "budgeting":
-        return _budget_reply(text_lower, selected_event)
-    if intent == "timeline_help":
-        return _timeline_reply(text_lower, selected_event)
-    if intent == "event_creation":
-        return _creation_reply(text_lower, selected_event)
-    if intent == "task_help":
-        return _task_reply(text_lower, context, selected_event)
     if intent == "event_summary":
-        return _summary_reply(context, selected_event)
-    if intent == "event_help":
-        return _event_help_reply(text_lower, context, selected_event)
-    if intent == "unclear":
-        return _unclear_reply(context)
+        if not events:
+            return "You do not have any events yet. Create one first and I can summarize it."
 
-    return _unclear_reply(context)
+        if selected_event:
+            return (
+                f"Here is the current picture for '{selected_event['title']}'. "
+                f"It is scheduled for {selected_event.get('date', 'not set')}. "
+                f"The location is {selected_event.get('location', 'not set')}. "
+                f"There are {len(event_tasks)} task(s) tied to it, with {len(pending_event_tasks)} still open. "
+                f"Do you want a budget summary or the next recommended actions?"
+            )
+
+        next_event = events[0]
+        return (
+            f"You currently have {total_events} event(s), {total_tasks} total task(s), and {pending_tasks} pending task(s). "
+            f"Your next event appears to be '{next_event.get('title', 'Untitled Event')}'. "
+            f"Do you want a quick summary of that one?"
+        )
+
+    if intent == "task_help":
+        if selected_event:
+            if pending_event_tasks:
+                next_tasks = pending_event_tasks[:3]
+                task_list = ", ".join(task["title"] for task in next_tasks)
+                return (
+                    f"For '{selected_event['title']}', the next tasks I would prioritize are {task_list}. "
+                    f"You still have {len(pending_event_tasks)} incomplete task(s). Do you want a simple first-second-third order for them?"
+                )
+
+            return (
+                f"'{selected_event['title']}' does not have any pending tasks right now. "
+                f"A smart next step would be reviewing event-day logistics and confirmations."
+            )
+
+        if pending_tasks:
+            next_tasks = [task for task in tasks if int(task.get("completed", 0)) == 0][:3]
+            task_list = ", ".join(task["title"] for task in next_tasks) if next_tasks else "your pending tasks"
+            return (
+                f"Across all events, you currently have {pending_tasks} pending task(s). "
+                f"The next few worth handling are {task_list}. Do you want me to narrow that down to one event?"
+            )
+
+        return "You do not have any tasks yet. Add a few tasks and I can help prioritize them."
+
+    if intent == "event_help":
+        if "timeline" in text_lower or "schedule" in text_lower:
+            return (
+                "A good event timeline usually moves from core decisions into bookings, then confirmations, then event-day setup and follow-up. "
+                "When is the event happening? I can turn that into a shorter countdown if you already have a date."
+            )
+
+        return (
+            "A good event plan usually covers the basics first, then venue, food, tasks, and day-of logistics. "
+            "What part do you want to narrow down first?"
+        )
+
+    return "I’m not sure yet, but I can help with event planning if you give me a little more detail."

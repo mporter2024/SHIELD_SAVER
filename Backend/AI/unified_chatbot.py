@@ -5,120 +5,38 @@ from .response_engine import get_response
 
 class UnifiedChatbot:
     def __init__(self):
-        self.fallback_keywords = {
-            "budget": "budgeting",
-            "cost": "budgeting",
-            "price": "budgeting",
-            "spend": "budgeting",
-            "afford": "budgeting",
-            "cheap": "budgeting",
-            "low budget": "budgeting",
-            "cut costs": "budgeting",
-            "save money": "budgeting",
-            "venue": "event_help",
-            "location": "event_help",
-            "food": "event_help",
-            "catering": "event_help",
-            "timeline": "timeline_help",
-            "schedule": "timeline_help",
-            "week before": "timeline_help",
-            "event day": "timeline_help",
-            "logistics": "event_help",
-            "task": "task_help",
-            "todo": "task_help",
-            "checklist": "task_help",
-            "what should i do next": "task_help",
-            "next step": "task_help",
-            "not forget": "task_help",
-            "status": "event_summary",
-            "summary": "event_summary",
-            "overview": "event_summary",
-            "plan": "event_creation",
-            "create": "event_creation",
-            "organize": "event_creation",
-            "set up": "event_creation",
-            "new event": "event_creation",
-            "called": "event_creation",
-            "named": "event_creation",
-            "titled": "event_creation",
-        }
-        self.greetings = {"hello", "hi", "hey", "good morning", "good afternoon"}
+        self.ordered_rules = [
+            ([r"\bbudget\b", r"\bcost\b", r"\bprice\b", r"how much", r"spend", r"afford", r"cheap"], "budgeting"),
+            ([r"\bvenue\b", r"\blocation\b", r"\bplace\b", r"\bspace\b"], "event_help"),
+            ([r"\bcatering\b", r"\bfood\b", r"\bmenu\b"], "event_help"),
+            ([r"\btimeline\b", r"\bschedule\b", r"event day", r"week before"], "event_help"),
+            ([r"\btask\b", r"\bchecklist\b", r"what should i do next", r"next step", r"priorit", r"first second third"], "task_help"),
+            ([r"\bstatus\b", r"\bsummary\b", r"\boverview\b"], "event_summary"),
+            ([r"^hello$", r"^hi$", r"^hey$"], "greeting"),
+            ([r"help me plan", r"event planning", r"where to start", r"organizing an event", r"create something", r"new event", r"what should i focus on first", r"what kind of event"], "event_creation"),
+        ]
 
     def normalize_text(self, text: str) -> str:
-        text = (text or "").lower().strip()
+        text = text.lower().strip()
         text = text.replace("to do", "todo")
         text = text.replace("next steps", "next step")
         text = text.replace("fund-raiser", "fundraiser")
-        text = text.replace("pls", "please")
-        text = text.replace("rn", "right now")
-        text = text.replace("idk", "i do not know")
         text = re.sub(r"[^\w\s\-]", "", text)
         text = re.sub(r"\s+", " ", text)
         return text
 
-    def _matches_any(self, normalized: str, phrases):
-        return any(phrase in normalized for phrase in phrases)
-
     def detect_intent_with_rules(self, message: str):
         normalized = self.normalize_text(message)
 
-        if normalized in self.greetings:
-            return "greeting", 0.99
-
-        budget_phrases = [
-            "budget", "cost", "price", "spend", "afford", "cheap", "low budget",
-            "save money", "cut costs", "how much money", "not too expensive", "affordable",
-        ]
-        if self._matches_any(normalized, budget_phrases):
-            return "budgeting", 0.99
-
-        if "how long does it take" in normalized and "event" in normalized:
-            return "event_creation", 0.98
-
-        if any(p in normalized for p in ["focus on first", "what should i focus on first"]):
-            return "event_creation", 0.98
-
-        if any(p in normalized for p in ["first second third", "what should i do first second third"]):
-            return "task_help", 0.98
-
-        if "what should i do first" in normalized and ("people" in normalized or "event" in normalized or "planning" in normalized):
-            return "event_creation", 0.98
-
-        task_phrases = [
-            "checklist", "tasks", "task", "what should i do next", "next step", "not forget",
-            "organize tasks", "schedule tasks",
-        ]
-        if self._matches_any(normalized, task_phrases):
-            return "task_help", 0.99
-
-        timeline_phrases = ["timeline", "week before", "event day", "schedule"]
-        if self._matches_any(normalized, timeline_phrases):
-            return "timeline_help", 0.99
-
-        event_help_phrases = [
-            "what do i need", "what should i plan for", "any advice", "good plan", "how do i organize it",
-            "what should i prioritize", "how do i choose a good location", "venues", "food should i get",
-            "networking event", "outdoor event", "graduation", "club meeting", "casual event", "dinner event",
-        ]
-        if self._matches_any(normalized, event_help_phrases):
-            return "event_help", 0.95
-
-        creation_phrases = [
-            "help me plan", "plan an event", "create something", "where do i start", "how do i start",
-            "throw something", "something small", "small but still nice", "overthinking it", "what now",
-            "guide me", "event planning", "i need ideas for an event", "how do i even plan this",
-            "trying to plan", "i dont really know what im doing", "i do not know where to start",
-        ]
-        if self._matches_any(normalized, creation_phrases):
-            return "event_creation", 0.95
-
-        for keyword, intent in self.fallback_keywords.items():
-            if keyword in normalized:
-                return intent, 0.9
+        for patterns, intent in self.ordered_rules:
+            if any(re.search(pattern, normalized) for pattern in patterns):
+                return intent, 0.99
 
         intent, confidence = detect_intent_with_confidence(normalized)
-        if confidence < 0.42:
+
+        if confidence < 0.45:
             return "unclear", confidence
+
         return intent, confidence
 
     def pick_relevant_event(self, message: str, context: dict, allow_fallback=True):
@@ -141,6 +59,7 @@ class UnifiedChatbot:
             title_words = set(self.normalize_text(event.get("title", "")).split())
             if not title_words:
                 continue
+
             score = len(title_words.intersection(message_words))
             if score > best_score:
                 best_score = score
@@ -152,17 +71,166 @@ class UnifiedChatbot:
         if allow_fallback and len(events) == 1:
             return events[0]
 
-        fallback_phrases = ["my event", "this event", "that event", "my birthday dinner", "spring expo", "tech summit"]
-        if allow_fallback and any(phrase in normalized_message for phrase in fallback_phrases):
+        if allow_fallback and any(
+            phrase in normalized_message for phrase in ["my event", "this event", "that event"]
+        ):
             return events[0]
 
         return None
 
     def parse_add_task_command(self, message: str, context=None):
-        return None
+        if context is None:
+            context = {"events": [], "tasks": []}
+
+        normalized = self.normalize_text(message)
+        original = message.strip()
+
+        create_patterns = [
+            r"^add (?:a )?task(?: called)? ",
+            r"^create (?:a )?task(?: called)? ",
+            r"^remind me to ",
+            r"^i need to ",
+            r"^we need to ",
+            r"^we should ",
+            r"^remember to ",
+        ]
+
+        if not any(re.search(pattern, normalized, re.IGNORECASE) for pattern in create_patterns):
+            return None
+
+        task_text = original
+        prefix_patterns = [
+            r"^add a task called ", r"^add a task ", r"^add task called ", r"^add task ",
+            r"^create a task called ", r"^create a task ", r"^create task called ", r"^create task ",
+            r"^remind me to ", r"^i need to ", r"^we need to ", r"^we should ", r"^remember to ",
+        ]
+        for pattern in prefix_patterns:
+            new_text = re.sub(pattern, "", task_text, flags=re.IGNORECASE).strip()
+            if new_text != task_text:
+                task_text = new_text
+                break
+
+        due_date = None
+        due_match = re.search(r"\s+due\s+(\d{4}-\d{2}-\d{2})\s*$", task_text, re.IGNORECASE)
+        if due_match:
+            due_date = due_match.group(1)
+            task_text = task_text[:due_match.start()].strip()
+
+        event_name = None
+        event_match = re.search(r"\s+for\s+(.+)$", task_text, re.IGNORECASE)
+        if event_match:
+            event_name = event_match.group(1).strip()
+            title = task_text[:event_match.start()].strip()
+        else:
+            title = task_text.strip()
+
+        if not title:
+            return {"error": "Please include the task you want to add."}
+
+        selected_event = None
+        events = context.get("events", [])
+        if event_name:
+            normalized_event_name = self.normalize_text(event_name)
+            for event in events:
+                event_title = self.normalize_text(event.get("title", ""))
+                if event_title == normalized_event_name or normalized_event_name in event_title or event_title in normalized_event_name:
+                    selected_event = event
+                    break
+        else:
+            selected_event = self.pick_relevant_event(message, context, allow_fallback=False)
+            if selected_event is None and len(events) == 1:
+                selected_event = events[0]
+
+        if selected_event is None:
+            return {"error": "I couldn’t tell which event this task belongs to. Please include the event name."}
+
+        return {
+            "title": title,
+            "due_date": due_date,
+            "event_id": selected_event["id"]
+        }
 
     def parse_complete_task_command(self, message: str, context=None):
-        return None
+        if context is None:
+            context = {"events": [], "tasks": []}
+
+        normalized = self.normalize_text(message)
+        original = message.strip()
+
+        command_patterns = [
+            r"^complete(?: task)? ",
+            r"^mark .+ done$",
+            r"^mark task ",
+            r"^finished? ",
+            r"^done with ",
+            r"^check off ",
+            r"^cross off ",
+        ]
+        if not any(re.search(pattern, normalized, re.IGNORECASE) for pattern in command_patterns):
+            return None
+
+        task_part = original
+        patterns = [
+            r"^complete task\s+", r"^complete\s+", r"^mark task\s+", r"^mark\s+",
+            r"^finished\s+", r"^finish\s+", r"^done with\s+", r"^check off\s+", r"^cross off\s+",
+        ]
+        for pattern in patterns:
+            new_text = re.sub(pattern, "", task_part, flags=re.IGNORECASE).strip()
+            if new_text != task_part:
+                task_part = new_text
+                break
+
+        task_part = re.sub(r"\s+as\s+complete$", "", task_part, flags=re.IGNORECASE).strip()
+        task_part = re.sub(r"\s+complete$", "", task_part, flags=re.IGNORECASE).strip()
+        task_part = re.sub(r"\s+done$", "", task_part, flags=re.IGNORECASE).strip()
+
+        event_name = None
+        event_match = re.search(r"\s+for\s+(.+)$", original, re.IGNORECASE)
+        if event_match:
+            event_name = event_match.group(1).strip()
+            task_part = re.sub(r"\s+for\s+(.+)$", "", task_part, flags=re.IGNORECASE).strip()
+
+        if not task_part:
+            return {"error": "Please include the task name you want to complete."}
+
+        tasks = context.get("tasks", [])
+        events = context.get("events", [])
+        selected_event = None
+        if event_name:
+            normalized_event_name = self.normalize_text(event_name)
+            for event in events:
+                event_title = self.normalize_text(event.get("title", ""))
+                if event_title == normalized_event_name or normalized_event_name in event_title or event_title in normalized_event_name:
+                    selected_event = event
+                    break
+
+        candidate_tasks = tasks
+        if selected_event is not None:
+            candidate_tasks = [task for task in tasks if int(task.get("event_id", 0)) == int(selected_event["id"])]
+
+        normalized_task_name = self.normalize_text(task_part)
+        exact_matches = []
+        partial_matches = []
+        for task in candidate_tasks:
+            task_title = self.normalize_text(task.get("title", ""))
+            if task_title == normalized_task_name:
+                exact_matches.append(task)
+            elif normalized_task_name in task_title or task_title in normalized_task_name:
+                partial_matches.append(task)
+
+        matches = exact_matches if exact_matches else partial_matches
+        if not matches:
+            return {"error": "I couldn’t find a matching task to complete. Try using the full task name."}
+
+        incomplete_matches = [task for task in matches if int(task.get("completed", 0)) == 0]
+        if len(incomplete_matches) == 1:
+            return {"task_id": incomplete_matches[0]["id"]}
+        if len(incomplete_matches) > 1:
+            task_titles = ", ".join(task["title"] for task in incomplete_matches[:3])
+            return {"error": f"I found multiple matching incomplete tasks: {task_titles}. Please be more specific."}
+        if len(matches) == 1 and int(matches[0].get("completed", 0)) == 1:
+            return {"error": f"'{matches[0]['title']}' is already marked complete."}
+        return {"error": "I couldn’t find an incomplete version of that task."}
 
     def build_response(self, message: str, context=None, selected_event=None):
         if context is None:
@@ -179,13 +247,16 @@ class UnifiedChatbot:
             text=normalized,
             context=context,
             selected_event=selected_event,
-            confidence=confidence,
+            confidence=confidence
         )
 
     def get_response(self, message: str, context=None) -> str:
-        cleaned_message = (message or "").strip()
+        cleaned_message = message.strip()
+
         if not cleaned_message:
             return "Please send a message so I can help."
+
         if context is None:
             context = {"events": [], "tasks": []}
+
         return self.build_response(cleaned_message, context=context)
