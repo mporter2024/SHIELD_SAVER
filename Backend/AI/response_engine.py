@@ -40,11 +40,32 @@ def _small_medium_large(guest_count):
     return "larger"
 
 
+def _event_type(text_lower, selected_event=None):
+    title = _normalize(selected_event.get("title")) if selected_event else ""
+    source = f"{text_lower} {title}".strip()
+    for phrase, label in [
+        ("networking", "networking event"),
+        ("birthday", "birthday event"),
+        ("dinner", "dinner event"),
+        ("graduation", "graduation event"),
+        ("outdoor", "outdoor event"),
+        ("club meeting", "club meeting"),
+        ("workshop", "workshop"),
+        ("casual", "casual event"),
+    ]:
+        if phrase in source:
+            return label
+    return "event"
+
+
 def _budget_reply(text_lower, selected_event=None):
     estimate = estimate_budget(selected_event or {})
     guest_count = _guest_count(selected_event, text_lower) or estimate.get("attendance") or 50
     venue_known = bool(selected_event and selected_event.get("location"))
-    free_venue_hint = any(p in text_lower for p in ["free venue", "not renting", "my house", "at home", "classroom", "school building", "free location"])
+    free_venue_hint = any(
+        p in text_lower
+        for p in ["free venue", "not renting", "my house", "at home", "classroom", "school building", "free location"]
+    )
 
     if free_venue_hint:
         estimate["venue"] = 0
@@ -91,6 +112,8 @@ def _timeline_reply(text_lower, selected_event=None):
         lines.append("A week before the event, focus on final headcount, vendor confirmations, supplies, and a simple event-day checklist.")
     elif "event day" in text_lower:
         lines.append("On event day, the essentials are setup items, contact info for any vendors, signage or materials, and a short run-of-show so nothing gets missed.")
+    elif "how long does it take" in text_lower:
+        lines.append("For a simple event, a few weeks can be enough, but anything with vendors, invitations, or a larger guest list usually benefits from more lead time.")
     else:
         lines.append("A simple structure is: finalize basics, book venue and food, confirm attendance and materials, then handle setup, execution, and follow-up.")
 
@@ -121,6 +144,12 @@ def _task_reply(text_lower, context, selected_event=None):
     event_tasks = _event_tasks(selected_event, tasks)
     pending = _pending_tasks(event_tasks if selected_event else tasks)
 
+    if any(p in text_lower for p in ["first second third", "what should i do first second third", "what should i do first"]):
+        return (
+            "A simple order is: first lock in the date and location, second confirm food and guest communication, and third build a short setup and day-of checklist. "
+            "Do you want me to turn that into a checklist for one specific event?"
+        )
+
     if selected_event:
         if pending:
             task_list = ", ".join(task.get("title", "task") for task in pending[:3])
@@ -135,10 +164,10 @@ def _task_reply(text_lower, context, selected_event=None):
             "Do you want me to suggest a checklist?"
         )
 
-    if any(p in text_lower for p in ["checklist", "not forget", "event day", "week before", "first second third"]):
+    if any(p in text_lower for p in ["checklist", "not forget", "event day", "week before"]):
         return (
             "A solid checklist usually includes venue or location confirmation, food, guest communication, supplies, setup, and a short event-day plan. "
-            "If you already have an event picked out, I can turn that into a more specific checklist for you."
+            "Do you want me to turn that into a more specific checklist for one event?"
         )
 
     if pending:
@@ -155,6 +184,10 @@ def _task_reply(text_lower, context, selected_event=None):
 
 
 def _event_help_reply(text_lower, context, selected_event=None):
+    guest_count = _guest_count(selected_event, text_lower)
+    size_text = _small_medium_large(guest_count) or "manageable"
+    event_type = _event_type(text_lower, selected_event)
+
     if any(p in text_lower for p in ["venue", "location"]):
         venues = get_venues()[:3]
         venue_names = ", ".join(v.get("name", "Venue") for v in venues) if venues else "a few venue options"
@@ -185,9 +218,24 @@ def _event_help_reply(text_lower, context, selected_event=None):
     if any(p in text_lower for p in ["timeline", "schedule", "week before", "event day"]):
         return _timeline_reply(text_lower, selected_event)
 
+    if any(p in text_lower for p in ["prioritize", "plan for", "what do i need", "good plan", "organize it", "any advice"]):
+        detail = [
+            f"For a {size_text} {event_type}, I would focus first on locking in the date and location, then food, then a short task list so the event stays easy to manage.",
+        ]
+        if "networking" in event_type:
+            detail.append("For networking specifically, flow, check-in, name tags, and enough space for people to move around matter more than heavy decorations.")
+        elif "outdoor" in event_type:
+            detail.append("For an outdoor setup, the biggest things to plan for are weather backup, seating, and whether food or equipment needs extra setup time.")
+        elif "graduation" in event_type or "birthday" in event_type or "dinner" in event_type:
+            detail.append("For a more personal gathering, guest comfort, food timing, and a simple order of events usually matter more than making it elaborate.")
+        elif "club meeting" in event_type or "workshop" in event_type:
+            detail.append("For a meeting-style event, the most important pieces are the room setup, timing, materials, and making the purpose of the event clear.")
+        detail.append("Do you already have a date and location, or are you still deciding those?")
+        return " ".join(detail)
+
     return (
         "A good event plan usually covers the basics first, then venue, food, tasks, and day-of logistics. "
-        "If you tell me the event type and rough size, I can make the advice much more specific."
+        "Do you already have a date and rough guest count, or are you still deciding those?"
     )
 
 

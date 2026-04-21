@@ -33,9 +33,6 @@ class UnifiedChatbot:
             "status": "event_summary",
             "summary": "event_summary",
             "overview": "event_summary",
-            "hello": "greeting",
-            "hi": "greeting",
-            "hey": "greeting",
             "plan": "event_creation",
             "create": "event_creation",
             "organize": "event_creation",
@@ -45,6 +42,7 @@ class UnifiedChatbot:
             "named": "event_creation",
             "titled": "event_creation",
         }
+        self.greetings = {"hello", "hi", "hey", "good morning", "good afternoon"}
 
     def normalize_text(self, text: str) -> str:
         text = (text or "").lower().strip()
@@ -64,6 +62,9 @@ class UnifiedChatbot:
     def detect_intent_with_rules(self, message: str):
         normalized = self.normalize_text(message)
 
+        if normalized in self.greetings:
+            return "greeting", 0.99
+
         budget_phrases = [
             "budget", "cost", "price", "spend", "afford", "cheap", "low budget",
             "save money", "cut costs", "how much money", "not too expensive", "affordable",
@@ -71,20 +72,33 @@ class UnifiedChatbot:
         if self._matches_any(normalized, budget_phrases):
             return "budgeting", 0.99
 
+        if "how long does it take" in normalized and "event" in normalized:
+            return "event_creation", 0.98
+
+        if any(p in normalized for p in ["focus on first", "what should i focus on first"]):
+            return "event_creation", 0.98
+
+        if any(p in normalized for p in ["first second third", "what should i do first second third"]):
+            return "task_help", 0.98
+
+        if "what should i do first" in normalized and ("people" in normalized or "event" in normalized or "planning" in normalized):
+            return "event_creation", 0.98
+
         task_phrases = [
             "checklist", "tasks", "task", "what should i do next", "next step", "not forget",
-            "first second third", "what should i do first", "organize tasks", "schedule tasks",
+            "organize tasks", "schedule tasks",
         ]
         if self._matches_any(normalized, task_phrases):
             return "task_help", 0.99
 
-        timeline_phrases = ["timeline", "week before", "event day", "schedule", "how long does it take"]
+        timeline_phrases = ["timeline", "week before", "event day", "schedule"]
         if self._matches_any(normalized, timeline_phrases):
             return "timeline_help", 0.99
 
         event_help_phrases = [
             "what do i need", "what should i plan for", "any advice", "good plan", "how do i organize it",
             "what should i prioritize", "how do i choose a good location", "venues", "food should i get",
+            "networking event", "outdoor event", "graduation", "club meeting", "casual event", "dinner event",
         ]
         if self._matches_any(normalized, event_help_phrases):
             return "event_help", 0.95
@@ -97,9 +111,6 @@ class UnifiedChatbot:
         ]
         if self._matches_any(normalized, creation_phrases):
             return "event_creation", 0.95
-
-        if any(normalized == greet for greet in ["hello", "hi", "hey", "good morning", "good afternoon"]):
-            return "greeting", 0.99
 
         for keyword, intent in self.fallback_keywords.items():
             if keyword in normalized:
