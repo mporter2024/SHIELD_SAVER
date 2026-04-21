@@ -2,7 +2,7 @@
   "total": 80,
   "passed": 78,
   "failed": 2,
-  "average_score": 8.56,
+  "average_score": 8.55,
   "results": [
     {
       "input": "How should I budget for an event?",
@@ -354,7 +354,7 @@
     },
     {
       "input": "What food should I get for a small event?",
-      "response": "For an event like this, food decisions usually come down to guest count, serving style, and how much you want to spend per person. Some good options are Gourmet Bites (plated, $20.0/person); Bella Festa Catering (buffet, $18.0/person); Smoke & Spice BBQ (buffet, $16.0/person). Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
+      "response": "For an event like this, food decisions usually come down to guest count, serving style, and how much you want to spend per person. Some good options are Chef by Design Catering Co. (plated, $32.0/person); Doumar's Drive-In Catering (trays, $14.0/person); Cuisine & Company Catering (plated, $28.0/person). Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
       "expected_intent": "event_help",
       "actual_intent": "event_help",
       "score": 8,
@@ -366,7 +366,7 @@
     },
     {
       "input": "Small event for 15 people, what kind of food should I get?",
-      "response": "For an event like this, food decisions usually come down to guest count, serving style, and how much you want to spend per person. Some good options are Gourmet Bites (plated, $20.0/person); Bella Festa Catering (buffet, $18.0/person); Smoke & Spice BBQ (buffet, $16.0/person). Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
+      "response": "For an event like this, food decisions usually come down to guest count, serving style, and how much you want to spend per person. Some good options are Chef by Design Catering Co. (plated, $32.0/person); Doumar's Drive-In Catering (trays, $14.0/person); Cuisine & Company Catering (plated, $28.0/person). Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
       "expected_intent": "event_help",
       "actual_intent": "event_help",
       "score": 8,
@@ -378,7 +378,7 @@
     },
     {
       "input": "What about catering for my birthday dinner?",
-      "response": "For 'Birthday Dinner', food decisions usually come down to guest count, serving style, and how much you want to spend per person. Some good options are Gourmet Bites (plated, $20.0/person); Bella Festa Catering (buffet, $18.0/person); Smoke & Spice BBQ (buffet, $16.0/person). Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
+      "response": "For 'Birthday Dinner', food decisions usually come down to guest count, serving style, and how much you want to spend per person. Some good options are Chef by Design Catering Co. (plated, $32.0/person); Doumar's Drive-In Catering (trays, $14.0/person); Cuisine & Company Catering (plated, $28.0/person). Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
       "expected_intent": "event_help",
       "actual_intent": "event_help",
       "score": 9,
@@ -674,7 +674,7 @@
     },
     {
       "input": "food",
-      "response": "For an event like this, food decisions usually come down to guest count, serving style, and how much you want to spend per person. Some good options are Gourmet Bites (plated, $20.0/person); Bella Festa Catering (buffet, $18.0/person); Smoke & Spice BBQ (buffet, $16.0/person). Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
+      "response": "For an event like this, food decisions usually come down to guest count, serving style, and how much you want to spend per person. Some good options are Chef by Design Catering Co. (plated, $32.0/person); Doumar's Drive-In Catering (trays, $14.0/person); Cuisine & Company Catering (plated, $28.0/person). Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
       "expected_intent": null,
       "actual_intent": "event_help",
       "score": 8,
@@ -790,7 +790,7 @@
     },
     {
       "input": "what should i do for food",
-      "response": "For an event like this, food decisions usually come down to guest count, serving style, and how much you want to spend per person. Some good options are Gourmet Bites (plated, $20.0/person); Bella Festa Catering (buffet, $18.0/person); Smoke & Spice BBQ (buffet, $16.0/person). Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
+      "response": "For an event like this, food decisions usually come down to guest count, serving style, and how much you want to spend per person. Some good options are Chef by Design Catering Co. (plated, $32.0/person); Doumar's Drive-In Catering (trays, $14.0/person); Cuisine & Company Catering (plated, $28.0/person). Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
       "expected_intent": null,
       "actual_intent": "event_help",
       "score": 8,
@@ -886,14 +886,14 @@
     },
     {
       "input": "I want to plan a small event for like 20 people sometime in May, probably simple food, nothing too expensive",
-      "response": "For an event like this, food decisions usually come down to guest count, serving style, and how much you want to spend per person. Some good options are Gourmet Bites (plated, $20.0/person); Bella Festa Catering (buffet, $18.0/person); Smoke & Spice BBQ (buffet, $16.0/person). Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
+      "response": "For an event like this, food decisions usually come down to guest count, serving style, and how much you want to spend per person. Some good options are Chef by Design Catering Co. (plated, $32.0/person); Doumar's Drive-In Catering (trays, $14.0/person); Cuisine & Company Catering (plated, $28.0/person). Do you want the food to feel inexpensive, polished, or somewhere in the middle?",
       "expected_intent": null,
       "actual_intent": "event_help",
-      "score": 9,
+      "score": 8,
       "passing_score": 7,
       "passed": true,
       "notes": [
-        "partial keyword coverage (2/3)"
+        "low keyword coverage (1/3)"
       ]
     },
     {
