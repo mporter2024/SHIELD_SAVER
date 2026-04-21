@@ -1,0 +1,1104 @@
+{
+  "cases": [
+    {
+      "input": "How should I budget for an event?",
+      "expected_intent": "budgeting",
+      "required_keywords": [
+        "budget",
+        "venue",
+        "food"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "What\u2019s a good budget for a small event?",
+      "expected_intent": "budgeting",
+      "required_keywords": [
+        "small",
+        "food",
+        "venue"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "I\u2019m planning a birthday party for 20 people, how should I budget?",
+      "expected_intent": "budgeting",
+      "required_keywords": [
+        "20",
+        "food",
+        "venue"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "I have an event next month for 50 people, how much should I expect to spend?",
+      "expected_intent": "budgeting",
+      "required_keywords": [
+        "50",
+        "cost",
+        "food"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Free venue, how should I budget the rest?",
+      "expected_intent": "budgeting",
+      "required_keywords": [
+        "venue",
+        "food",
+        "supplies"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "We\u2019re not renting a venue, what should my budget focus on?",
+      "expected_intent": "budgeting",
+      "required_keywords": [
+        "venue",
+        "food",
+        "buffer"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Low budget event ideas?",
+      "expected_intent": "budgeting",
+      "required_keywords": [
+        "budget",
+        "simple",
+        "cost"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Event at my house for 20 people, what should my budget look like?",
+      "expected_intent": "budgeting",
+      "required_keywords": [
+        "20",
+        "house",
+        "food"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Budgeting for a networking event for 40 people?",
+      "expected_intent": "budgeting",
+      "required_keywords": [
+        "40",
+        "networking",
+        "food"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "How can I cut costs for an event?",
+      "expected_intent": "budgeting",
+      "required_keywords": [
+        "cost",
+        "venue",
+        "food"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "What\u2019s a good event timeline?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "timeline",
+        "planning",
+        "week"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "I have an event next month for 50 people, what should my timeline look like?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "50",
+        "timeline",
+        "before"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "What should I do a week before an event?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "week",
+        "confirm",
+        "setup"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "What do I need on event day?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "event day",
+        "setup",
+        "confirm"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "How long does it take to plan an event?",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "plan",
+        "time",
+        "weeks"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Small event for 15 people, what should I do first?",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "15",
+        "first",
+        "date"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Networking event for 40 people, what should I prioritize?",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "40",
+        "venue",
+        "guests"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Outdoor event for 30 people, any advice?",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "30",
+        "outdoor",
+        "weather"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "I\u2019m not sure where to start with planning.",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "start",
+        "date",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Can you guide me through event planning?",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "plan",
+        "details",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "How do I plan an event from scratch?",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "goal",
+        "date",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "How do I start planning an event?",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "start",
+        "date",
+        "location"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "What are the basics of event planning?",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "date",
+        "location",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "I want to create something small",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "small",
+        "people",
+        "date"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Help me plan an event",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "date",
+        "location",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "I need help organizing an event",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "organize",
+        "date",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "What should I focus on first when planning something?",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "first",
+        "goal",
+        "date"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "I don\u2019t really know what I\u2019m doing, help",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "help",
+        "start",
+        "event"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "I want something small but still nice",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "small",
+        "budget",
+        "guests"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Trying to plan something but I keep overthinking it",
+      "expected_intent": "event_creation",
+      "required_keywords": [
+        "plan",
+        "date",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "What food should I get for a small event?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "food",
+        "small",
+        "guests"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Small event for 15 people, what kind of food should I get?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "15",
+        "food",
+        "simple"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "What about catering for my birthday dinner?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "catering",
+        "birthday",
+        "15"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Can you suggest venues for an event?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "venue",
+        "capacity",
+        "cost"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "How do I choose a good location?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "location",
+        "size",
+        "cost"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Dinner event for 25 people, what should I plan for?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "25",
+        "dinner",
+        "food"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Graduation party for 20 guests, what do I need?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "20",
+        "food",
+        "location"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Casual event for 15 people, what\u2019s a good plan?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "15",
+        "casual",
+        "simple"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Club meeting for 30 people, how do I organize it?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "30",
+        "meeting",
+        "location"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Workshop for 50 people, what should I budget?",
+      "expected_intent": "event_help",
+      "required_keywords": [
+        "50",
+        "budget",
+        "space"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "What tasks should I have for an event?",
+      "expected_intent": "task_help",
+      "required_keywords": [
+        "tasks",
+        "venue",
+        "confirm"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Build me a checklist for Spring Expo",
+      "expected_intent": "task_help",
+      "required_keywords": [
+        "Spring Expo",
+        "tasks",
+        "confirm"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": "Spring Expo",
+      "passing_score": 7
+    },
+    {
+      "input": "What should I do next for Spring Expo?",
+      "expected_intent": "task_help",
+      "required_keywords": [
+        "Spring Expo",
+        "tasks",
+        "pending"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": "Spring Expo",
+      "passing_score": 7
+    },
+    {
+      "input": "Give me a summary of Spring Expo",
+      "expected_intent": "event_summary",
+      "required_keywords": [
+        "Spring Expo",
+        "date",
+        "location"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": "Spring Expo",
+      "passing_score": 7
+    },
+    {
+      "input": "What\u2019s the status of my birthday dinner?",
+      "expected_intent": "event_summary",
+      "required_keywords": [
+        "Birthday Dinner",
+        "tasks",
+        "location"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": "Birthday Dinner",
+      "passing_score": 7
+    },
+    {
+      "input": "Help me schedule tasks for Tech Summit",
+      "expected_intent": "task_help",
+      "required_keywords": [
+        "Tech Summit",
+        "tasks",
+        "timeline"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": "Tech Summit",
+      "passing_score": 7
+    },
+    {
+      "input": "What should I not forget for an event?",
+      "expected_intent": "task_help",
+      "required_keywords": [
+        "confirm",
+        "tasks",
+        "venue"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "How do I organize tasks?",
+      "expected_intent": "task_help",
+      "required_keywords": [
+        "tasks",
+        "priority",
+        "timeline"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "What should I do first, second, third?",
+      "expected_intent": "task_help",
+      "required_keywords": [
+        "first",
+        "next",
+        "tasks"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Event planning help plus a quick overview of Spring Expo",
+      "expected_intent": "event_summary",
+      "required_keywords": [
+        "Spring Expo",
+        "date",
+        "location"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": "Spring Expo",
+      "passing_score": 7
+    },
+    {
+      "input": "help",
+      "expected_intent": null,
+      "required_keywords": [
+        "help"
+      ],
+      "requires_followup": true,
+      "min_words": 12,
+      "min_sentences": 1,
+      "selected_event": null,
+      "passing_score": 6
+    },
+    {
+      "input": "event planning",
+      "expected_intent": null,
+      "required_keywords": [
+        "help"
+      ],
+      "requires_followup": true,
+      "min_words": 12,
+      "min_sentences": 1,
+      "selected_event": null,
+      "passing_score": 6
+    },
+    {
+      "input": "what now",
+      "expected_intent": null,
+      "required_keywords": [
+        "help"
+      ],
+      "requires_followup": true,
+      "min_words": 12,
+      "min_sentences": 1,
+      "selected_event": null,
+      "passing_score": 6
+    },
+    {
+      "input": "ideas?",
+      "expected_intent": null,
+      "required_keywords": [
+        "help"
+      ],
+      "requires_followup": true,
+      "min_words": 12,
+      "min_sentences": 1,
+      "selected_event": null,
+      "passing_score": 6
+    },
+    {
+      "input": "plan",
+      "expected_intent": null,
+      "required_keywords": [
+        "help"
+      ],
+      "requires_followup": true,
+      "min_words": 12,
+      "min_sentences": 1,
+      "selected_event": null,
+      "passing_score": 6
+    },
+    {
+      "input": "budget",
+      "expected_intent": null,
+      "required_keywords": [
+        "help"
+      ],
+      "requires_followup": true,
+      "min_words": 12,
+      "min_sentences": 1,
+      "selected_event": null,
+      "passing_score": 6
+    },
+    {
+      "input": "timeline",
+      "expected_intent": null,
+      "required_keywords": [
+        "help"
+      ],
+      "requires_followup": true,
+      "min_words": 12,
+      "min_sentences": 1,
+      "selected_event": null,
+      "passing_score": 6
+    },
+    {
+      "input": "food",
+      "expected_intent": null,
+      "required_keywords": [
+        "help"
+      ],
+      "requires_followup": true,
+      "min_words": 12,
+      "min_sentences": 1,
+      "selected_event": null,
+      "passing_score": 6
+    },
+    {
+      "input": "venue",
+      "expected_intent": null,
+      "required_keywords": [
+        "help"
+      ],
+      "requires_followup": true,
+      "min_words": 12,
+      "min_sentences": 1,
+      "selected_event": null,
+      "passing_score": 6
+    },
+    {
+      "input": "what can you help with?",
+      "expected_intent": null,
+      "required_keywords": [
+        "help"
+      ],
+      "requires_followup": true,
+      "min_words": 12,
+      "min_sentences": 1,
+      "selected_event": null,
+      "passing_score": 6
+    },
+    {
+      "input": "I wanna throw something small",
+      "expected_intent": null,
+      "required_keywords": [
+        "small",
+        "date",
+        "people"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "thinking about doing an event like 30 ppl",
+      "expected_intent": null,
+      "required_keywords": [
+        "30",
+        "date",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "how much money should i expect",
+      "expected_intent": null,
+      "required_keywords": [
+        "cost",
+        "budget",
+        "venue"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "what do i even need for this",
+      "expected_intent": null,
+      "required_keywords": [
+        "date",
+        "location",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "idk where to start",
+      "expected_intent": null,
+      "required_keywords": [
+        "start",
+        "date",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "something simple for like 20 people",
+      "expected_intent": null,
+      "required_keywords": [
+        "20",
+        "simple",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "not tryna spend too much",
+      "expected_intent": null,
+      "required_keywords": [
+        "budget",
+        "cost",
+        "simple"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "what should i do for food",
+      "expected_intent": null,
+      "required_keywords": [
+        "food",
+        "guests",
+        "simple"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "how do i even plan this",
+      "expected_intent": null,
+      "required_keywords": [
+        "date",
+        "location",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "just a small thing nothing crazy",
+      "expected_intent": null,
+      "required_keywords": [
+        "small",
+        "budget",
+        "people"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "what should i be doing rn",
+      "expected_intent": null,
+      "required_keywords": [
+        "next",
+        "date",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "event planning help pls",
+      "expected_intent": null,
+      "required_keywords": [
+        "plan",
+        "date",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "i need ideas for an event",
+      "expected_intent": null,
+      "required_keywords": [
+        "ideas",
+        "budget",
+        "location"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "what\u2019s the easiest way to do this",
+      "expected_intent": null,
+      "required_keywords": [
+        "simple",
+        "plan",
+        "start"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "low effort event ideas",
+      "expected_intent": null,
+      "required_keywords": [
+        "simple",
+        "budget",
+        "event"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "I want to plan a small event for like 20 people sometime in May, probably simple food, nothing too expensive",
+      "expected_intent": null,
+      "required_keywords": [
+        "20",
+        "may",
+        "food"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Planning something for 40 people next month, kinda stressed about budget",
+      "expected_intent": null,
+      "required_keywords": [
+        "40",
+        "budget",
+        "cost"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "I need to organize a casual event but I don\u2019t want it to be complicated",
+      "expected_intent": null,
+      "required_keywords": [
+        "casual",
+        "simple",
+        "plan"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Thinking about doing a birthday dinner, maybe 15 people, not sure what to do",
+      "expected_intent": null,
+      "required_keywords": [
+        "15",
+        "birthday",
+        "dinner"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    },
+    {
+      "input": "Event for 30 people, I want it to be simple and affordable",
+      "expected_intent": null,
+      "required_keywords": [
+        "30",
+        "simple",
+        "budget"
+      ],
+      "requires_followup": true,
+      "min_words": 20,
+      "min_sentences": 2,
+      "selected_event": null,
+      "passing_score": 7
+    }
+  ]
+}
