@@ -365,37 +365,108 @@ def _is_catering_request(message):
     return any(word in lowered for word in ["catering", "caterer", "food", "buffet", "plated", "food truck"])
 
 
+def _planning_signal_count(planning_context, keys):
+    score = 0
+    for key in keys:
+        value = planning_context.get(key)
+        if value not in (None, "", [], {}):
+            score += 1
+    return score
+
+
+def _generic_venue_reply(planning_context):
+    guest_count = planning_context.get("guest_count")
+    if guest_count:
+        return (
+            f"For about {guest_count} guests, the best venue depends on budget, atmosphere, and whether you want indoor or outdoor space. "
+            "Smaller groups usually do well in simple rooms or restaurant-style spaces, while larger groups need to prioritize capacity and parking. "
+            "Do you want something more affordable, more polished, or outdoors?"
+        )
+    return (
+        "The best venue depends mostly on guest count, budget, and the kind of atmosphere you want. "
+        "For smaller events, simple spaces are usually easier and cheaper. For medium events, halls or ballrooms tend to work well. "
+        "About how many people are you expecting?"
+    )
+
+
+def _generic_catering_reply(planning_context):
+    guest_count = planning_context.get("guest_count")
+    if guest_count:
+        return (
+            f"For about {guest_count} guests, catering mostly comes down to budget, formality, and service style. "
+            "Tray service is usually easiest for casual events, buffet works well for medium groups, and plated meals feel more formal. "
+            "Do you want something casual and affordable, or more polished?"
+        )
+    return (
+        "Catering depends mostly on guest count, budget, and how formal you want the food to feel. "
+        "For smaller casual events, trays are usually easiest. For medium groups, buffet service is often the safest choice. "
+        "About how many people are you expecting?"
+    )
+
+
+def _summarize_venue_option(item):
+    parts = []
+    venue_type = item.get("venue_type") or item.get("type")
+    if venue_type:
+        parts.append(venue_type)
+    capacity = item.get("capacity")
+    if capacity:
+        parts.append(f"capacity {capacity}")
+    cost = item.get("estimated_cost") or item.get("cost")
+    if cost not in (None, ""):
+        try:
+            parts.append(f"about ${int(float(cost))}")
+        except Exception:
+            parts.append(f"about ${cost}")
+    summary = f"• {item['name']}"
+    if parts:
+        summary += " — " + ", ".join(parts)
+    reasons = item.get("reasons") or []
+    if reasons:
+        summary += f" ({reasons[0]})"
+    return summary
+
+
+def _summarize_catering_option(item):
+    parts = []
+    cuisine = item.get("cuisine")
+    if cuisine:
+        parts.append(cuisine)
+    service = item.get("service_type")
+    if service:
+        parts.append(service)
+    price = item.get("cost_per_person")
+    if price not in (None, ""):
+        try:
+            parts.append(f"${float(price):.0f}/person")
+        except Exception:
+            parts.append(f"${price}/person")
+    summary = f"• {item['name']}"
+    if parts:
+        summary += " — " + ", ".join(parts)
+    reasons = item.get("reasons") or []
+    if reasons:
+        summary += f" ({reasons[0]})"
+    return summary
+
+
 def _format_venue_reply(results, planning_context):
     if not results:
         area = planning_context.get("location_area") or "your area"
         return f"I couldn't find a strong venue match in {area} with the current filters. Try loosening the budget, guest count, or venue style."
 
-    intro_bits = []
-    if planning_context.get("guest_count"):
-        intro_bits.append(f"for about {planning_context['guest_count']} guests")
-    if planning_context.get("location_area"):
-        intro_bits.append(f"near {planning_context['location_area']}")
-    if planning_context.get("indoor_outdoor"):
-        intro_bits.append(planning_context["indoor_outdoor"])
-    if planning_context.get("budget_level"):
-        intro_bits.append(f"{planning_context['budget_level']} budget")
+    signal_count = _planning_signal_count(planning_context, ["guest_count", "location_area", "indoor_outdoor", "budget_level", "date"])
+    if signal_count < 2:
+        return _generic_venue_reply(planning_context)
 
-    intro = " ".join(intro_bits).strip()
-    if intro:
-        intro = f"Based on your preferences {intro}, here are the best venue options\n\n"
+    guest_count = planning_context.get("guest_count")
+    if guest_count:
+        intro = f"For about {guest_count} guests, these look like the strongest venue fits:"
     else:
-        intro = "Here are the best venue options I found\n\n"
+        intro = "Here are a few venue options that look like the best fit:"
 
-    lines = []
-    for idx, item in enumerate(results, start=1):
-        reasons = "; ".join(item.get("reasons") or [])
-        lines.append(
-            f"{idx}. {item['name']} — {item.get('venue_type') or item.get('type')} in {item.get('city') or item.get('location')}\n"
-            f"   Capacity: {item.get('capacity')} | Estimated cost: ${int(float(item.get('estimated_cost') or item.get('cost') or 0))} | Rating: {item.get('rating')}\n"
-            + (f"   Why it fits: {reasons}\n" if reasons else "")
-            + (f"   {item.get('description')}" if item.get('description') else "")
-        )
-    return intro + "\n\n".join(lines)
+    lines = [_summarize_venue_option(item) for item in results[:3]]
+    return intro + "\n" + "\n".join(lines) + "\n\nDo you want me to narrow this down by affordability, vibe, or capacity?"
 
 
 def _format_catering_reply(results, planning_context):
@@ -403,33 +474,18 @@ def _format_catering_reply(results, planning_context):
         area = planning_context.get("location_area") or "your area"
         return f"I couldn't find a strong catering match in {area} with the current filters. Try loosening cuisine, service type, or budget."
 
-    intro_bits = []
-    if planning_context.get("cuisine"):
-        intro_bits.append(planning_context["cuisine"])
-    if planning_context.get("service_type"):
-        intro_bits.append(planning_context["service_type"])
-    if planning_context.get("budget_per_person"):
-        intro_bits.append(f"under ${int(planning_context['budget_per_person'])} per person")
-    if planning_context.get("location_area"):
-        intro_bits.append(f"near {planning_context['location_area']}")
+    signal_count = _planning_signal_count(planning_context, ["guest_count", "cuisine", "service_type", "budget_per_person", "budget_level", "location_area"])
+    if signal_count < 2:
+        return _generic_catering_reply(planning_context)
 
-    intro = " ".join(intro_bits).strip()
-    if intro:
-        intro = f"Based on your catering preferences {intro}, here are the best options\n\n"
+    guest_count = planning_context.get("guest_count")
+    if guest_count:
+        intro = f"For about {guest_count} guests, these look like the best catering fits:"
     else:
-        intro = "Here are the best catering options I found\n\n"
+        intro = "Here are a few catering options that look like the best fit:"
 
-    lines = []
-    for idx, item in enumerate(results, start=1):
-        reasons = "; ".join(item.get("reasons") or [])
-        dietary = item.get("dietary_options") or "not listed"
-        lines.append(
-            f"{idx}. {item['name']} — {item.get('cuisine')} | {item.get('service_type')}\n"
-            f"   Cost: ${float(item.get('cost_per_person') or 0):.0f} per person | Rating: {item.get('rating')} | Dietary: {dietary}\n"
-            + (f"   Why it fits: {reasons}\n" if reasons else "")
-            + (f"   {item.get('description')}" if item.get('description') else "")
-        )
-    return intro + "\n\n".join(lines)
+    lines = [_summarize_catering_option(item) for item in results[:3]]
+    return intro + "\n" + "\n".join(lines) + "\n\nDo you want me to narrow this down by budget, formality, or cuisine?"
 
 
 def _apply_time_logic(target_event, cleaned_updates):
@@ -789,7 +845,7 @@ def chat():
         chat_state["planning_context"] = planning_context
 
         if _is_venue_request(user_message):
-            venue_results = search_venues(planning_context, limit=5)
+            venue_results = search_venues(planning_context, limit=3)
             planning_context["last_recommendations"]["venues"] = [item.get("id") for item in venue_results]
             chat_state["planning_context"] = planning_context
             if target_for_planning:
@@ -803,7 +859,7 @@ def chat():
             }), 200
 
         if _is_catering_request(user_message):
-            catering_results = search_caterers(planning_context, limit=5)
+            catering_results = search_caterers(planning_context, limit=3)
             planning_context["last_recommendations"]["caterers"] = [item.get("id") for item in catering_results]
             chat_state["planning_context"] = planning_context
             if target_for_planning:
