@@ -2,6 +2,14 @@ import re
 from .planning_engine import search_venues, search_caterers, estimate_budget
 
 
+SHORT_GENERIC_CATERING = {
+    "catering", "food", "food?", "catering?", "food help", "catering help"
+}
+SHORT_GENERIC_VENUES = {
+    "venue", "venues", "location", "locations", "venue?", "venues?", "location?", "locations?"
+}
+
+
 def get_event_tasks(selected_event, all_tasks):
     if not selected_event:
         return []
@@ -34,7 +42,7 @@ def _extract_guest_count(text, selected_event=None):
 
 
 def _detect_budget_level(text):
-    if any(phrase in text for phrase in ["cheap", "low budget", "affordable", "not too expensive", "budget-friendly", "save money"]):
+    if any(phrase in text for phrase in ["cheap", "low budget", "affordable", "not too expensive", "budget-friendly", "save money", "low cost"]):
         return "budget"
     if any(phrase in text for phrase in ["formal", "upscale", "premium", "polished", "high-end"]):
         return "premium"
@@ -64,7 +72,7 @@ def _detect_cuisine(text):
 def _detect_venue_type(text):
     if any(word in text for word in ["restaurant", "dinner"]):
         return "restaurant"
-    if any(word in text for word in ["ballroom", "banquet"]):
+    if any(word in text for word in ["ballroom", "banquet", "hall"]):
         return "ballroom"
     if any(word in text for word in ["classroom", "meeting room"]):
         return "classroom"
@@ -100,15 +108,20 @@ def _context_snapshot(text, selected_event=None):
     }
 
 
+def _meaningful_catering_context(prefs):
+    return sum(1 for key in ("guest_count", "budget_level", "service_type", "cuisine") if prefs.get(key))
+
+
+def _meaningful_venue_context(prefs):
+    return sum(1 for key in ("guest_count", "budget_level", "venue_type", "indoor_outdoor") if prefs.get(key))
+
+
 def _summarize_caterer(option):
-    bits = [option.get("name", "Unknown caterer")]
+    name = option.get("name", "Unknown caterer")
+    reason = (option.get("reasons") or [None])[0]
     cuisine = option.get("cuisine")
     service = option.get("service_type") or option.get("type")
     price = option.get("cost_per_person")
-    reason = None
-    reasons = option.get("reasons") or []
-    if reasons:
-        reason = reasons[0]
 
     details = []
     if cuisine:
@@ -118,7 +131,7 @@ def _summarize_caterer(option):
     if price not in (None, ""):
         details.append(f"${price}/person")
 
-    summary = " — ".join([bits[0], ", ".join(details)]) if details else bits[0]
+    summary = f"{name} — {', '.join(details)}" if details else name
     if reason:
         summary += f" ({reason})"
     return summary
@@ -129,7 +142,7 @@ def _summarize_venue(option):
     venue_type = option.get("venue_type") or option.get("type")
     capacity = option.get("capacity")
     cost = option.get("estimated_cost") or option.get("cost")
-    reasons = option.get("reasons") or []
+    reason = (option.get("reasons") or [None])[0]
 
     details = []
     if venue_type:
@@ -140,16 +153,16 @@ def _summarize_venue(option):
         details.append(f"about ${cost}")
 
     summary = f"{name} — {', '.join(details)}" if details else name
-    if reasons:
-        summary += f" ({reasons[0]})"
+    if reason:
+        summary += f" ({reason})"
     return summary
 
 
 def _generic_catering_reply():
     return (
-        "Catering usually comes down to event size, budget, and how polished you want the food to feel. "
+        "Catering depends mostly on guest count, budget, and how formal you want the food to feel. "
         "For smaller casual events, trays are usually easiest. For medium groups, buffet service is often the safest choice. "
-        "For more formal events, plated service feels more polished. About how many people are you expecting?"
+        "For more polished events, plated service feels more formal. About how many people are you expecting?"
     )
 
 
@@ -157,15 +170,23 @@ def _generic_venue_reply():
     return (
         "The best venue depends mostly on guest count, budget, and the kind of atmosphere you want. "
         "For smaller events, simple spaces are usually easier and cheaper. For medium events, halls or ballrooms tend to work well. "
-        "For larger events, you need capacity and parking to matter more. About how many people are you expecting?"
+        "For larger events, capacity and parking matter more. About how many people are you expecting?"
     )
 
 
 def _tailored_catering_reply(text, selected_event=None):
     prefs = _context_snapshot(text, selected_event)
-    has_context = any([prefs.get("guest_count"), prefs.get("budget_level"), prefs.get("service_type"), prefs.get("cuisine")])
-    if not has_context:
+
+    if text.strip() in SHORT_GENERIC_CATERING or _meaningful_catering_context(prefs) < 1:
         return _generic_catering_reply()
+
+    if _meaningful_catering_context(prefs) < 2:
+        opener = "I can narrow catering down once I know a little more"
+        if prefs.get("guest_count"):
+            opener = f"For about {prefs['guest_count']} guests, I can narrow catering down once I know a little more"
+        return (
+            f"{opener}. Do you want something more casual and affordable, or something more polished?"
+        )
 
     options = search_caterers(prefs, limit=3)
     if not options:
@@ -175,26 +196,30 @@ def _tailored_catering_reply(text, selected_event=None):
         )
 
     count = prefs.get("guest_count")
-    opener = "For this event, I would narrow it down to a few options"
+    opener = "Here are a few catering options that look like the best fit"
     if count:
-        opener = f"For about {count} guests, I would narrow it down to a few options"
+        opener = f"For about {count} guests, here are a few catering options that look like the best fit"
 
-    formatted = "\n".join(f"• {_summarize_caterer(option)}" for option in options)
-
-    follow_up = "Do you want the food to feel more casual, more polished, or as affordable as possible?"
-    if prefs.get("service_type") == "trays":
-        follow_up = "Do you want me to keep this tray-based and budget-friendly, or compare it to buffet options?"
-    elif prefs.get("budget_level") == "premium":
-        follow_up = "Do you want me to keep this more formal, or bring in a couple more mid-range options too?"
-
-    return f"{opener}:\n{formatted}\n\n{follow_up}"
+    formatted = "\n".join(f"• {_summarize_caterer(option)}" for option in options[:3])
+    return (
+        f"{opener}:\n{formatted}\n\n"
+        "Do you want me to narrow this down by budget, formality, or cuisine?"
+    )
 
 
 def _tailored_venue_reply(text, selected_event=None):
     prefs = _context_snapshot(text, selected_event)
-    has_context = any([prefs.get("guest_count"), prefs.get("budget_level"), prefs.get("venue_type"), prefs.get("indoor_outdoor")])
-    if not has_context:
+
+    if text.strip() in SHORT_GENERIC_VENUES or _meaningful_venue_context(prefs) < 1:
         return _generic_venue_reply()
+
+    if _meaningful_venue_context(prefs) < 2:
+        opener = "I can narrow venue options down once I know a little more"
+        if prefs.get("guest_count"):
+            opener = f"For about {prefs['guest_count']} guests, I can narrow venue options down once I know a little more"
+        return (
+            f"{opener}. Do you want something smaller and affordable, or something more polished?"
+        )
 
     options = search_venues(prefs, limit=3)
     if not options:
@@ -204,16 +229,15 @@ def _tailored_venue_reply(text, selected_event=None):
         )
 
     count = prefs.get("guest_count")
-    opener = "For this kind of event, these venues look like the best fit"
+    opener = "Here are a few venue options that look like the best fit"
     if count:
-        opener = f"For about {count} guests, these venues look like the best fit"
+        opener = f"For about {count} guests, here are a few venue options that look like the best fit"
 
-    formatted = "\n".join(f"• {_summarize_venue(option)}" for option in options)
-    follow_up = "Do you want me to narrow this down by affordability, vibe, or capacity?"
-    if prefs.get("indoor_outdoor") == "outdoor":
-        follow_up = "Do you want to keep this focused on outdoor-friendly spaces, or compare them to indoor backups too?"
-
-    return f"{opener}:\n{formatted}\n\n{follow_up}"
+    formatted = "\n".join(f"• {_summarize_venue(option)}" for option in options[:3])
+    return (
+        f"{opener}:\n{formatted}\n\n"
+        "Do you want me to narrow this down by affordability, vibe, or capacity?"
+    )
 
 
 def _budget_reply(selected_event=None):
@@ -225,7 +249,7 @@ def _budget_reply(selected_event=None):
 
 
 def get_response(intent, text, context=None, selected_event=None, confidence=None):
-    text_lower = text.lower()
+    text_lower = text.lower().strip()
     context = context or {"events": [], "tasks": []}
 
     events = context.get("events", [])
@@ -241,6 +265,12 @@ def get_response(intent, text, context=None, selected_event=None, confidence=Non
 
     if intent == "unclear":
         return "I can help with planning, budget, venues, catering, tasks, or a summary of one of your events. What part are you thinking through right now?"
+
+    if text_lower in SHORT_GENERIC_VENUES:
+        return _generic_venue_reply()
+
+    if text_lower in SHORT_GENERIC_CATERING:
+        return _generic_catering_reply()
 
     if "venue" in text_lower or "location" in text_lower:
         return _tailored_venue_reply(text_lower, selected_event)

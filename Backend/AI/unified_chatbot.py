@@ -7,7 +7,7 @@ class UnifiedChatbot:
     def __init__(self):
         self.ordered_rules = [
             ([r"\bbudget\b", r"\bcost\b", r"\bprice\b", r"how much", r"spend", r"afford", r"cheap"], "budgeting"),
-            ([r"\bvenue\b", r"\blocation\b", r"\bplace\b", r"\bspace\b"], "event_help"),
+            ([r"\bvenue\b", r"\bvenues\b", r"\blocation\b", r"\blocations\b", r"\bplace\b", r"\bspace\b"], "event_help"),
             ([r"\bcatering\b", r"\bfood\b", r"\bmenu\b"], "event_help"),
             ([r"\btimeline\b", r"\bschedule\b", r"event day", r"week before"], "event_help"),
             ([r"\btask\b", r"\bchecklist\b", r"what should i do next", r"next step", r"priorit", r"first second third"], "task_help"),
@@ -21,7 +21,7 @@ class UnifiedChatbot:
         text = text.replace("to do", "todo")
         text = text.replace("next steps", "next step")
         text = text.replace("fund-raiser", "fundraiser")
-        text = re.sub(r"[^\w\s\-]", "", text)
+        text = re.sub(r"[^\w\s\-?]", "", text)
         text = re.sub(r"\s+", " ", text)
         return text
 
@@ -258,5 +258,3 @@ class UnifiedChatbot:
 
         if context is None:
             context = {"events": [], "tasks": []}
-
-        return self.build_response(cleaned_message, context=context)
