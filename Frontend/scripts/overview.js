@@ -114,6 +114,12 @@ function renderOverview(event, tasks, agenda, budgetData = null) {
     document.getElementById("overview-event-when").textContent = formatDateTimeRange(event.start_datetime, event.end_datetime, event.date);
     document.getElementById("overview-event-description").textContent = event.description || "No description yet.";
     document.getElementById("overview-location").textContent = event.location || "Not set";
+    document.getElementById("overview-selected-venue").textContent = event.selected_venue || event.location || "Not selected";
+    const cateringCost = Number(event.estimated_catering_cost || 0);
+    const cateringLabel = event.selected_catering
+        ? `${event.selected_catering}${cateringCost > 0 ? ` (${formatCurrency(cateringCost)} est.)` : ""}`
+        : "Not selected";
+    document.getElementById("overview-selected-catering").textContent = cateringLabel;
     document.getElementById("overview-guests").textContent = String(event.guest_count || 0);
     document.getElementById("overview-schedule").textContent = formatDateTimeRange(event.start_datetime, event.end_datetime, event.date);
     const budgetLabel = budgetData?.health?.label ? `${formatCurrency(Number(event.budget_total || 0))} (${budgetData.health.label})` : formatCurrency(Number(event.budget_total || 0));
