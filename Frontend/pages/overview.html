@@ -3,17 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Overview</title>
+    <title>Event Overview - Spartan Shield Saver</title>
     <link rel="stylesheet" href="../styles/Spartan.css">
 </head>
-<body>
-    <h1>Event Overview</h1>
-    <div id="event-selector-container">
-        <select id="event-selector"></select>
+<body class="dashboard-page">
+    <div class="dashboard-shell">
+        <aside class="sidebar" id="sidebar"></aside>
+
+        <main class="dashboard-main">
+            <section class="hero-panel">
+                <div>
+                    <h1 id="overview-title">Event Overview</h1>
+                    <p id="overview-subtitle" class="muted-text">A clean summary of one event's current details.</p>
+                    <div id="event-selector-container" class="top-gap">
+                        <label for="event-selector" class="muted-text">Select event</label>
+                        <select id="event-selector"></select>
+                    </div>
+                </div>
+            </section>
+
+            <section id="overview-error" class="panel hidden"></section>
+
+            <section id="overview-content" class="hidden overview-stack">
+                <section class="panel overview-hero-card">
+                    <div class="section-header">
+                        <div>
+                            <h2 id="overview-event-name">Event</h2>
+                            <p id="overview-event-when" class="muted-text">—</p>
+                        </div>
+                        <div class="planner-header-actions">
+                            <a id="overview-open-planner" class="secondary-btn" href="planner.html">Open Planner</a>
+                            <a id="overview-open-budget" class="secondary-btn" href="budget.html">Open Budget</a>
+                        </div>
+                    </div>
+                    <p id="overview-event-description">—</p>
+                </section>
+
+                <section class="overview-grid">
+                    <div class="panel">
+                        <h3>General Details</h3>
+                        <div class="snapshot-grid">
+                            <div class="info-item"><strong>Location</strong><span id="overview-location">—</span></div>
+                            <div class="info-item"><strong>Guest Count</strong><span id="overview-guests">0</span></div>
+                            <div class="info-item"><strong>Schedule</strong><span id="overview-schedule">—</span></div>
+                            <div class="info-item"><strong>Budget Total</strong><span id="overview-budget-total">$0.00</span></div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Planning Progress</h3>
+                        <div class="snapshot-grid">
+                            <div class="info-item"><strong>Total Tasks</strong><span id="overview-total-tasks">0</span></div>
+                            <div class="info-item"><strong>Completed Tasks</strong><span id="overview-completed-tasks">0</span></div>
+                            <div class="info-item"><strong>Pending Tasks</strong><span id="overview-pending-tasks">0</span></div>
+                            <div class="info-item"><strong>Agenda Items</strong><span id="overview-agenda-count">0</span></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="overview-grid">
+                    <div class="panel">
+                        <h3>Tasks Snapshot</h3>
+                        <div id="overview-tasks-list"></div>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Agenda Snapshot</h3>
+                        <div id="overview-agenda-list"></div>
+                    </div>
+                </section>
+            </section>
+        </main>
     </div>
 
-    <div id="overview-error" class="hidden"></div>
-
+    <script src="../scripts/sidebar.js"></script>
     <script src="../scripts/overview.js"></script>
 </body>
 </html>

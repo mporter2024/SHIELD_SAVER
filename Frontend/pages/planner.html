@@ -14,19 +14,133 @@
             <section class="hero-panel">
                 <div>
                     <h1 id="planner-title">Event Planner</h1>
-                    <p id="planner-subtitle" class="muted-text">Select or load an event</p>
+                    <p id="planner-subtitle" class="muted-text">Loading event...</p>
                     <div id="event-selector-container" class="top-gap">
+                        <label for="event-selector" class="muted-text">Select event</label>
                         <select id="event-selector"></select>
                     </div>
                 </div>
             </section>
 
             <section id="planner-error" class="panel hidden"></section>
-            <section id="planner-content" class="panel hidden"></section>
 
-            <script src="../scripts/sidebar.js"></script>
-            <script src="../scripts/planner.js"></script>
+            <section id="planner-content" class="panel hidden">
+                <div class="section-header planner-header">
+                    <div>
+                        <h2>Planner Workspace</h2>
+                        <p class="muted-text">Edit details, manage tasks, and build a dated agenda</p>
+                    </div>
+                    <div class="planner-header-actions">
+                        <a id="open-overview-page-link" class="secondary-btn planner-link" href="overview.html">Open Overview</a>
+                        <a id="open-budget-page-link" class="secondary-btn planner-link" href="budget.html">Open Budget Page</a>
+                    </div>
+                </div>
+
+                <div class="planner-grid">
+                    <div>
+                        <h3>Edit Event Details</h3>
+                        <form id="event-edit-form" class="event-form">
+                            <input type="text" id="edit-event-title" placeholder="Event title" required>
+                            <label for="edit-event-start">Event start</label>
+                            <input type="datetime-local" id="edit-event-start" required>
+                            <label for="edit-event-end">Event end</label>
+                            <input type="datetime-local" id="edit-event-end">
+                            <input type="text" id="edit-event-location" placeholder="Location" required>
+                            <textarea id="edit-event-description" placeholder="Event description" rows="4" required></textarea>
+                            <button type="submit">Save Event Changes</button>
+                        </form>
+                        <p id="event-edit-message" class="form-message"></p>
+                    </div>
+
+                    <div>
+                        <h3>Event Snapshot</h3>
+                        <div class="snapshot-grid">
+                            <div class="info-item">
+                                <strong>Schedule</strong>
+                                <span id="snapshot-schedule">—</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Location</strong>
+                                <span id="snapshot-location">—</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Tasks Progress</strong>
+                                <span id="snapshot-progress">0 / 0 complete</span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Saved Budget</strong>
+                                <span id="snapshot-budget">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="planner-grid planner-lower-grid">
+                    <div>
+                        <h3>Tasks for This Event</h3>
+                        <div id="selected-event-tasks"></div>
+                    </div>
+
+                    <div>
+                        <h3>Add Task</h3>
+                        <form id="selected-task-form" class="task-form">
+                            <input type="text" id="selected-task-title" placeholder="New task title" required>
+                            <label for="selected-task-start">Task start</label>
+                            <input type="datetime-local" id="selected-task-start">
+                            <label for="selected-task-end">Task end</label>
+                            <input type="datetime-local" id="selected-task-end">
+                            <button type="submit">Add Task To Event</button>
+                        </form>
+                        <p id="selected-task-message" class="form-message"></p>
+                    </div>
+                </div>
+
+                <div class="planner-grid planner-lower-grid">
+                    <div>
+                        <h3>Agenda and Lineup</h3>
+                        <div id="agenda-list"></div>
+                    </div>
+
+                    <div>
+                        <h3>Add Agenda Item</h3>
+                        <form id="agenda-form" class="task-form">
+                            <input type="text" id="agenda-title" placeholder="Agenda title" required>
+                            <label for="agenda-date">Agenda date</label>
+                            <input type="date" id="agenda-date">
+                            <label for="agenda-start">Start time</label>
+                            <input type="time" id="agenda-start">
+                            <label for="agenda-end">End time</label>
+                            <input type="time" id="agenda-end">
+                            <textarea id="agenda-description" placeholder="Agenda description" rows="3"></textarea>
+                            <button type="submit">Add Agenda Item</button>
+                        </form>
+                        <p id="agenda-message" class="form-message"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel chatbot-panel compact-chat planner-chat-panel">
+                <div class="chatbot-header">
+                    <h3>AI Planning Assistant</h3>
+                    <button id="clear-chat-btn" type="button" class="secondary-btn">Clear Chat</button>
+                </div>
+
+                <div id="chat-messages" class="chat-messages"></div>
+
+                <div class="chatbot-input-row">
+                    <input
+                        type="text"
+                        id="chat-input"
+                        placeholder="Ask about tasks, scheduling, venues, catering, or event updates..."
+                    />
+                    <button id="send-chat-btn" type="button">Send</button>
+                </div>
+            </section>
         </main>
     </div>
+
+    <script src="../scripts/sidebar.js"></script>
+    <script src="../scripts/planner.js"></script>
+    <script src="../scripts/chatbot.js"></script>
 </body>
 </html>
