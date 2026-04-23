@@ -1345,11 +1345,14 @@ a.secondary-btn:hover {
 }
 
 .chat-message.user .chat-bubble {
-    background: #dff3e3;
+    background: #198754;
+    color: #ffffff;
 }
 
 .chat-message.bot .chat-bubble {
-    background: #ececec;
+    background: #eaf5ec;
+    border: 1px solid #d2e4d5;
+    color: #183024;
 }
 
 .chatbot-input-row {
@@ -1699,3 +1702,40 @@ a.secondary-btn:hover {
 /* Smart budgeting additions */
 .compact-list { margin: 8px 0 0 18px; color: #183024; }
 .compact-list li { margin-bottom: 8px; line-height: 1.45; }
+
+
+/* =========================================================
+   17) CHAT UI NORMALIZATION FIXES
+   Keeps existing layout but resolves faded text and
+   duplicate chat style inconsistencies across pages.
+========================================================= */
+.chat-message .chat-bubble,
+.chat-bubble.user,
+.chat-message.user .chat-bubble {
+  background: #198754;
+  color: #ffffff;
+}
+
+.chat-bubble.bot,
+.chat-message.bot .chat-bubble {
+  background: #eaf5ec;
+  border: 1px solid #d2e4d5;
+  color: #183024;
+}
+
+.chat-bubble,
+.chat-message .chat-bubble {
+  opacity: 1;
+}
+
+.chatbot-container .chat-messages,
+.planner-chat-panel .chat-messages,
+.standard-chat-panel .chat-messages {
+  color: #183024;
+}
+
+.chatbot-container .chat-bubble,
+.planner-chat-panel .chat-bubble,
+.standard-chat-panel .chat-bubble {
+  line-height: 1.45;
+}
