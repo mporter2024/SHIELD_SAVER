@@ -9,6 +9,7 @@ from ai.planning_engine import search_venues, search_caterers
 from ai.budget_engine import calculate_budget_totals
 from models.database import get_db
 import sqlite3
+import re
 
 
 ai_bp = Blueprint("ai", __name__)
@@ -460,6 +461,123 @@ def _is_venue_request(message):
 def _is_catering_request(message):
     lowered = (message or "").lower()
     return any(word in lowered for word in ["catering", "caterer", "food", "buffet", "plated", "food truck"])
+
+
+def _extract_service_assignment(message):
+    """Return a venue/catering assignment when the user is trying to attach a service to an event.
+
+    This prevents messages like "add Chick-fil-A catering" or "set the venue to Local Park"
+    from falling through to generic advice.
+    """
+    cleaned = (message or "").strip()
+    lowered = cleaned.lower()
+
+    action_words = r"(?:add|use|set|choose|select|make|change|update|attach|put)"
+
+    catering_patterns = [
+        rf"\b{action_words}\s+(?:the\s+)?catering\s+(?:to|as|from|with)?\s*(.+?)(?:\s+to\s+(?:this|that|the)\s+event)?(?:$|\.)",
+        rf"\b{action_words}\s+(.+?)\s+catering(?:\s+to\s+(?:this|that|the)\s+event)?(?:$|\.)",
+        r"\bcatering\s+(?:is|should be|will be|from|with)\s+(.+?)(?:$|\.)",
+        r"\bfood\s+(?:is|should be|will be)?\s*(?:from|with)\s+(.+?)(?:$|\.)",
+    ]
+    for pattern in catering_patterns:
+        match = re.search(pattern, cleaned, re.IGNORECASE)
+        if match:
+            value = _clean_service_value(match.group(1))
+            if value:
+                return {"field": "selected_catering", "value": value}
+
+    venue_patterns = [
+        rf"\b{action_words}\s+(?:the\s+)?venue\s+(?:to|as|at|for)?\s*(.+?)(?:\s+to\s+(?:this|that|the)\s+event)?(?:$|\.)",
+        rf"\b{action_words}\s+(.+?)\s+(?:as\s+)?(?:the\s+)?venue(?:\s+for\s+(?:this|that|the)\s+event)?(?:$|\.)",
+        r"\bvenue\s+(?:is|should be|will be|at)\s+(.+?)(?:$|\.)",
+    ]
+    for pattern in venue_patterns:
+        match = re.search(pattern, cleaned, re.IGNORECASE)
+        if match:
+            value = _clean_service_value(match.group(1))
+            if value:
+                return {"field": "selected_venue", "value": value}
+
+    return None
+
+
+def _clean_service_value(value):
+    if not value:
+        return None
+    value = re.sub(r"\b(?:to|for)\s+(?:this|that|the)\s+event\b", "", value, flags=re.IGNORECASE)
+    value = re.sub(r"\b(?:please|for me|thanks|thank you)\b", "", value, flags=re.IGNORECASE)
+    value = value.strip(" .,!?:;\"'\t\n")
+    if not value:
+        return None
+    blocked = {"catering", "venue", "food", "the venue", "the catering"}
+    if value.lower() in blocked:
+        return None
+    return value
+
+
+def _handle_service_assignment(user_id, user_message, context, chat_state):
+    assignment = _extract_service_assignment(user_message)
+    if not assignment:
+        return None
+
+    target_event = resolve_target_event(user_message, context, chat_state)
+    if not target_event:
+        return jsonify({
+            "reply": "I can add that to an event, but I couldn’t tell which event you meant. Please mention the event title first.",
+            "action": "service_assignment_needs_event"
+        }), 200
+
+    field = assignment["field"]
+    value = assignment["value"]
+    updates = {field: value}
+
+    if field == "selected_venue":
+        updates["location"] = value
+        service_updates = _apply_service_fields({**dict(target_event), **updates})
+        updates.update({
+            "selected_venue": service_updates.get("selected_venue", value),
+            "estimated_venue_cost": service_updates.get("estimated_venue_cost", 0),
+            "venue_cost": service_updates.get("venue_cost", 0),
+        })
+    else:
+        service_updates = _apply_service_fields({**dict(target_event), **updates})
+        updates.update({
+            "selected_catering": service_updates.get("selected_catering", value),
+            "estimated_catering_cost": service_updates.get("estimated_catering_cost", 0),
+            "food_cost_per_person": service_updates.get("food_cost_per_person", target_event.get("food_cost_per_person") or 0),
+        })
+
+    updated = update_event_in_db(target_event["id"], updates)
+    if not updated:
+        return jsonify({
+            "reply": "I found the event, but I couldn’t save that venue/catering update.",
+            "action": "service_assignment_failed"
+        }), 200
+
+    chat_state["last_event_id"] = target_event["id"]
+    chat_state["pending_followup"] = None
+    refreshed = dict(target_event)
+    refreshed.update(updates)
+    chat_state["planning_context"] = _seed_planning_context_from_event(chat_state.get("planning_context"), refreshed)
+    _save_chat_state(chat_state)
+
+    if field == "selected_venue":
+        cost = updates.get("estimated_venue_cost") or 0
+        cost_text = f" Estimated venue cost: ${float(cost):.2f}." if float(cost or 0) > 0 else " Venue cost is currently $0 unless you enter a rental fee."
+        reply = f"Added {updates.get('selected_venue', value)} as the venue for '{target_event['title']}'." + cost_text
+    else:
+        cost = updates.get("estimated_catering_cost") or 0
+        cost_text = f" Estimated catering cost: ${float(cost):.2f}." if float(cost or 0) > 0 else " Catering cost is currently $0 unless you enter a cost or matching provider."
+        reply = f"Added {updates.get('selected_catering', value)} as the catering for '{target_event['title']}'." + cost_text
+
+    return jsonify({
+        "reply": reply,
+        "action": "service_assigned",
+        "event_id": target_event["id"],
+        "updated_fields": updates
+    }), 200
+
 
 
 def _planning_signal_count(planning_context, keys):
@@ -932,6 +1050,10 @@ def chat():
         context = load_user_context(user_id)
         chat_state = _get_chat_state()
 
+        service_assignment_response = _handle_service_assignment(user_id, user_message, context, chat_state)
+        if service_assignment_response:
+            return service_assignment_response
+
         followup_response = _handle_pending_followup(user_id, user_message, chat_state)
         if followup_response:
             return followup_response
@@ -944,6 +1066,10 @@ def chat():
 
         interpreted = interpret_message(user_message, context=context, state=chat_state)
         action_type = interpreted["type"]
+
+        service_assignment_response = _handle_service_assignment(user_id, user_message, context, chat_state)
+        if service_assignment_response:
+            return service_assignment_response
 
         if action_type == "fallback" and _is_venue_request(user_message):
             venue_results = search_venues(planning_context, limit=3)
