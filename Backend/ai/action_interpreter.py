@@ -530,7 +530,6 @@ def _clean_update_changes(extracted_update: dict) -> dict:
     if extracted_update.get("_parsed_time_only"):
         update_changes["_parsed_time_only"] = extracted_update["_parsed_time_only"]
 
-    update_changes.pop("catering", None)
     update_changes.pop("event_size_hint", None)
     return update_changes
 

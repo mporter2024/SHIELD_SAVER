@@ -6,6 +6,7 @@ from ai.unified_chatbot import UnifiedChatbot
 from ai.action_interpreter import interpret_message, get_default_chat_state, resolve_target_event
 from ai.entity_parser import extract_planning_preferences
 from ai.planning_engine import search_venues, search_caterers
+from ai.budget_engine import calculate_budget_totals
 from models.database import get_db
 import sqlite3
 
@@ -58,7 +59,8 @@ def load_user_context(user_id):
     events = db.execute(
         """
         SELECT id, title, date, start_datetime, end_datetime, location, description,
-               guest_count, budget_total
+               guest_count, budget_total, selected_venue, selected_catering,
+               estimated_venue_cost, estimated_catering_cost, venue_cost, food_cost_per_person
         FROM events
         WHERE user_id = ?
         ORDER BY COALESCE(start_datetime, date) ASC, id DESC
@@ -165,8 +167,90 @@ def complete_task_for_user(user_id, task_id):
     }, None
 
 
+
+def _clean_number(value, default=0.0):
+    try:
+        if value in (None, ""):
+            return default
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _find_matching_caterer(name):
+    if not name:
+        return None
+    db = get_db()
+    exact = db.execute(
+        "SELECT * FROM caterers WHERE lower(name) = lower(?) LIMIT 1",
+        (name,),
+    ).fetchone()
+    if exact:
+        return dict(exact)
+    like = db.execute(
+        "SELECT * FROM caterers WHERE lower(name) LIKE lower(?) ORDER BY cost_per_person ASC LIMIT 1",
+        (f"%{name}%",),
+    ).fetchone()
+    return dict(like) if like else None
+
+
+def _find_matching_venue(name):
+    if not name:
+        return None
+    db = get_db()
+    exact = db.execute(
+        "SELECT * FROM venues WHERE lower(name) = lower(?) LIMIT 1",
+        (name,),
+    ).fetchone()
+    if exact:
+        return dict(exact)
+    like = db.execute(
+        "SELECT * FROM venues WHERE lower(name) LIKE lower(?) ORDER BY estimated_cost ASC LIMIT 1",
+        (f"%{name}%",),
+    ).fetchone()
+    return dict(like) if like else None
+
+
+def _apply_service_fields(event_data):
+    event_data = dict(event_data or {})
+    guest_count = int(_clean_number(event_data.get("guest_count"), 0))
+
+    catering_name = event_data.get("selected_catering") or event_data.get("catering")
+    if catering_name:
+        event_data["selected_catering"] = catering_name
+        caterer = _find_matching_caterer(catering_name)
+        if caterer:
+            cost_per_person = _clean_number(caterer.get("cost_per_person"), 0)
+            if cost_per_person > 0 and _clean_number(event_data.get("food_cost_per_person"), 0) <= 0:
+                event_data["food_cost_per_person"] = cost_per_person
+            if guest_count > 0 and _clean_number(event_data.get("estimated_catering_cost"), 0) <= 0:
+                event_data["estimated_catering_cost"] = round(guest_count * cost_per_person, 2)
+        elif guest_count > 0 and _clean_number(event_data.get("estimated_catering_cost"), 0) <= 0:
+            # Unknown caterer: keep the provider linked, but leave costs for the user/budget tool to estimate later.
+            event_data["estimated_catering_cost"] = 0
+
+    venue_name = event_data.get("selected_venue")
+    location = event_data.get("location")
+    venue = _find_matching_venue(venue_name or location)
+    if venue:
+        event_data["selected_venue"] = venue.get("name")
+        estimated_cost = _clean_number(venue.get("estimated_cost"), 0)
+        if _clean_number(event_data.get("venue_cost"), 0) <= 0:
+            event_data["venue_cost"] = estimated_cost
+        if _clean_number(event_data.get("estimated_venue_cost"), 0) <= 0:
+            event_data["estimated_venue_cost"] = estimated_cost
+    elif venue_name:
+        event_data["selected_venue"] = venue_name
+
+    totals = calculate_budget_totals(event_data)
+    event_data["budget_subtotal"] = totals["subtotal"]
+    event_data["budget_contingency"] = totals["contingency"]
+    event_data["budget_total"] = totals["total"]
+    return event_data
+
 def create_event_for_user(user_id, event_data):
     db = get_db()
+    event_data = _apply_service_fields(event_data)
 
     start_datetime = event_data.get("start_datetime")
     date = event_data.get("date") or (start_datetime[:10] if start_datetime else None)
@@ -175,12 +259,13 @@ def create_event_for_user(user_id, event_data):
         """
         INSERT INTO events (
             title, date, start_datetime, end_datetime, location, description,
-            guest_count, venue_cost, food_cost_per_person, decorations_cost,
+            guest_count, venue_cost, food_cost_per_person, selected_venue, selected_catering,
+            estimated_venue_cost, estimated_catering_cost, decorations_cost,
             equipment_cost, staff_cost, marketing_cost, misc_cost,
             contingency_percent, budget_subtotal, budget_contingency, budget_total,
             user_id
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             event_data.get("title"),
@@ -192,6 +277,10 @@ def create_event_for_user(user_id, event_data):
             int(event_data.get("guest_count") or 0),
             float(event_data.get("venue_cost") or 0),
             float(event_data.get("food_cost_per_person") or 0),
+            event_data.get("selected_venue"),
+            event_data.get("selected_catering"),
+            float(event_data.get("estimated_venue_cost") or 0),
+            float(event_data.get("estimated_catering_cost") or 0),
             float(event_data.get("decorations_cost") or 0),
             float(event_data.get("equipment_cost") or 0),
             float(event_data.get("staff_cost") or 0),
@@ -214,7 +303,11 @@ def create_event_for_user(user_id, event_data):
         "location": event_data.get("location"),
         "description": event_data.get("description"),
         "guest_count": int(event_data.get("guest_count") or 0),
-        "catering": event_data.get("catering"),
+        "selected_venue": event_data.get("selected_venue"),
+        "selected_catering": event_data.get("selected_catering"),
+        "estimated_venue_cost": float(event_data.get("estimated_venue_cost") or 0),
+        "estimated_catering_cost": float(event_data.get("estimated_catering_cost") or 0),
+        "catering": event_data.get("selected_catering") or event_data.get("catering"),
     }
 
 
@@ -231,6 +324,10 @@ def update_event_in_db(event_id, updated_fields):
         "guest_count",
         "venue_cost",
         "food_cost_per_person",
+        "selected_venue",
+        "selected_catering",
+        "estimated_venue_cost",
+        "estimated_catering_cost",
         "decorations_cost",
         "equipment_cost",
         "staff_cost",
@@ -529,7 +626,8 @@ def _get_event_for_user(user_id, event_id):
     row = db.execute(
         """
         SELECT id, title, date, start_datetime, end_datetime, location, description,
-               guest_count, budget_total
+               guest_count, budget_total, selected_venue, selected_catering,
+               estimated_venue_cost, estimated_catering_cost, venue_cost, food_cost_per_person
         FROM events
         WHERE id = ? AND user_id = ?
         """,
@@ -844,7 +942,10 @@ def chat():
         planning_context = _seed_planning_context_from_event(planning_context, target_for_planning)
         chat_state["planning_context"] = planning_context
 
-        if _is_venue_request(user_message):
+        interpreted = interpret_message(user_message, context=context, state=chat_state)
+        action_type = interpreted["type"]
+
+        if action_type == "fallback" and _is_venue_request(user_message):
             venue_results = search_venues(planning_context, limit=3)
             planning_context["last_recommendations"]["venues"] = [item.get("id") for item in venue_results]
             chat_state["planning_context"] = planning_context
@@ -858,7 +959,7 @@ def chat():
                 "results": venue_results
             }), 200
 
-        if _is_catering_request(user_message):
+        if action_type == "fallback" and _is_catering_request(user_message):
             catering_results = search_caterers(planning_context, limit=3)
             planning_context["last_recommendations"]["caterers"] = [item.get("id") for item in catering_results]
             chat_state["planning_context"] = planning_context
@@ -871,9 +972,6 @@ def chat():
                 "planning_context": planning_context,
                 "results": catering_results
             }), 200
-
-        interpreted = interpret_message(user_message, context=context, state=chat_state)
-        action_type = interpreted["type"]
 
         use_ollama = current_app.config.get("USE_OLLAMA_FALLBACK", False)
         if use_ollama and action_type in {
@@ -1044,7 +1142,10 @@ def chat():
         if action_type == "event_update":
             target_event = interpreted["target_event"]
             cleaned_updates = dict(interpreted["changes"])
+            if cleaned_updates.get("catering") and not cleaned_updates.get("selected_catering"):
+                cleaned_updates["selected_catering"] = cleaned_updates.pop("catering")
             cleaned_updates = _apply_time_logic(target_event, cleaned_updates)
+            cleaned_updates = _apply_service_fields({**dict(target_event), **cleaned_updates}) | cleaned_updates
 
             updated = update_event_in_db(target_event["id"], cleaned_updates)
             if updated:
