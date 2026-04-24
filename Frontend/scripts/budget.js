@@ -35,6 +35,13 @@ function getSelectedEventIdFromUrl() {
   return params.get("event_id") || localStorage.getItem("selectedEventId") || "";
 }
 
+function getCurrentSelectedEvent() {
+  const select = document.getElementById("event-select");
+  const eventId = select?.value;
+  if (!eventId) return null;
+  return myEvents.find(event => Number(event.id) === Number(eventId)) || null;
+}
+
 function getBudgetTip(total, guests, healthLabel = "", budgetLimit = 0) {
   if (guests === 0) return "Enter a guest count to get a more realistic estimate.";
   if (budgetLimit > 0) {
@@ -229,12 +236,16 @@ function renderInsights(data, recommendedVenue = null, recommendedCaterer = null
   if (summary.largest_category) {
     document.getElementById("summary-largest-category").textContent = summary.largest_category.charAt(0).toUpperCase() + summary.largest_category.slice(1);
   }
-  let venueLabel = recommendedVenue?.name || "—";
-  if (venueContext?.assumption === "assumed_free") {
+  const selectedEvent = getCurrentSelectedEvent();
+  const selectedVenue = selectedEvent?.selected_venue || selectedEvent?.location || "";
+  const selectedCaterer = selectedEvent?.selected_catering || "";
+
+  let venueLabel = selectedVenue ? `Current: ${selectedVenue}` : (recommendedVenue?.name || "—");
+  if (!selectedVenue && venueContext?.assumption === "assumed_free") {
     venueLabel = `${venueContext.source === "custom_location" ? "Custom location" : venueLabel} (assumed free)`;
   }
   document.getElementById("budget-recommended-venue").textContent = venueLabel;
-  document.getElementById("budget-recommended-caterer").textContent = recommendedCaterer?.name || "—";
+  document.getElementById("budget-recommended-caterer").textContent = selectedCaterer ? `Current: ${selectedCaterer}` : (recommendedCaterer?.name || "—");
 
   const warningsEl = document.getElementById("budget-warnings");
   const suggestionsEl = document.getElementById("budget-suggestions");
@@ -338,8 +349,14 @@ async function generateSmartBudget() {
     document.getElementById("misc-cost").value = event.misc_cost || 0;
     document.getElementById("contingency-percent").value = event.contingency_percent || 0;
     calculateBudget();
-    renderInsights(data.analysis || {}, data.recommended_venue, data.recommended_caterer, data.venue_context);
     myEvents = await fetchMyEvents();
+    // Keep the selected event in sync before rendering insights, so the side panel
+    // displays current selections instead of unnecessary replacements.
+    loadEventIntoForm(eventId);
+    const refreshedEvent = getCurrentSelectedEvent() || event;
+    const venueSuggestion = (refreshedEvent.selected_venue || refreshedEvent.location) ? null : data.recommended_venue;
+    const catererSuggestion = refreshedEvent.selected_catering ? null : data.recommended_caterer;
+    renderInsights(data.analysis || {}, venueSuggestion, catererSuggestion, data.venue_context);
     statusEl.textContent = "Smart budget generated and saved to the event.";
   } catch (error) {
     console.error(error);

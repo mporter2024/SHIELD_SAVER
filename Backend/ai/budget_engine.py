@@ -276,14 +276,22 @@ def _fit_estimate_to_limit(estimate: dict[str, Any], budget_limit: float) -> dic
 def generate_budget_estimate(event: dict[str, Any]) -> dict[str, Any]:
     style = _infer_event_style(event)
     defaults = _style_defaults(style)
-    guest_count = max(_to_int(event.get("guest_count"), 0), 25)
+
+    # Preserve the user's actual guest count. Earlier versions used max(existing, 25),
+    # which quietly changed smaller events (ex: 20 guests became 25) whenever Generate
+    # Budget was clicked. Only use 25 as a fallback when no guest count exists yet.
+    existing_guest_count = _to_int(event.get("guest_count"), 0)
+    guest_count = existing_guest_count if existing_guest_count > 0 else 25
 
     estimate = dict(event)
     estimate["guest_count"] = guest_count
 
+    has_selected_venue = bool((event.get("selected_venue") or "").strip() or (event.get("location") or "").strip())
+    has_selected_catering = bool((event.get("selected_catering") or "").strip())
+
     matching_venue = _find_matching_venue(event)
-    recommended_venue = matching_venue or _find_best_venue_for_event({**event, "guest_count": guest_count})
-    recommended_caterer = _find_best_caterer_for_event({**event, "guest_count": guest_count})
+    recommended_venue = None if has_selected_venue else (matching_venue or _find_best_venue_for_event({**event, "guest_count": guest_count}))
+    recommended_caterer = None if has_selected_catering else _find_best_caterer_for_event({**event, "guest_count": guest_count})
 
     location = (estimate.get("location") or "").strip()
     venue_context = {
@@ -314,7 +322,10 @@ def generate_budget_estimate(event: dict[str, Any]) -> dict[str, Any]:
             })
 
     if _to_float(estimate.get("food_cost_per_person"), 0.0) <= 0:
-        if recommended_caterer and _to_float(recommended_caterer.get("cost_per_person"), 0.0) > 0:
+        selected_catering_total = _to_float(estimate.get("estimated_catering_cost"), 0.0)
+        if has_selected_catering and selected_catering_total > 0 and guest_count > 0:
+            estimate["food_cost_per_person"] = round(selected_catering_total / guest_count, 2)
+        elif recommended_caterer and _to_float(recommended_caterer.get("cost_per_person"), 0.0) > 0:
             estimate["food_cost_per_person"] = _to_float(recommended_caterer.get("cost_per_person"))
         else:
             estimate["food_cost_per_person"] = defaults["food_cost_per_person"]

@@ -144,11 +144,17 @@ def estimate_budget(event_id):
     )
     db.commit()
 
+    # Do not send side recommendations when the user has already selected/entered
+    # a venue or caterer. The budget page should not suggest replacing active choices
+    # unless the user explicitly asks for alternatives.
+    has_selected_venue = bool((event_data.get("selected_venue") or "").strip() or (event_data.get("location") or "").strip())
+    has_selected_catering = bool((event_data.get("selected_catering") or "").strip())
+
     return jsonify({
         "event": event_data,
         "analysis": analyze_budget(event_data),
-        "recommended_venue": estimated.get("recommended_venue"),
-        "recommended_caterer": estimated.get("recommended_caterer"),
+        "recommended_venue": None if has_selected_venue else estimated.get("recommended_venue"),
+        "recommended_caterer": None if has_selected_catering else estimated.get("recommended_caterer"),
         "venue_context": estimated.get("venue_context"),
     }), 200
 
