@@ -496,14 +496,22 @@ def _format_catering_reply(results, planning_context, budget_limited=False, even
     limit = float((event or {}).get("budget_limit") or planning_context.get("max_budget_total") or 0)
 
     if not results:
+        dietary_needs = " ".join(planning_context.get("dietary_needs") or []) if isinstance(planning_context.get("dietary_needs"), list) else str(planning_context.get("dietary_needs") or "")
+        dietary_label = ""
+        if "vegetarian" in dietary_needs.lower():
+            dietary_label = "vegetarian "
+        elif "gluten" in dietary_needs.lower():
+            dietary_label = "gluten-free "
+        elif dietary_needs.strip():
+            dietary_label = "dietary-friendly "
         if budget_limited and limit > 0:
             guest_text = f" for about {guest_count} guests" if guest_count else ""
             return (
-                f"I could not find a catering option that fits the current ${limit:.2f} spending limit{guest_text}. "
+                f"I could not find a {dietary_label}catering option that fits the current ${limit:.2f} spending limit{guest_text}. "
                 "To stay within budget, consider lighter refreshments, snacks, a free/low-cost venue, or increasing the budget."
             )
         area = planning_context.get("location_area") or "your area"
-        return f"I couldn't find a strong catering match in {area} with the current filters. Try loosening cuisine, service type, or budget."
+        return f"I couldn't find a strong {dietary_label}catering match in {area} with the current filters. Try loosening cuisine, service type, or budget."
 
     signal_count = _planning_signal_count(planning_context, ["guest_count", "cuisine", "service_type", "budget_per_person", "budget_level", "location_area", "dietary_needs", "max_budget_total"])
     if signal_count < 2 and not budget_limited:
@@ -783,18 +791,55 @@ def _format_task_status_for_event(user_id, event):
 
 def _is_guest_count_question(message):
     lowered = _normalize_text(message)
-    return "guest count" in lowered or "how many guests" in lowered or "how many people" in lowered
+    # Do not treat edit commands like "update the guest count to 12" as a question.
+    # Those must flow to _extract_guest_count_followup so the event is actually updated.
+    if any(phrase in lowered for phrase in [
+        "update guest", "update the guest", "set guest", "set the guest",
+        "change guest", "change the guest", "make it", "adjust guest",
+        "guest count to", "guests to", "people to"
+    ]):
+        return False
+    return (
+        "what is the guest count" in lowered
+        or "what's the guest count" in lowered
+        or "current guest count" in lowered
+        or "how many guests" in lowered
+        or "how many people" in lowered
+    )
 
 
 def _service_affordability_question(message):
     lowered = _normalize_text(message)
     if "afford" not in lowered and "fit" not in lowered:
         return None
-    if _looks_like_named_catering(message):
-        return "catering"
+    # Venue wording should win over prior catering context. Phrases like
+    # "can I afford a paid venue too" are about venue capacity, not the last caterer.
     if _looks_like_named_venue(message) or "paid venue" in lowered or "venue" in lowered:
         return "venue"
+    if _looks_like_named_catering(message):
+        return "catering"
     return None
+
+
+def _generic_paid_venue_affordability_reply(event):
+    totals = calculate_budget_totals(event)
+    current_total = float(totals.get("total") or 0)
+    limit = float(event.get("budget_limit") or event.get("budget") or 0)
+    if limit <= 0:
+        return (
+            "A paid venue may be possible, but I need a maximum spending limit first. "
+            f"Your current estimated total is about ${current_total:.2f}."
+        )
+    remaining = limit - current_total
+    if remaining <= 0:
+        return (
+            f"A paid venue does not currently fit the ${limit:.2f} spending limit. "
+            f"Your event is already estimated at about ${current_total:.2f}, so use a free venue or reduce other costs first."
+        )
+    return (
+        f"Yes, a paid venue could fit if the venue cost stays around ${remaining:.2f} or less. "
+        f"Your current estimated total is about ${current_total:.2f} against a ${limit:.2f} spending limit."
+    )
 
 
 def _extract_budget_limit_amount(message):
@@ -1525,6 +1570,11 @@ def chat():
         if afford_service_type and target_for_planning:
             item = _find_service_match(user_message, afford_service_type)
             event = _get_full_event_for_user(user_id, target_for_planning["id"])
+            if event and afford_service_type == "venue" and (not item or "paid venue" in _normalize_text(user_message)):
+                reply = _generic_paid_venue_affordability_reply(event)
+                chat_state["last_event_id"] = target_for_planning["id"]
+                _save_chat_state(chat_state)
+                return jsonify({"reply": reply, "action": "venue_affordability_check", "event_id": target_for_planning["id"]}), 200
             if item and event:
                 projected = dict(event)
                 if afford_service_type == "catering":
@@ -1536,12 +1586,13 @@ def chat():
                     projected.update({"selected_venue": item.get("name"), "venue_cost": cost, "estimated_venue_cost": cost})
                 totals = calculate_budget_totals(projected)
                 limit = float(event.get("budget_limit") or 0)
+                label = "venue" if afford_service_type == "venue" else "catering"
                 if limit > 0 and totals["total"] > limit:
-                    reply = f"{item.get('name')} would bring the estimated total to ${totals['total']:.2f}, which is ${totals['total'] - limit:.2f} over your ${limit:.2f} spending limit."
+                    reply = f"{item.get('name')} {label} would bring the estimated total to ${totals['total']:.2f}, which is ${totals['total'] - limit:.2f} over your ${limit:.2f} spending limit."
                 elif limit > 0:
-                    reply = f"Yes — {item.get('name')} fits your ${limit:.2f} spending limit. Projected total would be about ${totals['total']:.2f}."
+                    reply = f"Yes — {item.get('name')} {label} fits your ${limit:.2f} spending limit. Projected total would be about ${totals['total']:.2f}."
                 else:
-                    reply = f"{item.get('name')} would bring the estimated total to about ${totals['total']:.2f}. Set a maximum budget if you want me to judge whether it fits."
+                    reply = f"{item.get('name')} {label} would bring the estimated total to about ${totals['total']:.2f}. Set a maximum budget if you want me to judge whether it fits."
                 chat_state["last_event_id"] = target_for_planning["id"]
                 _save_chat_state(chat_state)
                 return jsonify({"reply": reply, "action": "affordability_check", "event_id": target_for_planning["id"]}), 200
