@@ -1,6 +1,6 @@
 # Expanded AI Conversation Full-Lifecycle Test Suite
 
-This dataset is meant to test the AI across complete event-planning conversations instead of one-off interactions.
+This dataset is meant to test the AI across complete event-planning conversations 
 
 ## What it covers
 
@@ -39,6 +39,3 @@ For a quick sample:
 python test_ai_conversation_suite.py --dataset ai_conversation_dataset_full_lifecycle.json --limit 5
 ```
 
-## Important note
-
-This suite is intentionally stricter and broader than the earlier dataset. It is expected to reveal missing AI capabilities, especially around deleting/editing tasks and agenda items if those intents are not fully implemented yet.
