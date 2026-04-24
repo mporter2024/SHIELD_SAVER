@@ -1,0 +1,1560 @@
+{
+  "dataset": "ai_conversation_dataset_large.json",
+  "base_url": "http://127.0.0.1:5000",
+  "scenarios_run": 78,
+  "total_turns": 405,
+  "scenarios_failed": 63,
+  "scenarios_passed": 15,
+  "results": [
+    {
+      "scenario": "budget aware catering after event creation",
+      "category": "budget+catering",
+      "failures": [
+        {
+          "turn": 2,
+          "user": "update the guest count to 12",
+          "reply": "Added 1 starter task(s) to 'Spring Conference': Prepare guest check-in list. You can ask me to add more tasks, mark one complete, or update the event details.",
+          "failures": [
+            "missing required phrase: '12'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "I need catering advice",
+          "reply": "Here are a few catering options that look like the best fit:\n\u2022 Chef by Design Catering Co. \u2014 Upscale, plated, $32/person (fits your per-person budget)\n\u2022 Doumar's Drive-In Catering \u2014 Classic American, trays, $14/person (fits your per-person budget)\n\u2022 Cuisine & Company Catering \u2014 Mixed, plated, $28/person (fits your per-person budget)\n\nDo you want me to narrow this down by budget, formality, or cuisine?",
+          "failures": [
+            "must_not_include matched: 'Chef by Design'",
+            "must_not_include matched: 'Cuisine & Company'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "Add Doumar's",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Doumar'"
+          ]
+        },
+        {
+          "turn": 6,
+          "user": "I need vegetarian options",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "starter task follow-up",
+      "category": "tasks",
+      "failures": [
+        {
+          "turn": 3,
+          "user": "add starter tasks",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "create with catering phrase should not pivot to advice",
+      "category": "intent-priority",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Create an event called Birthday Party for 20 people on April 20th with Chick-Fil-A catering",
+          "reply": "For about 20 guests, catering mostly comes down to budget, formality, and service style. Tray service is usually easiest for casual events, buffet works well for medium groups, and plated meals feel more formal. Do you want something casual and affordable, or more polished?",
+          "failures": [
+            "missing required phrase: 'Birthday Party'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "what is my budget looking like",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'budget'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "budget set before catering recommendation",
+      "category": "budget+catering",
+      "failures": [
+        {
+          "turn": 3,
+          "user": "recommend catering options",
+          "reply": "For about 30 guests, these look like the best catering fits:\n\u2022 Chef by Design Catering Co. \u2014 Upscale, plated, $32/person (fits your per-person budget)\n\u2022 Doumar's Drive-In Catering \u2014 Classic American, trays, $14/person (fits your per-person budget)\n\u2022 Cuisine & Company Catering \u2014 Mixed, plated, $28/person (fits your per-person budget)\n\nDo you want me to narrow this down by budget, formality, or cuisine?",
+          "failures": [
+            "must_not_include matched: 'Chef by Design'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "Can I afford Chick-Fil-A?",
+          "reply": "Budget status: Comfortable. Estimated total: $94.50. This plan fits your $500.00 spending limit with about $405.50 left. This event has strong budget flexibility. You can keep the savings or improve food, venue, or supplies.",
+          "failures": [
+            "missing required phrase: 'Chick'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "partial venue assignment",
+      "category": "venue",
+      "failures": [
+        {
+          "turn": 2,
+          "user": "Set the venue to Innovation",
+          "reply": "Added 1 starter task(s) to 'Tech Meetup': Confirm venue. You can ask me to add more tasks, mark one complete, or update the event details.",
+          "failures": [
+            "missing required phrase: 'Innovation'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "raw guest count follow-up",
+      "category": "follow-up",
+      "failures": []
+    },
+    {
+      "scenario": "dietary filter after budget",
+      "category": "dietary",
+      "failures": [
+        {
+          "turn": 2,
+          "user": "maximum budget is $400",
+          "reply": "Budget status: Watch. Estimated total: $0.00. No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend. Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.",
+          "failures": [
+            "missing required phrase: '400'"
+          ]
+        },
+        {
+          "turn": 3,
+          "user": "I need vegetarian catering options",
+          "reply": "For about 25 guests, these look like the best catering fits:\n\u2022 Chef by Design Catering Co. \u2014 Upscale, plated, $32/person (fits your per-person budget)\n\u2022 Cuisine & Company Catering \u2014 Mixed, plated, $28/person (fits your per-person budget)\n\u2022 Jikoni Cafe Catering \u2014 African Fusion, buffet, $22/person (fits your per-person budget)\n\nDo you want me to narrow this down by budget, formality, or cuisine?",
+          "failures": [
+            "must_not_include matched: 'Chef by Design'",
+            "must_not_include matched: 'Cuisine & Company'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "What about gluten free options?",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'gluten'",
+            "missing required phrase: 'free'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "budget should not force guest reduction",
+      "category": "budget-generation",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "What is the guest count?",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: '40'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 01",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 2,
+          "user": "maximum budget is $150",
+          "reply": "Budget status: Watch. Estimated total: $0.00. No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend. Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.",
+          "failures": [
+            "missing required phrase: '150'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "Add Doumars",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: \"Doumar's\""
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "I need vegetarian options",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 02",
+      "category": "tasks",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 03",
+      "category": "follow-up",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 04",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add Cuisine and Company",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Cuisine'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "what tasks are left",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 05",
+      "category": "tasks",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Career Workshop Test 5 for 25 people on May 1st at 5:30pm in Student Center",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T17:30:00, location as Student Center, guest count as 25. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Career'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 3,
+          "user": "my budget is $300",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T17:30:00, location as Student Center, guest count as 25. I still need the event title.",
+          "failures": [
+            "missing required phrase: '300'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 06",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "maximum budget is $600",
+          "reply": "Budget status: Watch. Estimated total: $0.00. No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend. Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.",
+          "failures": [
+            "missing required phrase: '600'"
+          ]
+        },
+        {
+          "turn": 6,
+          "user": "I need vegetarian options",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 07",
+      "category": "tasks",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Tech Meetup Test 7 for 20 people on May 21st at 4 PM in Local Park",
+          "reply": "I\u2019ve got date as 2026-05-21, start time as 2026-05-21T16:00:00, location as 4 PM in Local Park, guest count as 20. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Tech'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "do not go over $500",
+          "reply": "I\u2019ve got date as 2026-05-21, start time as 2026-05-21T16:00:00, location as 4 PM in Local Park, guest count as 20. I still need the event title.",
+          "failures": [
+            "missing required phrase: '500'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "Add Chef by Design",
+          "reply": "I\u2019ve got date as 2026-05-21, start time as 2026-05-21T16:00:00, location as 4 PM in Local Park, guest count as 20. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Chef'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "what is my budget status",
+          "reply": "I\u2019ve got date as 2026-05-21, start time as 2026-05-21T16:00:00, location as 4 PM in Local Park, guest count as 20. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'budget'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 08",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 5,
+          "user": "set the venue to local park",
+          "reply": "Added 1 starter task(s) to 'Volunteer Fair Test 8': Confirm venue. You can ask me to add more tasks, mark one complete, or update the event details.",
+          "failures": [
+            "missing required phrase: 'park'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 09",
+      "category": "follow-up",
+      "failures": [
+        {
+          "turn": 6,
+          "user": "what tasks are left",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 10",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add chick fil a",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Chick-Fil-A'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 11",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Spring Conference Test 11 for 20 people on May 6th at 3pm in Local Park",
+          "reply": "I\u2019ve got date as 2026-05-06, start time as 2026-05-06T15:00:00, location as 3pm in Local Park, guest count as 20. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Spring'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 3,
+          "user": "cap this at $600",
+          "reply": "I\u2019ve got date as 2026-05-06, start time as 2026-05-06T15:00:00, location as 3pm in Local Park, guest count as 20. I still need the event title.",
+          "failures": [
+            "missing required phrase: '600'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "I need vegetarian options",
+          "reply": "I\u2019ve got date as 2026-05-06, start time as 2026-05-06T15:00:00, location as 3pm in Local Park, guest count as 20. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 12",
+      "category": "budget",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 13",
+      "category": "follow-up",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add Doumar catering",
+          "reply": "I did not add Doumar because it would bring the estimated total to $283.50, which is $133.50 over your $150.00 spending limit. Try a cheaper option, reduce guest count, or use a free/low-cost venue.",
+          "failures": [
+            "missing required phrase: \"Doumar's\""
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "set the venue to local park",
+          "reply": "Added 1 starter task(s) to 'Networking Night Test 13': Confirm venue. You can ask me to add more tasks, mark one complete, or update the event details.",
+          "failures": [
+            "missing required phrase: 'park'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 14",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 5,
+          "user": "what tasks are left",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 15",
+      "category": "venue",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Career Workshop Test 15 for 50 people on June 2nd at 4 PM in Local Park",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T16:00:00, location as 4 PM in Local Park, guest count as 50. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Career'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "add starter tasks",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T16:00:00, location as 4 PM in Local Park, guest count as 50. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'task'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "I only have $500 to spend",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T16:00:00, location as 4 PM in Local Park, guest count as 50. I still need the event title.",
+          "failures": [
+            "missing required phrase: '500'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "generate budget",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T16:00:00, location as 4 PM in Local Park, guest count as 50. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'budget'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 16",
+      "category": "venue",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Club Banquet Test 16 for 30 people on June 2nd at 4 PM in Innovation Hall",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T16:00:00, location as 4 PM in Innovation Hall, guest count as 30. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Club'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "maximum budget is $500",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T16:00:00, location as 4 PM in Innovation Hall, guest count as 30. I still need the event title.",
+          "failures": [
+            "missing required phrase: '500'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "Add Cuisine and Company",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T16:00:00, location as 4 PM in Innovation Hall, guest count as 30. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Cuisine'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "I need vegetarian options",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T16:00:00, location as 4 PM in Innovation Hall, guest count as 30. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 17",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 3,
+          "user": "maximum budget is $800",
+          "reply": "Budget status: Watch. Estimated total: $0.00. No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend. Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.",
+          "failures": [
+            "missing required phrase: '800'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 18",
+      "category": "budget",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 19",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Student Mixer Test 19 for 12 people on May 14th at 3pm in Local Park",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T15:00:00, location as 3pm in Local Park, guest count as 12. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Student'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "I only have $400 to spend",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T15:00:00, location as 3pm in Local Park, guest count as 12. I still need the event title.",
+          "failures": [
+            "missing required phrase: '400'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "Add Chef",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T15:00:00, location as 3pm in Local Park, guest count as 12. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Chef'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "what tasks are left",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T15:00:00, location as 3pm in Local Park, guest count as 12. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 20",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Fundraiser Test 20 for 12 people on May 14th at 5:30pm in Innovation Hall",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T17:30:00, location as Innovation Hall, guest count as 12. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Fundraiser'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 3,
+          "user": "cap this at $500",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T17:30:00, location as Innovation Hall, guest count as 12. I still need the event title.",
+          "failures": [
+            "missing required phrase: '500'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 21",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 6,
+          "user": "I need vegetarian options",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 22",
+      "category": "venue",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add Chick-Fil-A",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Chick-Fil-A'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 23",
+      "category": "follow-up",
+      "failures": [
+        {
+          "turn": 2,
+          "user": "update the guest count to 30",
+          "reply": "Added 1 starter task(s) to 'Networking Night Test 23': Prepare guest check-in list. You can ask me to add more tasks, mark one complete, or update the event details.",
+          "failures": [
+            "missing required phrase: '30'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 24",
+      "category": "follow-up",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Birthday Party Test 24 for 40 people on May 14th at 3pm in Innovation Hall",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T15:00:00, location as 3pm in Innovation Hall, guest count as 40. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Birthday'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "add starter tasks",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T15:00:00, location as 3pm in Innovation Hall, guest count as 40. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'task'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "my budget is $200",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T15:00:00, location as 3pm in Innovation Hall, guest count as 40. I still need the event title.",
+          "failures": [
+            "missing required phrase: '200'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "generate budget",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T15:00:00, location as 3pm in Innovation Hall, guest count as 40. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'budget'"
+          ]
+        },
+        {
+          "turn": 6,
+          "user": "what tasks are left",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T15:00:00, location as 3pm in Innovation Hall, guest count as 40. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 25",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Career Workshop Test 25 for 10 people on May 14th at 6pm in Student Center",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T18:00:00, location as 6pm in Student Center, guest count as 10. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Career'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "I only have $1000 to spend",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T18:00:00, location as 6pm in Student Center, guest count as 10. I still need the event title.",
+          "failures": [
+            "missing required phrase: '1000'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 26",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 5,
+          "user": "I need vegetarian options",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 27",
+      "category": "catering",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 28",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Volunteer Fair Test 28 for 40 people on May 1st at 5:30pm in Innovation Hall",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T17:30:00, location as Innovation Hall, guest count as 40. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Volunteer'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "maximum budget is $200",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T17:30:00, location as Innovation Hall, guest count as 40. I still need the event title.",
+          "failures": [
+            "missing required phrase: '200'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "Add Cuisine",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T17:30:00, location as Innovation Hall, guest count as 40. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Cuisine'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "set the venue to local park",
+          "reply": "I couldn't find a strong venue match in Innovation Hall with the current filters. Try loosening the budget, guest count, or venue style.",
+          "failures": [
+            "missing required phrase: 'park'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 29",
+      "category": "follow-up",
+      "failures": [
+        {
+          "turn": 2,
+          "user": "update the guest count to 15",
+          "reply": "Added 1 starter task(s) to 'Student Mixer Test 29': Prepare guest check-in list. You can ask me to add more tasks, mark one complete, or update the event details.",
+          "failures": [
+            "missing required phrase: '15'"
+          ]
+        },
+        {
+          "turn": 3,
+          "user": "maximum budget is $800",
+          "reply": "Budget status: Watch. Estimated total: $0.00. No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend. Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.",
+          "failures": [
+            "missing required phrase: '800'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "what tasks are left",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 30",
+      "category": "venue",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "maximum budget is $400",
+          "reply": "Budget status: Watch. Estimated total: $0.00. No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend. Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.",
+          "failures": [
+            "missing required phrase: '400'"
+          ]
+        },
+        {
+          "turn": 6,
+          "user": "can I afford a paid venue too",
+          "reply": "Budget status: Watch. Estimated total: $0.00. No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend. Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.",
+          "failures": [
+            "missing required phrase: 'venue'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 31",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add Chef",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Chef'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "I need vegetarian options",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 32",
+      "category": "tasks",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 33",
+      "category": "venue",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "maximum budget is $500",
+          "reply": "Budget status: Watch. Estimated total: $0.00. No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend. Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.",
+          "failures": [
+            "missing required phrase: '500'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 34",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 2,
+          "user": "maximum budget is $1000",
+          "reply": "Budget status: Watch. Estimated total: $0.00. No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend. Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.",
+          "failures": [
+            "missing required phrase: '1000'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "Add chick fil a",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Chick-Fil-A'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "what tasks are left",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 35",
+      "category": "tasks",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 36",
+      "category": "venue",
+      "failures": [
+        {
+          "turn": 6,
+          "user": "I need vegetarian options",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 37",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Tech Meetup Test 37 for 50 people on May 1st at 3pm in Student Center",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T15:00:00, location as 3pm in Student Center, guest count as 50. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Tech'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "cap this at $1000",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T15:00:00, location as 3pm in Student Center, guest count as 50. I still need the event title.",
+          "failures": [
+            "missing required phrase: '1000'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "Add Doumar's",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T15:00:00, location as 3pm in Student Center, guest count as 50. I still need the event title.",
+          "failures": [
+            "missing required phrase: \"Doumar's\""
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "what is my budget status",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T15:00:00, location as 3pm in Student Center, guest count as 50. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'budget'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 38",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 5,
+          "user": "set the venue to local park",
+          "reply": "Added 1 starter task(s) to 'Volunteer Fair Test 38': Confirm venue. You can ask me to add more tasks, mark one complete, or update the event details.",
+          "failures": [
+            "missing required phrase: 'park'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 39",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 6,
+          "user": "what tasks are left",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 40",
+      "category": "venue",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add Cuisine & Company",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Cuisine'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 41",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 5,
+          "user": "I need vegetarian options",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 42",
+      "category": "venue",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "maximum budget is $150",
+          "reply": "Budget status: Watch. Estimated total: $0.00. No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend. Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.",
+          "failures": [
+            "missing required phrase: '150'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 43",
+      "category": "follow-up",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add Chef",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Chef'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 44",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Birthday Party Test 44 for 15 people on May 14th at 6pm in Innovation Hall",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T18:00:00, location as 6pm in Innovation Hall, guest count as 15. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Birthday'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 3,
+          "user": "I can only spend $400",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T18:00:00, location as 6pm in Innovation Hall, guest count as 15. I still need the event title.",
+          "failures": [
+            "missing required phrase: '400'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "what tasks are left",
+          "reply": "I\u2019ve got date as 2026-05-14, start time as 2026-05-14T18:00:00, location as 6pm in Innovation Hall, guest count as 15. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 45",
+      "category": "catering",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 46",
+      "category": "follow-up",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add chick fil a",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Chick-Fil-A'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "I need vegetarian options",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 47",
+      "category": "follow-up",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 48",
+      "category": "tasks",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 49",
+      "category": "venue",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add Doumars",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: \"Doumar's\""
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "what tasks are left",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 50",
+      "category": "catering",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 51",
+      "category": "follow-up",
+      "failures": [
+        {
+          "turn": 6,
+          "user": "I need vegetarian options",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 52",
+      "category": "follow-up",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add Cuisine",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Cuisine'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 53",
+      "category": "tasks",
+      "failures": [
+        {
+          "turn": 2,
+          "user": "update the guest count to 12",
+          "reply": "Added 1 starter task(s) to 'Networking Night Test 53': Prepare guest check-in list. You can ask me to add more tasks, mark one complete, or update the event details.",
+          "failures": [
+            "missing required phrase: '12'"
+          ]
+        },
+        {
+          "turn": 3,
+          "user": "maximum budget is $200",
+          "reply": "Budget status: Watch. Estimated total: $0.00. No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend. Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.",
+          "failures": [
+            "missing required phrase: '200'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 54",
+      "category": "tasks",
+      "failures": [
+        {
+          "turn": 6,
+          "user": "what tasks are left",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 55",
+      "category": "tasks",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Career Workshop Test 55 for 10 people on June 2nd at 3pm in Local Park",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T15:00:00, location as 3pm in Local Park, guest count as 10. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Career'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "I can only spend $800",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T15:00:00, location as 3pm in Local Park, guest count as 10. I still need the event title.",
+          "failures": [
+            "missing required phrase: '800'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "Add Chef",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T15:00:00, location as 3pm in Local Park, guest count as 10. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Chef'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 56",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 5,
+          "user": "I need vegetarian options",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 57",
+      "category": "venue",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 58",
+      "category": "venue",
+      "failures": [
+        {
+          "turn": 2,
+          "user": "maximum budget is $400",
+          "reply": "Budget status: Watch. Estimated total: $0.00. No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend. Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.",
+          "failures": [
+            "missing required phrase: '400'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "Add CFA",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Chick-Fil-A'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 59",
+      "category": "tasks",
+      "failures": [
+        {
+          "turn": 2,
+          "user": "update the guest count to 15",
+          "reply": "Added 1 starter task(s) to 'Student Mixer Test 59': Prepare guest check-in list. You can ask me to add more tasks, mark one complete, or update the event details.",
+          "failures": [
+            "missing required phrase: '15'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "what tasks are left",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 60",
+      "category": "follow-up",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Fundraiser Test 60 for 25 people on May 6th at 5:30pm in Innovation Hall",
+          "reply": "I\u2019ve got date as 2026-05-06, start time as 2026-05-06T17:30:00, location as Innovation Hall, guest count as 25. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Fundraiser'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "add starter tasks",
+          "reply": "I\u2019ve got date as 2026-05-06, start time as 2026-05-06T17:30:00, location as Innovation Hall, guest count as 25. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'task'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "my spending limit is $600",
+          "reply": "I\u2019ve got date as 2026-05-06, start time as 2026-05-06T17:30:00, location as Innovation Hall, guest count as 25. I still need the event title.",
+          "failures": [
+            "missing required phrase: '600'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "generate budget",
+          "reply": "I\u2019ve got date as 2026-05-06, start time as 2026-05-06T17:30:00, location as Innovation Hall, guest count as 25. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'budget'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 61",
+      "category": "venue",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add Doumar catering",
+          "reply": "Added Doumar as the catering. Estimated total is now $94.50, leaving about $205.50.",
+          "failures": [
+            "missing required phrase: \"Doumar's\""
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "I need vegetarian options",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 62",
+      "category": "tasks",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 63",
+      "category": "budget",
+      "failures": []
+    },
+    {
+      "scenario": "generated mixed conversation 64",
+      "category": "follow-up",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add Cuisine & Company",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Cuisine'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "what tasks are left",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 65",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Career Workshop Test 65 for 20 people on May 6th at 5:30pm in Student Center",
+          "reply": "I\u2019ve got date as 2026-05-06, start time as 2026-05-06T17:30:00, location as Student Center, guest count as 20. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Career'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 3,
+          "user": "cap this at $200",
+          "reply": "I\u2019ve got date as 2026-05-06, start time as 2026-05-06T17:30:00, location as Student Center, guest count as 20. I still need the event title.",
+          "failures": [
+            "missing required phrase: '200'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 66",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Club Banquet Test 66 for 30 people on May 1st at 3pm in Webb Center Ballroom",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T15:00:00, location as 3pm in Webb Center Ballroom, guest count as 30. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Club'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 2,
+          "user": "add starter tasks",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T15:00:00, location as 3pm in Webb Center Ballroom, guest count as 30. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'task'"
+          ]
+        },
+        {
+          "turn": 4,
+          "user": "I can only spend $1000",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T15:00:00, location as 3pm in Webb Center Ballroom, guest count as 30. I still need the event title.",
+          "failures": [
+            "missing required phrase: '1000'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "generate budget",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T15:00:00, location as 3pm in Webb Center Ballroom, guest count as 30. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'budget'"
+          ]
+        },
+        {
+          "turn": 6,
+          "user": "I need vegetarian options",
+          "reply": "I\u2019ve got date as 2026-05-01, start time as 2026-05-01T15:00:00, location as 3pm in Webb Center Ballroom, guest count as 30. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'vegetarian'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 67",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add Chef by Design",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Chef'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 68",
+      "category": "catering",
+      "failures": [
+        {
+          "turn": 1,
+          "user": "Set up Volunteer Fair Test 68 for 10 people on June 2nd at 5:30pm in Innovation Hall",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T17:30:00, location as Innovation Hall, guest count as 10. I still need the event title.",
+          "failures": [
+            "missing required phrase: 'Volunteer'",
+            "missing required phrase: 'created'"
+          ]
+        },
+        {
+          "turn": 3,
+          "user": "my budget is $800",
+          "reply": "I\u2019ve got date as 2026-06-02, start time as 2026-06-02T17:30:00, location as Innovation Hall, guest count as 10. I still need the event title.",
+          "failures": [
+            "missing required phrase: '800'"
+          ]
+        },
+        {
+          "turn": 5,
+          "user": "set the venue to local park",
+          "reply": "I couldn't find a strong venue match in Innovation Hall with the current filters. Try loosening the budget, guest count, or venue style.",
+          "failures": [
+            "missing required phrase: 'park'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 69",
+      "category": "budget",
+      "failures": [
+        {
+          "turn": 6,
+          "user": "what tasks are left",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'task'"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "generated mixed conversation 70",
+      "category": "tasks",
+      "failures": [
+        {
+          "turn": 4,
+          "user": "Add Chick-Fil-A",
+          "reply": "{\"action\": \"chat_reply\", \"reply\": null}",
+          "failures": [
+            "must_not_include matched: 'null'",
+            "missing required phrase: 'Chick-Fil-A'"
+          ]
+        }
+      ]
+    }
+  ]
+}
