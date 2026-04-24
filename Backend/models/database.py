@@ -47,10 +47,6 @@ CREATE TABLE IF NOT EXISTS events (
     guest_count INTEGER DEFAULT 0,
     venue_cost REAL DEFAULT 0,
     food_cost_per_person REAL DEFAULT 0,
-    selected_venue TEXT,
-    selected_catering TEXT,
-    estimated_venue_cost REAL DEFAULT 0,
-    estimated_catering_cost REAL DEFAULT 0,
     decorations_cost REAL DEFAULT 0,
     equipment_cost REAL DEFAULT 0,
     staff_cost REAL DEFAULT 0,
@@ -60,6 +56,11 @@ CREATE TABLE IF NOT EXISTS events (
     budget_subtotal REAL DEFAULT 0,
     budget_contingency REAL DEFAULT 0,
     budget_total REAL DEFAULT 0,
+    budget_limit REAL DEFAULT 0,
+    selected_venue TEXT,
+    selected_catering TEXT,
+    estimated_venue_cost REAL DEFAULT 0,
+    estimated_catering_cost REAL DEFAULT 0,
     user_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
@@ -145,10 +146,6 @@ def init_db(app):
         ensure_column(db, "events", "guest_count", "INTEGER DEFAULT 0")
         ensure_column(db, "events", "venue_cost", "REAL DEFAULT 0")
         ensure_column(db, "events", "food_cost_per_person", "REAL DEFAULT 0")
-        ensure_column(db, "events", "selected_venue", "TEXT")
-        ensure_column(db, "events", "selected_catering", "TEXT")
-        ensure_column(db, "events", "estimated_venue_cost", "REAL DEFAULT 0")
-        ensure_column(db, "events", "estimated_catering_cost", "REAL DEFAULT 0")
         ensure_column(db, "events", "decorations_cost", "REAL DEFAULT 0")
         ensure_column(db, "events", "equipment_cost", "REAL DEFAULT 0")
         ensure_column(db, "events", "staff_cost", "REAL DEFAULT 0")
@@ -158,6 +155,11 @@ def init_db(app):
         ensure_column(db, "events", "budget_subtotal", "REAL DEFAULT 0")
         ensure_column(db, "events", "budget_contingency", "REAL DEFAULT 0")
         ensure_column(db, "events", "budget_total", "REAL DEFAULT 0")
+        ensure_column(db, "events", "budget_limit", "REAL DEFAULT 0")
+        ensure_column(db, "events", "selected_venue", "TEXT")
+        ensure_column(db, "events", "selected_catering", "TEXT")
+        ensure_column(db, "events", "estimated_venue_cost", "REAL DEFAULT 0")
+        ensure_column(db, "events", "estimated_catering_cost", "REAL DEFAULT 0")
 
         ensure_column(db, "tasks", "start_datetime", "TEXT")
         ensure_column(db, "tasks", "end_datetime", "TEXT")

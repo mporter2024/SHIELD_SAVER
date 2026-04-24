@@ -114,10 +114,6 @@ def estimate_budget(event_id):
         SET guest_count = ?,
             venue_cost = ?,
             food_cost_per_person = ?,
-            selected_venue = ?,
-            selected_catering = ?,
-            estimated_venue_cost = ?,
-            estimated_catering_cost = ?,
             decorations_cost = ?,
             equipment_cost = ?,
             staff_cost = ?,
@@ -133,10 +129,6 @@ def estimate_budget(event_id):
             event_data.get("guest_count", 0),
             event_data.get("venue_cost", 0),
             event_data.get("food_cost_per_person", 0),
-            event_data.get("selected_venue"),
-            event_data.get("selected_catering"),
-            event_data.get("estimated_venue_cost", 0),
-            event_data.get("estimated_catering_cost", 0),
             event_data.get("decorations_cost", 0),
             event_data.get("equipment_cost", 0),
             event_data.get("staff_cost", 0),
@@ -200,10 +192,6 @@ def create_event():
         "guest_count": int(clean_number(data.get("guest_count"), 0)),
         "venue_cost": clean_number(data.get("venue_cost"), 0),
         "food_cost_per_person": clean_number(data.get("food_cost_per_person"), 0),
-        "selected_venue": data.get("selected_venue"),
-        "selected_catering": data.get("selected_catering"),
-        "estimated_venue_cost": clean_number(data.get("estimated_venue_cost"), 0),
-        "estimated_catering_cost": clean_number(data.get("estimated_catering_cost"), 0),
         "decorations_cost": clean_number(data.get("decorations_cost"), 0),
         "equipment_cost": clean_number(data.get("equipment_cost"), 0),
         "staff_cost": clean_number(data.get("staff_cost"), 0),
@@ -213,6 +201,11 @@ def create_event():
         "budget_subtotal": clean_number(data.get("budget_subtotal"), 0),
         "budget_contingency": clean_number(data.get("budget_contingency"), 0),
         "budget_total": clean_number(data.get("budget_total"), 0),
+        "budget_limit": clean_number(data.get("budget_limit"), 0),
+        "selected_venue": data.get("selected_venue"),
+        "selected_catering": data.get("selected_catering"),
+        "estimated_venue_cost": clean_number(data.get("estimated_venue_cost"), data.get("venue_cost", 0)),
+        "estimated_catering_cost": clean_number(data.get("estimated_catering_cost"), 0),
         "user_id": session["user_id"],
     }
 
@@ -228,22 +221,22 @@ def create_event():
             """
             INSERT INTO events (
                 title, date, start_datetime, end_datetime, location, description, user_id,
-                guest_count, venue_cost, food_cost_per_person, selected_venue, selected_catering,
-                estimated_venue_cost, estimated_catering_cost, decorations_cost,
+                guest_count, venue_cost, food_cost_per_person, decorations_cost,
                 equipment_cost, staff_cost, marketing_cost, misc_cost,
-                contingency_percent, budget_subtotal, budget_contingency, budget_total
+                contingency_percent, budget_subtotal, budget_contingency, budget_total,
+                budget_limit, selected_venue, selected_catering, estimated_venue_cost, estimated_catering_cost
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 payload["title"], payload["date"], payload["start_datetime"], payload["end_datetime"],
                 payload["location"], payload["description"], payload["user_id"],
                 payload["guest_count"], payload["venue_cost"], payload["food_cost_per_person"],
-                payload["selected_venue"], payload["selected_catering"],
-                payload["estimated_venue_cost"], payload["estimated_catering_cost"],
                 payload["decorations_cost"], payload["equipment_cost"], payload["staff_cost"],
                 payload["marketing_cost"], payload["misc_cost"], payload["contingency_percent"],
-                payload["budget_subtotal"], payload["budget_contingency"], payload["budget_total"]
+                payload["budget_subtotal"], payload["budget_contingency"], payload["budget_total"],
+                payload["budget_limit"], payload["selected_venue"], payload["selected_catering"],
+                payload["estimated_venue_cost"], payload["estimated_catering_cost"]
             ),
         )
         db.commit()
@@ -278,10 +271,6 @@ def update_event(event_id):
         "guest_count": int(clean_number(data.get("guest_count"), existing["guest_count"] or 0)) if "guest_count" in data else None,
         "venue_cost": clean_number(data.get("venue_cost"), existing["venue_cost"] or 0) if "venue_cost" in data else None,
         "food_cost_per_person": clean_number(data.get("food_cost_per_person"), existing["food_cost_per_person"] or 0) if "food_cost_per_person" in data else None,
-        "selected_venue": data.get("selected_venue") if "selected_venue" in data else None,
-        "selected_catering": data.get("selected_catering") if "selected_catering" in data else None,
-        "estimated_venue_cost": clean_number(data.get("estimated_venue_cost"), existing["estimated_venue_cost"] or 0) if "estimated_venue_cost" in data else None,
-        "estimated_catering_cost": clean_number(data.get("estimated_catering_cost"), existing["estimated_catering_cost"] or 0) if "estimated_catering_cost" in data else None,
         "decorations_cost": clean_number(data.get("decorations_cost"), existing["decorations_cost"] or 0) if "decorations_cost" in data else None,
         "equipment_cost": clean_number(data.get("equipment_cost"), existing["equipment_cost"] or 0) if "equipment_cost" in data else None,
         "staff_cost": clean_number(data.get("staff_cost"), existing["staff_cost"] or 0) if "staff_cost" in data else None,
@@ -291,6 +280,11 @@ def update_event(event_id):
         "budget_subtotal": clean_number(data.get("budget_subtotal"), existing["budget_subtotal"] or 0) if "budget_subtotal" in data else None,
         "budget_contingency": clean_number(data.get("budget_contingency"), existing["budget_contingency"] or 0) if "budget_contingency" in data else None,
         "budget_total": clean_number(data.get("budget_total"), existing["budget_total"] or 0) if "budget_total" in data else None,
+        "budget_limit": clean_number(data.get("budget_limit"), existing["budget_limit"] or 0) if "budget_limit" in data else None,
+        "selected_venue": data.get("selected_venue") if "selected_venue" in data else None,
+        "selected_catering": data.get("selected_catering") if "selected_catering" in data else None,
+        "estimated_venue_cost": clean_number(data.get("estimated_venue_cost"), existing["estimated_venue_cost"] or 0) if "estimated_venue_cost" in data else None,
+        "estimated_catering_cost": clean_number(data.get("estimated_catering_cost"), existing["estimated_catering_cost"] or 0) if "estimated_catering_cost" in data else None,
     }
 
     derived_source = dict(existing)
@@ -315,10 +309,6 @@ def update_event(event_id):
                 guest_count = COALESCE(?, guest_count),
                 venue_cost = COALESCE(?, venue_cost),
                 food_cost_per_person = COALESCE(?, food_cost_per_person),
-                selected_venue = COALESCE(?, selected_venue),
-                selected_catering = COALESCE(?, selected_catering),
-                estimated_venue_cost = COALESCE(?, estimated_venue_cost),
-                estimated_catering_cost = COALESCE(?, estimated_catering_cost),
                 decorations_cost = COALESCE(?, decorations_cost),
                 equipment_cost = COALESCE(?, equipment_cost),
                 staff_cost = COALESCE(?, staff_cost),
@@ -327,17 +317,22 @@ def update_event(event_id):
                 contingency_percent = COALESCE(?, contingency_percent),
                 budget_subtotal = COALESCE(?, budget_subtotal),
                 budget_contingency = COALESCE(?, budget_contingency),
-                budget_total = COALESCE(?, budget_total)
+                budget_total = COALESCE(?, budget_total),
+                budget_limit = COALESCE(?, budget_limit),
+                selected_venue = COALESCE(?, selected_venue),
+                selected_catering = COALESCE(?, selected_catering),
+                estimated_venue_cost = COALESCE(?, estimated_venue_cost),
+                estimated_catering_cost = COALESCE(?, estimated_catering_cost)
             WHERE id = ?
             """,
             (
                 title, date, start_datetime, end_datetime, location, description,
                 values["guest_count"], values["venue_cost"], values["food_cost_per_person"],
-                values["selected_venue"], values["selected_catering"],
-                values["estimated_venue_cost"], values["estimated_catering_cost"],
                 values["decorations_cost"], values["equipment_cost"], values["staff_cost"],
                 values["marketing_cost"], values["misc_cost"], values["contingency_percent"],
                 values["budget_subtotal"], values["budget_contingency"], values["budget_total"],
+                values["budget_limit"], values["selected_venue"], values["selected_catering"],
+                values["estimated_venue_cost"], values["estimated_catering_cost"],
                 event_id,
             ),
         )

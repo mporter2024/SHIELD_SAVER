@@ -6,10 +6,10 @@ from ai.unified_chatbot import UnifiedChatbot
 from ai.action_interpreter import interpret_message, get_default_chat_state, resolve_target_event
 from ai.entity_parser import extract_planning_preferences
 from ai.planning_engine import search_venues, search_caterers
-from ai.budget_engine import calculate_budget_totals, analyze_budget, generate_budget_estimate
 from models.database import get_db
 import sqlite3
 import re
+from ai.budget_engine import analyze_budget, calculate_budget_totals
 
 
 ai_bp = Blueprint("ai", __name__)
@@ -60,8 +60,8 @@ def load_user_context(user_id):
     events = db.execute(
         """
         SELECT id, title, date, start_datetime, end_datetime, location, description,
-               guest_count, budget_total, selected_venue, selected_catering,
-               estimated_venue_cost, estimated_catering_cost, venue_cost, food_cost_per_person
+               guest_count, budget_total, budget_limit, selected_venue, selected_catering,
+               estimated_venue_cost, estimated_catering_cost
         FROM events
         WHERE user_id = ?
         ORDER BY COALESCE(start_datetime, date) ASC, id DESC
@@ -168,90 +168,8 @@ def complete_task_for_user(user_id, task_id):
     }, None
 
 
-
-def _clean_number(value, default=0.0):
-    try:
-        if value in (None, ""):
-            return default
-        return float(value)
-    except (TypeError, ValueError):
-        return default
-
-
-def _find_matching_caterer(name):
-    if not name:
-        return None
-    db = get_db()
-    exact = db.execute(
-        "SELECT * FROM caterers WHERE lower(name) = lower(?) LIMIT 1",
-        (name,),
-    ).fetchone()
-    if exact:
-        return dict(exact)
-    like = db.execute(
-        "SELECT * FROM caterers WHERE lower(name) LIKE lower(?) ORDER BY cost_per_person ASC LIMIT 1",
-        (f"%{name}%",),
-    ).fetchone()
-    return dict(like) if like else None
-
-
-def _find_matching_venue(name):
-    if not name:
-        return None
-    db = get_db()
-    exact = db.execute(
-        "SELECT * FROM venues WHERE lower(name) = lower(?) LIMIT 1",
-        (name,),
-    ).fetchone()
-    if exact:
-        return dict(exact)
-    like = db.execute(
-        "SELECT * FROM venues WHERE lower(name) LIKE lower(?) ORDER BY estimated_cost ASC LIMIT 1",
-        (f"%{name}%",),
-    ).fetchone()
-    return dict(like) if like else None
-
-
-def _apply_service_fields(event_data):
-    event_data = dict(event_data or {})
-    guest_count = int(_clean_number(event_data.get("guest_count"), 0))
-
-    catering_name = event_data.get("selected_catering") or event_data.get("catering")
-    if catering_name:
-        event_data["selected_catering"] = catering_name
-        caterer = _find_matching_caterer(catering_name)
-        if caterer:
-            cost_per_person = _clean_number(caterer.get("cost_per_person"), 0)
-            if cost_per_person > 0 and _clean_number(event_data.get("food_cost_per_person"), 0) <= 0:
-                event_data["food_cost_per_person"] = cost_per_person
-            if guest_count > 0 and _clean_number(event_data.get("estimated_catering_cost"), 0) <= 0:
-                event_data["estimated_catering_cost"] = round(guest_count * cost_per_person, 2)
-        elif guest_count > 0 and _clean_number(event_data.get("estimated_catering_cost"), 0) <= 0:
-            # Unknown caterer: keep the provider linked, but leave costs for the user/budget tool to estimate later.
-            event_data["estimated_catering_cost"] = 0
-
-    venue_name = event_data.get("selected_venue")
-    location = event_data.get("location")
-    venue = _find_matching_venue(venue_name or location)
-    if venue:
-        event_data["selected_venue"] = venue.get("name")
-        estimated_cost = _clean_number(venue.get("estimated_cost"), 0)
-        if _clean_number(event_data.get("venue_cost"), 0) <= 0:
-            event_data["venue_cost"] = estimated_cost
-        if _clean_number(event_data.get("estimated_venue_cost"), 0) <= 0:
-            event_data["estimated_venue_cost"] = estimated_cost
-    elif venue_name:
-        event_data["selected_venue"] = venue_name
-
-    totals = calculate_budget_totals(event_data)
-    event_data["budget_subtotal"] = totals["subtotal"]
-    event_data["budget_contingency"] = totals["contingency"]
-    event_data["budget_total"] = totals["total"]
-    return event_data
-
 def create_event_for_user(user_id, event_data):
     db = get_db()
-    event_data = _apply_service_fields(event_data)
 
     start_datetime = event_data.get("start_datetime")
     date = event_data.get("date") or (start_datetime[:10] if start_datetime else None)
@@ -260,13 +178,13 @@ def create_event_for_user(user_id, event_data):
         """
         INSERT INTO events (
             title, date, start_datetime, end_datetime, location, description,
-            guest_count, venue_cost, food_cost_per_person, selected_venue, selected_catering,
-            estimated_venue_cost, estimated_catering_cost, decorations_cost,
+            guest_count, venue_cost, food_cost_per_person, decorations_cost,
             equipment_cost, staff_cost, marketing_cost, misc_cost,
             contingency_percent, budget_subtotal, budget_contingency, budget_total,
+            budget_limit, selected_venue, selected_catering, estimated_venue_cost, estimated_catering_cost,
             user_id
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             event_data.get("title"),
@@ -278,10 +196,6 @@ def create_event_for_user(user_id, event_data):
             int(event_data.get("guest_count") or 0),
             float(event_data.get("venue_cost") or 0),
             float(event_data.get("food_cost_per_person") or 0),
-            event_data.get("selected_venue"),
-            event_data.get("selected_catering"),
-            float(event_data.get("estimated_venue_cost") or 0),
-            float(event_data.get("estimated_catering_cost") or 0),
             float(event_data.get("decorations_cost") or 0),
             float(event_data.get("equipment_cost") or 0),
             float(event_data.get("staff_cost") or 0),
@@ -291,6 +205,11 @@ def create_event_for_user(user_id, event_data):
             float(event_data.get("budget_subtotal") or 0),
             float(event_data.get("budget_contingency") or 0),
             float(event_data.get("budget_total") or 0),
+            float(event_data.get("budget_limit") or event_data.get("max_budget_total") or 0),
+            event_data.get("selected_venue"),
+            event_data.get("selected_catering") or event_data.get("catering"),
+            float(event_data.get("estimated_venue_cost") or event_data.get("venue_cost") or 0),
+            float(event_data.get("estimated_catering_cost") or 0),
             user_id,
         )
     )
@@ -304,11 +223,8 @@ def create_event_for_user(user_id, event_data):
         "location": event_data.get("location"),
         "description": event_data.get("description"),
         "guest_count": int(event_data.get("guest_count") or 0),
-        "selected_venue": event_data.get("selected_venue"),
-        "selected_catering": event_data.get("selected_catering"),
-        "estimated_venue_cost": float(event_data.get("estimated_venue_cost") or 0),
-        "estimated_catering_cost": float(event_data.get("estimated_catering_cost") or 0),
         "catering": event_data.get("selected_catering") or event_data.get("catering"),
+        "budget_limit": float(event_data.get("budget_limit") or event_data.get("max_budget_total") or 0),
     }
 
 
@@ -325,10 +241,6 @@ def update_event_in_db(event_id, updated_fields):
         "guest_count",
         "venue_cost",
         "food_cost_per_person",
-        "selected_venue",
-        "selected_catering",
-        "estimated_venue_cost",
-        "estimated_catering_cost",
         "decorations_cost",
         "equipment_cost",
         "staff_cost",
@@ -338,6 +250,11 @@ def update_event_in_db(event_id, updated_fields):
         "budget_subtotal",
         "budget_contingency",
         "budget_total",
+        "budget_limit",
+        "selected_venue",
+        "selected_catering",
+        "estimated_venue_cost",
+        "estimated_catering_cost",
     }
 
     set_clauses = []
@@ -462,329 +379,6 @@ def _is_catering_request(message):
     lowered = (message or "").lower()
     return any(word in lowered for word in ["catering", "caterer", "food", "buffet", "plated", "food truck"])
 
-
-def _extract_service_assignment(message):
-    """Return a venue/catering assignment when the user is trying to attach a service to an event.
-
-    This prevents messages like "add Chick-fil-A catering" or "set the venue to Local Park"
-    from falling through to generic advice.
-    """
-    cleaned = (message or "").strip()
-    lowered = cleaned.lower()
-
-    action_words = r"(?:add|use|set|choose|select|make|change|update|attach|put)"
-
-    catering_patterns = [
-        rf"\b{action_words}\s+(?:the\s+)?catering\s+(?:to|as|from|with)?\s*(.+?)(?:\s+to\s+(?:this|that|the)\s+event)?(?:$|\.)",
-        rf"\b{action_words}\s+(.+?)\s+catering(?:\s+to\s+(?:this|that|the)\s+event)?(?:$|\.)",
-        r"\bcatering\s+(?:is|should be|will be|from|with)\s+(.+?)(?:$|\.)",
-        r"\bfood\s+(?:is|should be|will be)?\s*(?:from|with)\s+(.+?)(?:$|\.)",
-    ]
-    for pattern in catering_patterns:
-        match = re.search(pattern, cleaned, re.IGNORECASE)
-        if match:
-            value = _clean_service_value(match.group(1))
-            if value:
-                return {"field": "selected_catering", "value": value}
-
-    venue_patterns = [
-        rf"\b{action_words}\s+(?:the\s+)?venue\s+(?:to|as|at|for)?\s*(.+?)(?:\s+to\s+(?:this|that|the)\s+event)?(?:$|\.)",
-        rf"\b{action_words}\s+(.+?)\s+(?:as\s+)?(?:the\s+)?venue(?:\s+for\s+(?:this|that|the)\s+event)?(?:$|\.)",
-        r"\bvenue\s+(?:is|should be|will be|at)\s+(.+?)(?:$|\.)",
-    ]
-    for pattern in venue_patterns:
-        match = re.search(pattern, cleaned, re.IGNORECASE)
-        if match:
-            value = _clean_service_value(match.group(1))
-            if value:
-                return {"field": "selected_venue", "value": value}
-
-    return None
-
-
-def _clean_service_value(value):
-    if not value:
-        return None
-    value = re.sub(r"\b(?:to|for)\s+(?:this|that|the)\s+event\b", "", value, flags=re.IGNORECASE)
-    value = re.sub(r"\b(?:please|for me|thanks|thank you)\b", "", value, flags=re.IGNORECASE)
-    value = value.strip(" .,!?:;\"'\t\n")
-    if not value:
-        return None
-    blocked = {"catering", "venue", "food", "the venue", "the catering"}
-    if value.lower() in blocked:
-        return None
-    return value
-
-
-def _handle_service_assignment(user_id, user_message, context, chat_state):
-    assignment = _extract_service_assignment(user_message)
-    if not assignment:
-        return None
-
-    target_event = resolve_target_event(user_message, context, chat_state)
-    if not target_event:
-        return jsonify({
-            "reply": "I can add that to an event, but I couldn’t tell which event you meant. Please mention the event title first.",
-            "action": "service_assignment_needs_event"
-        }), 200
-
-    field = assignment["field"]
-    value = assignment["value"]
-    updates = {field: value}
-
-    if field == "selected_venue":
-        updates["location"] = value
-        service_updates = _apply_service_fields({**dict(target_event), **updates})
-        updates.update({
-            "selected_venue": service_updates.get("selected_venue", value),
-            "estimated_venue_cost": service_updates.get("estimated_venue_cost", 0),
-            "venue_cost": service_updates.get("venue_cost", 0),
-        })
-    else:
-        service_updates = _apply_service_fields({**dict(target_event), **updates})
-        updates.update({
-            "selected_catering": service_updates.get("selected_catering", value),
-            "estimated_catering_cost": service_updates.get("estimated_catering_cost", 0),
-            "food_cost_per_person": service_updates.get("food_cost_per_person", target_event.get("food_cost_per_person") or 0),
-        })
-
-    updated = update_event_in_db(target_event["id"], updates)
-    if not updated:
-        return jsonify({
-            "reply": "I found the event, but I couldn’t save that venue/catering update.",
-            "action": "service_assignment_failed"
-        }), 200
-
-    chat_state["last_event_id"] = target_event["id"]
-    chat_state["pending_followup"] = None
-    refreshed = dict(target_event)
-    refreshed.update(updates)
-    chat_state["planning_context"] = _seed_planning_context_from_event(chat_state.get("planning_context"), refreshed)
-    _save_chat_state(chat_state)
-
-    if field == "selected_venue":
-        cost = updates.get("estimated_venue_cost") or 0
-        cost_text = f" Estimated venue cost: ${float(cost):.2f}." if float(cost or 0) > 0 else " Venue cost is currently $0 unless you enter a rental fee."
-        reply = f"Added {updates.get('selected_venue', value)} as the venue for '{target_event['title']}'." + cost_text
-    else:
-        cost = updates.get("estimated_catering_cost") or 0
-        cost_text = f" Estimated catering cost: ${float(cost):.2f}." if float(cost or 0) > 0 else " Catering cost is currently $0 unless you enter a cost or matching provider."
-        reply = f"Added {updates.get('selected_catering', value)} as the catering for '{target_event['title']}'." + cost_text
-
-    return jsonify({
-        "reply": reply,
-        "action": "service_assigned",
-        "event_id": target_event["id"],
-        "updated_fields": updates
-    }), 200
-
-
-
-
-BUDGET_REQUEST_WORDS = [
-    "budget", "cost", "costs", "spend", "spending", "price", "prices",
-    "break down", "breakdown", "how much", "cheaper", "save money", "afford"
-]
-
-
-def _is_budget_request(message):
-    lowered = (message or "").lower()
-    return any(word in lowered for word in BUDGET_REQUEST_WORDS)
-
-
-def _format_money(value):
-    try:
-        return f"${float(value or 0):.2f}"
-    except (TypeError, ValueError):
-        return "$0.00"
-
-
-def _get_full_event_for_user(user_id, event_id):
-    if not event_id:
-        return None
-    db = get_db()
-    row = db.execute(
-        "SELECT * FROM events WHERE id = ? AND user_id = ?",
-        (event_id, user_id),
-    ).fetchone()
-    return dict(row) if row else None
-
-
-def _build_budget_reply(event, analysis, generated=False):
-    summary = analysis.get("summary", {})
-    health = analysis.get("health", {})
-    warnings = analysis.get("warnings", []) or []
-    suggestions = analysis.get("suggestions", []) or []
-
-    prefix = "I generated and saved a smart budget estimate." if generated else "Here is the current budget breakdown."
-    lines = [
-        f"{prefix} For '{event.get('title', 'this event')}':",
-        f"• Estimated total: {_format_money(summary.get('total'))}",
-        f"• Cost per guest: {_format_money(summary.get('cost_per_guest'))}",
-        f"• Venue: {_format_money(summary.get('venue_cost'))}",
-        f"• Food total: {_format_money(summary.get('food_total'))} ({_format_money(summary.get('food_cost_per_person'))}/person)",
-        f"• Largest category: {str(summary.get('largest_category') or 'none').title()}",
-        f"• Budget health: {health.get('label', 'Not analyzed')} ({health.get('score', '—')}/100)",
-    ]
-
-    if warnings:
-        lines.append("Main warning: " + warnings[0])
-    if suggestions:
-        lines.append("Suggestion: " + suggestions[0])
-
-    lines.append("You can ask me to make it cheaper, generate a smart budget, or update a specific category like venue cost or food per person.")
-    return "\n".join(lines)
-
-
-def _handle_budget_request(user_id, user_message, context, chat_state):
-    if not _is_budget_request(user_message):
-        return None
-
-    target_event = resolve_target_event(user_message, context, chat_state)
-    if not target_event:
-        return jsonify({
-            "reply": "I can help with the budget, but I couldn’t tell which event you mean. Please mention the event title or select an event first.",
-            "action": "budget_needs_event"
-        }), 200
-
-    full_event = _get_full_event_for_user(user_id, target_event.get("id"))
-    if not full_event:
-        return jsonify({
-            "reply": "I couldn’t find that event anymore.",
-            "action": "budget_failed"
-        }), 200
-
-    lowered = (user_message or "").lower()
-    should_generate = any(phrase in lowered for phrase in [
-        "generate", "estimate", "smart budget", "build a budget", "create a budget", "make a budget"
-    ])
-
-    generated = False
-    if should_generate:
-        estimate = generate_budget_estimate(full_event)
-        event_data = estimate.get("event", {})
-        update_fields = {
-            "guest_count": event_data.get("guest_count", 0),
-            "venue_cost": event_data.get("venue_cost", 0),
-            "food_cost_per_person": event_data.get("food_cost_per_person", 0),
-            "decorations_cost": event_data.get("decorations_cost", 0),
-            "equipment_cost": event_data.get("equipment_cost", 0),
-            "staff_cost": event_data.get("staff_cost", 0),
-            "marketing_cost": event_data.get("marketing_cost", 0),
-            "misc_cost": event_data.get("misc_cost", 0),
-            "contingency_percent": event_data.get("contingency_percent", 0),
-            "budget_subtotal": event_data.get("budget_subtotal", 0),
-            "budget_contingency": event_data.get("budget_contingency", 0),
-            "budget_total": event_data.get("budget_total", 0),
-        }
-        update_event_in_db(full_event["id"], update_fields)
-        full_event.update(update_fields)
-        generated = True
-
-    analysis = analyze_budget(full_event)
-    chat_state["last_event_id"] = full_event["id"]
-    chat_state["pending_followup"] = None
-    chat_state["planning_context"] = _seed_planning_context_from_event(chat_state.get("planning_context"), full_event)
-    _save_chat_state(chat_state)
-
-    return jsonify({
-        "reply": _build_budget_reply(full_event, analysis, generated=generated),
-        "action": "budget_answer",
-        "event_id": full_event["id"],
-        "analysis": analysis,
-        "event": full_event,
-    }), 200
-
-
-def _extract_task_update_request(message):
-    cleaned = (message or "").strip()
-    patterns = [
-        ("title", r"(?:rename|change|update)\s+(?:the\s+)?task\s+(.+?)\s+to\s+(.+)$"),
-        ("title", r"(?:rename|change|update)\s+(.+?)\s+task\s+to\s+(.+)$"),
-    ]
-    for field, pattern in patterns:
-        match = re.search(pattern, cleaned, re.IGNORECASE)
-        if match:
-            return {"task_ref": _clean_service_value(match.group(1)), "updates": {field: _clean_service_value(match.group(2))}}
-
-    date_match = re.search(r"(?:schedule|set|change|update)\s+(?:the\s+)?task\s+(.+?)\s+(?:for|on|to|by)\s+([a-z]+\s+\d{1,2}(?:st|nd|rd|th)?(?:,\s*\d{4})?)$", cleaned, re.IGNORECASE)
-    if date_match:
-        return {"task_ref": _clean_service_value(date_match.group(1)), "updates": {"due_date": _clean_service_value(date_match.group(2))}}
-
-    return None
-
-
-def update_task_for_user(user_id, task_id, updates):
-    db = get_db()
-    task = db.execute(
-        """
-        SELECT tasks.*, events.title AS event_title
-        FROM tasks
-        INNER JOIN events ON tasks.event_id = events.id
-        WHERE tasks.id = ? AND events.user_id = ?
-        """,
-        (task_id, user_id),
-    ).fetchone()
-    if not task:
-        return None, "That task was not found for the current user."
-
-    allowed = {"title", "due_date", "start_datetime", "end_datetime", "completed"}
-    set_parts = []
-    values = []
-    for key, value in (updates or {}).items():
-        if key in allowed and value not in (None, ""):
-            set_parts.append(f"{key} = ?")
-            values.append(value)
-
-    if not set_parts:
-        return None, "I found the task, but I couldn’t tell what to change."
-
-    values.append(task_id)
-    db.execute(f"UPDATE tasks SET {', '.join(set_parts)} WHERE id = ?", values)
-    db.commit()
-    updated = db.execute(
-        """
-        SELECT tasks.*, events.title AS event_title
-        FROM tasks
-        INNER JOIN events ON tasks.event_id = events.id
-        WHERE tasks.id = ?
-        """,
-        (task_id,),
-    ).fetchone()
-    return dict(updated), None
-
-
-def _handle_task_update(user_id, user_message, context, chat_state):
-    request_data = _extract_task_update_request(user_message)
-    if not request_data:
-        return None
-
-    event_hint = resolve_target_event(user_message, context, chat_state)
-    target_task = _find_task_by_reference(
-        request_data.get("task_ref"),
-        context.get("tasks", []),
-        event_hint.get("id") if event_hint else chat_state.get("last_event_id"),
-    )
-    if not target_task:
-        return jsonify({
-            "reply": "I can update a task, but I couldn’t tell which task you meant. Try using the task name, like 'rename task Confirm venue to Confirm park reservation.'",
-            "action": "task_update_needs_task"
-        }), 200
-
-    updated_task, error = update_task_for_user(user_id, target_task["id"], request_data.get("updates", {}))
-    if error:
-        return jsonify({"reply": error, "action": "task_update_failed"}), 200
-
-    chat_state["last_task_id"] = updated_task["id"]
-    chat_state["last_event_id"] = updated_task["event_id"]
-    chat_state["pending_followup"] = None
-    _save_chat_state(chat_state)
-
-    return jsonify({
-        "reply": f"Updated task '{updated_task['title']}' for '{updated_task['event_title']}'.",
-        "action": "task_updated",
-        "task": updated_task,
-    }), 200
 
 def _planning_signal_count(planning_context, keys):
     score = 0
@@ -945,13 +539,201 @@ def _normalize_text(value):
     return (value or "").strip().lower()
 
 
+BUDGET_LIMIT_PATTERNS = [
+    r"\bi\s+can\s+only\s+spend\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\bi\s+only\s+have\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\bmy\s+max(?:imum)?\s+(?:budget|spend|spending|limit)\s+is\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\bmy\s+(?:budget|spending\s+limit|limit)\s+is\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\bkeep\s+(?:it|this|the\s+event|everything)?\s*(?:at\s+or\s+)?under\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\bkeep\s+(?:it|this|the\s+event|everything)?\s*(?:at\s+or\s+)?below\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\bdo\s+not\s+go\s+over\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\bdon't\s+go\s+over\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\bno\s+more\s+than\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\bnot\s+more\s+than\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\b(?:cap|limit)\s+(?:it|this|the\s+event|spending)?\s*(?:at|to)?\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\b(?:hard|strict)\s+(?:cap|limit|ceiling)\s+(?:of|is)?\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\b(?:spending|budget)\s+ceiling\s+(?:of|is)?\s*\$?(\d+(?:\.\d+)?)\b",
+    r"\b(?:under|below|less\s+than)\s*\$?(\d+(?:\.\d+)?)\s+(?:total|overall|all\s+in|for\s+everything)\b",
+    r"\b\$\s*(\d+(?:\.\d+)?)\s+(?:budget|max|maximum|limit|cap|ceiling|all\s+in)\b",
+]
+
+BUDGET_REQUEST_WORDS = [
+    "budget", "spending", "afford", "affordable", "cost", "costs", "total", "over budget",
+    "under budget", "remaining", "how much left", "can i afford", "budget health", "spending limit",
+]
+
+
+def _extract_budget_limit_amount(message):
+    for pattern in BUDGET_LIMIT_PATTERNS:
+        match = re.search(pattern, message or "", re.IGNORECASE)
+        if match:
+            try:
+                return float(match.group(1))
+            except (TypeError, ValueError):
+                return None
+    return None
+
+
+def _is_budget_request(message):
+    lowered = _normalize_text(message)
+    return any(word in lowered for word in BUDGET_REQUEST_WORDS)
+
+
+def _get_full_event_for_user(user_id, event_id):
+    db = get_db()
+    row = db.execute("SELECT * FROM events WHERE id = ? AND user_id = ?", (event_id, user_id)).fetchone()
+    return dict(row) if row else None
+
+
+def _recalculate_and_save_event_budget(event_id):
+    db = get_db()
+    event = db.execute("SELECT * FROM events WHERE id = ?", (event_id,)).fetchone()
+    if not event:
+        return None
+    event = dict(event)
+    totals = calculate_budget_totals(event)
+    db.execute(
+        """
+        UPDATE events
+        SET budget_subtotal = ?, budget_contingency = ?, budget_total = ?
+        WHERE id = ?
+        """,
+        (totals["subtotal"], totals["contingency"], totals["total"], event_id),
+    )
+    db.commit()
+    event.update({"budget_subtotal": totals["subtotal"], "budget_contingency": totals["contingency"], "budget_total": totals["total"]})
+    return event
+
+
+def _format_budget_summary(event):
+    analysis = analyze_budget(event)
+    summary = analysis.get("summary", {})
+    health = analysis.get("health", {})
+    limit = float(summary.get("budget_limit") or 0)
+    total = float(summary.get("total") or 0)
+    remaining = summary.get("remaining_budget")
+    if limit > 0:
+        if float(summary.get("over_budget_by") or 0) > 0:
+            status = f"This plan is over your ${limit:.2f} spending limit by ${float(summary.get('over_budget_by') or 0):.2f}."
+        else:
+            status = f"This plan fits your ${limit:.2f} spending limit with about ${float(remaining or 0):.2f} left."
+    else:
+        status = "No maximum spending limit is set yet, so I can analyze costs but cannot tell whether the plan fits what you can spend."
+    suggestion = (analysis.get("suggestions") or [""])[0]
+    return f"Budget status: {health.get('label', 'Not analyzed')}. Estimated total: ${total:.2f}. {status} {suggestion}".strip()
+
+
+def _set_budget_limit_for_event(user_id, event_id, amount):
+    db = get_db()
+    db.execute("UPDATE events SET budget_limit = ? WHERE id = ? AND user_id = ?", (float(amount), event_id, user_id))
+    db.commit()
+    event = _recalculate_and_save_event_budget(event_id)
+    return _get_full_event_for_user(user_id, event_id) or event
+
+
+def _infer_custom_catering_cost_per_person(name):
+    lowered = _normalize_text(name)
+    if any(word in lowered for word in ["chick", "pizza", "sub", "sandwich", "fast food", "taco", "burger"]):
+        return 12.0
+    if any(word in lowered for word in ["snack", "dessert", "refreshment"]):
+        return 6.0
+    if any(word in lowered for word in ["gourmet", "plated", "upscale", "formal"]):
+        return 24.0
+    return 15.0
+
+
+def _extract_custom_service_name(message, service_type):
+    cleaned = (message or "").strip()
+    if service_type == "catering":
+        patterns = [
+            r"(?:add|use|choose|select|set|make)\s+(.+?)\s+(?:as\s+)?(?:the\s+)?(?:catering|caterer|food)(?:\s+for\s+.+)?$",
+            r"(?:catering|caterer|food)\s+(?:to|as|from|is)?\s*(.+?)(?:\s+for\s+.+)?$",
+        ]
+    else:
+        patterns = [
+            r"(?:set|make|change|switch)\s+(?:the\s+)?(?:venue|location|place)\s+(?:to|as|at)?\s*(.+?)(?:\s+for\s+.+)?$",
+            r"(?:use|choose|select|add)\s+(.+?)\s+as\s+(?:the\s+)?(?:venue|location|place)(?:\s+for\s+.+)?$",
+            r"(?:venue|location|place)\s+(?:to|as|at|is)?\s*(.+?)(?:\s+for\s+.+)?$",
+        ]
+    for pattern in patterns:
+        match = re.search(pattern, cleaned, re.IGNORECASE)
+        if match:
+            name = match.group(1).strip(" .!?;:")
+            name = re.sub(r"\b(?:to that event|to the event|for that event|for the event)$", "", name, flags=re.IGNORECASE).strip(" .!?;:")
+            if name and name.lower() not in {"that", "it", "this", "the"}:
+                return name
+    return None
+
+
+def _find_service_match(message, service_type):
+    db = get_db()
+    if service_type == "venue":
+        rows = db.execute("SELECT * FROM venues ORDER BY LENGTH(name) DESC").fetchall()
+    else:
+        rows = db.execute("SELECT * FROM caterers ORDER BY LENGTH(name) DESC").fetchall()
+    lowered = _normalize_text(message)
+    for row in rows:
+        item = dict(row)
+        if _normalize_text(item.get("name")) in lowered:
+            return item
+    custom_name = _extract_custom_service_name(message, service_type)
+    if custom_name:
+        if service_type == "catering":
+            return {"name": custom_name, "cost_per_person": _infer_custom_catering_cost_per_person(custom_name)}
+        return {"name": custom_name, "estimated_cost": 0}
+    return None
+
+
+def _looks_like_service_assignment(message):
+    lowered = _normalize_text(message)
+    has_action = any(word in lowered for word in ["add", "set", "use", "choose", "select", "make", "change", "switch"])
+    if not has_action:
+        return None
+    if any(word in lowered for word in ["catering", "caterer", "food"]):
+        return "catering"
+    if any(word in lowered for word in ["venue", "location", "place"]):
+        return "venue"
+    return None
+
+
+def _apply_service_assignment(user_id, event, service_type, item):
+    event = _get_full_event_for_user(user_id, event["id"])
+    if not event:
+        return None, "I couldn’t find that event anymore."
+    guest_count = int(event.get("guest_count") or 0)
+    if service_type == "venue":
+        cost = float(item.get("estimated_cost") or item.get("cost") or 0)
+        updates = {"selected_venue": item.get("name"), "location": item.get("name"), "estimated_venue_cost": cost, "venue_cost": cost}
+    else:
+        per_person = float(item.get("cost_per_person") or 0)
+        cost = per_person * max(guest_count, 1)
+        updates = {"selected_catering": item.get("name"), "estimated_catering_cost": cost, "food_cost_per_person": per_person}
+    projected = dict(event)
+    projected.update(updates)
+    totals = calculate_budget_totals(projected)
+    limit = float(projected.get("budget_limit") or 0)
+    if limit > 0 and totals["total"] > limit:
+        over = totals["total"] - limit
+        return None, (
+            f"I did not add {item.get('name')} because it would bring the estimated total to ${totals['total']:.2f}, "
+            f"which is ${over:.2f} over your ${limit:.2f} spending limit. Try a cheaper option, reduce guest count, or use a free/low-cost venue."
+        )
+    update_event_in_db(event["id"], updates)
+    refreshed = _recalculate_and_save_event_budget(event["id"])
+    remaining = float(calculate_budget_totals(refreshed).get("remaining_budget") or 0) if refreshed else 0
+    label = "venue" if service_type == "venue" else "catering"
+    if limit > 0:
+        return refreshed, f"Added {item.get('name')} as the {label}. Estimated total is now ${calculate_budget_totals(refreshed)['total']:.2f}, leaving about ${remaining:.2f}."
+    return refreshed, f"Added {item.get('name')} as the {label}. Estimated total is now ${calculate_budget_totals(refreshed)['total']:.2f}."
+
+
 def _get_event_for_user(user_id, event_id):
     db = get_db()
     row = db.execute(
         """
         SELECT id, title, date, start_datetime, end_datetime, location, description,
-               guest_count, budget_total, selected_venue, selected_catering,
-               estimated_venue_cost, estimated_catering_cost, venue_cost, food_cost_per_person
+               guest_count, budget_total, budget_limit, selected_venue, selected_catering,
+               estimated_venue_cost, estimated_catering_cost
         FROM events
         WHERE id = ? AND user_id = ?
         """,
@@ -1256,21 +1038,9 @@ def chat():
         context = load_user_context(user_id)
         chat_state = _get_chat_state()
 
-        service_assignment_response = _handle_service_assignment(user_id, user_message, context, chat_state)
-        if service_assignment_response:
-            return service_assignment_response
-
         followup_response = _handle_pending_followup(user_id, user_message, chat_state)
         if followup_response:
             return followup_response
-
-        task_update_response = _handle_task_update(user_id, user_message, context, chat_state)
-        if task_update_response:
-            return task_update_response
-
-        budget_response = _handle_budget_request(user_id, user_message, context, chat_state)
-        if budget_response:
-            return budget_response
 
         planning_updates = extract_planning_preferences(user_message)
         target_for_planning = resolve_target_event(user_message, context, chat_state)
@@ -1278,14 +1048,44 @@ def chat():
         planning_context = _seed_planning_context_from_event(planning_context, target_for_planning)
         chat_state["planning_context"] = planning_context
 
-        interpreted = interpret_message(user_message, context=context, state=chat_state)
-        action_type = interpreted["type"]
+        budget_limit_amount = _extract_budget_limit_amount(user_message)
+        if budget_limit_amount is not None and target_for_planning:
+            event = _set_budget_limit_for_event(user_id, target_for_planning["id"], budget_limit_amount)
+            chat_state["last_event_id"] = target_for_planning["id"]
+            planning_context["max_budget_total"] = budget_limit_amount
+            chat_state["planning_context"] = planning_context
+            _save_chat_state(chat_state)
+            return jsonify({
+                "reply": f"Got it. I’ll treat ${budget_limit_amount:.2f} as the maximum spending limit for '{target_for_planning['title']}'. " + _format_budget_summary(event),
+                "action": "budget_limit_set",
+                "event": event
+            }), 200
 
-        service_assignment_response = _handle_service_assignment(user_id, user_message, context, chat_state)
-        if service_assignment_response:
-            return service_assignment_response
+        service_type = _looks_like_service_assignment(user_message)
+        if service_type and target_for_planning:
+            item = _find_service_match(user_message, service_type)
+            if item:
+                updated_event, reply = _apply_service_assignment(user_id, target_for_planning, service_type, item)
+                chat_state["last_event_id"] = target_for_planning["id"]
+                _save_chat_state(chat_state)
+                return jsonify({
+                    "reply": reply,
+                    "action": f"{service_type}_assigned" if updated_event else f"{service_type}_blocked_by_budget",
+                    "event": updated_event,
+                    "event_id": target_for_planning["id"]
+                }), 200
 
-        if action_type == "fallback" and _is_venue_request(user_message):
+        if _is_budget_request(user_message) and target_for_planning:
+            event = _get_full_event_for_user(user_id, target_for_planning["id"])
+            chat_state["last_event_id"] = target_for_planning["id"]
+            _save_chat_state(chat_state)
+            return jsonify({
+                "reply": _format_budget_summary(event),
+                "action": "budget_summary",
+                "event": event
+            }), 200
+
+        if _is_venue_request(user_message):
             venue_results = search_venues(planning_context, limit=3)
             planning_context["last_recommendations"]["venues"] = [item.get("id") for item in venue_results]
             chat_state["planning_context"] = planning_context
@@ -1299,7 +1099,7 @@ def chat():
                 "results": venue_results
             }), 200
 
-        if action_type == "fallback" and _is_catering_request(user_message):
+        if _is_catering_request(user_message):
             catering_results = search_caterers(planning_context, limit=3)
             planning_context["last_recommendations"]["caterers"] = [item.get("id") for item in catering_results]
             chat_state["planning_context"] = planning_context
@@ -1312,6 +1112,9 @@ def chat():
                 "planning_context": planning_context,
                 "results": catering_results
             }), 200
+
+        interpreted = interpret_message(user_message, context=context, state=chat_state)
+        action_type = interpreted["type"]
 
         use_ollama = current_app.config.get("USE_OLLAMA_FALLBACK", False)
         if use_ollama and action_type in {
@@ -1440,7 +1243,13 @@ def chat():
             }), 200
 
         if action_type == "event_create":
-            created_event = create_event_for_user(user_id, interpreted["draft"])
+            draft = dict(interpreted["draft"])
+            budget_limit_amount = _extract_budget_limit_amount(user_message)
+            if budget_limit_amount is not None:
+                draft["budget_limit"] = budget_limit_amount
+            created_event = create_event_for_user(user_id, draft)
+            if budget_limit_amount is not None:
+                created_event = _set_budget_limit_for_event(user_id, created_event["id"], budget_limit_amount) or created_event
 
             new_state = interpreted["state"]
             new_state["pending_event_draft"] = {}
@@ -1459,7 +1268,8 @@ def chat():
                     f"Event '{created_event['title']}' was created"
                     f" for {created_event['date'] or created_event['start_datetime']}"
                     f" at {created_event['location']}. "
-                    f"Would you like me to add starter tasks like confirming the venue, arranging catering, or sending invites?"
+                    + (f"I’ll keep it at or under ${created_event.get('budget_limit', 0):.2f}. " if created_event.get('budget_limit') else "")
+                    + "Would you like me to add starter tasks like confirming the venue, arranging catering, or sending invites?"
                 ),
                 "action": "event_created",
                 "event": created_event
@@ -1482,10 +1292,7 @@ def chat():
         if action_type == "event_update":
             target_event = interpreted["target_event"]
             cleaned_updates = dict(interpreted["changes"])
-            if cleaned_updates.get("catering") and not cleaned_updates.get("selected_catering"):
-                cleaned_updates["selected_catering"] = cleaned_updates.pop("catering")
             cleaned_updates = _apply_time_logic(target_event, cleaned_updates)
-            cleaned_updates = _apply_service_fields({**dict(target_event), **cleaned_updates}) | cleaned_updates
 
             updated = update_event_in_db(target_event["id"], cleaned_updates)
             if updated:

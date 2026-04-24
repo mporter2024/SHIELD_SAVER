@@ -65,6 +65,11 @@
                 </div>
 
                 <div>
+                  <label for="budget-limit">Maximum Spending Limit ($)</label>
+                  <input type="number" id="budget-limit" min="0" value="0" />
+                </div>
+
+                <div>
                   <label for="venue-cost">Venue Cost ($)</label>
                   <input type="number" id="venue-cost" min="0" value="300" />
                 </div>
@@ -138,7 +143,8 @@
               <div class="budget-breakdown">
                 <div class="budget-row"><span>Cost Per Guest</span><span id="summary-cost-per-guest">$0.00</span></div>
                 <div class="budget-row"><span>Largest Category</span><span id="summary-largest-category">—</span></div>
-                <div class="budget-row"><span>Budget Health</span><span id="summary-health-label">Not analyzed</span></div>
+                <div class="budget-row"><span>Maximum Spending Limit</span><span id="summary-budget-limit">Not set</span></div>
+                <div class="budget-row"><span>Budget Fit</span><span id="summary-health-label">Not analyzed</span></div>
               </div>
 
               <div class="budget-tip-box">
@@ -152,7 +158,7 @@
               <h3>Smart Budget Insights</h3>
               <div class="snapshot-grid">
                 <div class="info-item">
-                  <strong>Health Score</strong>
+                  <strong>Budget Fit Score</strong>
                   <span id="budget-health-score">—</span>
                 </div>
                 <div class="info-item">

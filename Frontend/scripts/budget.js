@@ -35,8 +35,14 @@ function getSelectedEventIdFromUrl() {
   return params.get("event_id") || localStorage.getItem("selectedEventId") || "";
 }
 
-function getBudgetTip(total, guests, healthLabel = "") {
+function getBudgetTip(total, guests, healthLabel = "", budgetLimit = 0) {
   if (guests === 0) return "Enter a guest count to get a more realistic estimate.";
+  if (budgetLimit > 0) {
+    const remaining = budgetLimit - total;
+    if (remaining < 0) return `This plan is over your spending limit by ${formatCurrency(Math.abs(remaining))}. Reduce costs before adding more.`;
+    if (remaining <= budgetLimit * 0.1) return `This fits, but only ${formatCurrency(remaining)} remains. Avoid adding new costs unless something else is reduced.`;
+    return `This fits within your maximum spending limit with ${formatCurrency(remaining)} left.`;
+  }
   if (healthLabel === "High Risk" || healthLabel === "Over Budget Risk") {
     return "This budget has pressure points. Review the warnings and try the smart suggestions before finalizing it.";
   }
@@ -47,6 +53,7 @@ function getBudgetTip(total, guests, healthLabel = "") {
 
 function calculateBudget() {
   const guests = getNumberValue("guest-count");
+  const budgetLimit = getNumberValue("budget-limit");
   const venue = getNumberValue("venue-cost");
   const foodPerPerson = getNumberValue("food-cost");
   const decorations = getNumberValue("decorations-cost");
@@ -74,6 +81,8 @@ function calculateBudget() {
   document.getElementById("summary-subtotal").textContent = formatCurrency(subtotal);
   document.getElementById("summary-contingency").textContent = formatCurrency(contingency);
   document.getElementById("summary-total").textContent = formatCurrency(total);
+  const budgetLimitEl = document.getElementById("summary-budget-limit");
+  if (budgetLimitEl) budgetLimitEl.textContent = budgetLimit > 0 ? formatCurrency(budgetLimit) : "Not set";
   document.getElementById("summary-cost-per-guest").textContent = formatCurrency(costPerGuest);
 
   const largestCategory = [
@@ -88,11 +97,12 @@ function calculateBudget() {
   document.getElementById("summary-largest-category").textContent = largestCategory;
 
   const currentHealth = document.getElementById("summary-health-label").textContent || "";
-  document.getElementById("budget-tip").textContent = getBudgetTip(total, guests, currentHealth);
+  document.getElementById("budget-tip").textContent = getBudgetTip(total, guests, currentHealth, budgetLimit);
 
   return {
     eventName: getSelectedEventName(),
     guests,
+    budgetLimit,
     venue,
     foodPerPerson,
     foodTotal,
@@ -113,6 +123,7 @@ function calculateBudget() {
 function resetBudgetForm() {
   [
     "guest-count",
+    "budget-limit",
     "venue-cost",
     "food-cost",
     "decorations-cost",
@@ -136,6 +147,8 @@ function resetBudgetForm() {
     if (el) el.textContent = "$0.00";
   });
   document.getElementById("summary-largest-category").textContent = "—";
+  const limitEl = document.getElementById("summary-budget-limit");
+  if (limitEl) limitEl.textContent = "Not set";
   document.getElementById("summary-health-label").textContent = "Not analyzed";
   document.getElementById("budget-health-score").textContent = "—";
   document.getElementById("budget-recommended-venue").textContent = "—";
@@ -210,6 +223,8 @@ function renderInsights(data, recommendedVenue = null, recommendedCaterer = null
   document.getElementById("summary-health-label").textContent = health.label || "Not analyzed";
   document.getElementById("budget-health-score").textContent = typeof health.score === "number" ? `${health.score}/100` : "—";
   document.getElementById("budget-style").textContent = health.style ? (health.style.charAt(0).toUpperCase() + health.style.slice(1)) : "—";
+  const limitEl = document.getElementById("summary-budget-limit");
+  if (limitEl) limitEl.textContent = summary.budget_limit ? formatCurrency(summary.budget_limit) : "Not set";
   document.getElementById("summary-cost-per-guest").textContent = formatCurrency(summary.cost_per_guest || 0);
   if (summary.largest_category) {
     document.getElementById("summary-largest-category").textContent = summary.largest_category.charAt(0).toUpperCase() + summary.largest_category.slice(1);
@@ -227,7 +242,7 @@ function renderInsights(data, recommendedVenue = null, recommendedCaterer = null
     .map(item => `<li>${item}</li>`).join("");
   suggestionsEl.innerHTML = (data.suggestions?.length ? data.suggestions : ["No budget suggestions right now."])
     .map(item => `<li>${item}</li>`).join("");
-  document.getElementById("budget-tip").textContent = getBudgetTip(summary.total || 0, summary.guest_count || 0, health.label || "");
+  document.getElementById("budget-tip").textContent = getBudgetTip(summary.total || 0, summary.guest_count || 0, health.label || "", summary.budget_limit || 0);
 }
 
 function loadEventIntoForm(eventId) {
@@ -236,6 +251,8 @@ function loadEventIntoForm(eventId) {
 
   localStorage.setItem("selectedEventId", String(selectedEvent.id));
   document.getElementById("guest-count").value = selectedEvent.guest_count || 0;
+  const limitInput = document.getElementById("budget-limit");
+  if (limitInput) limitInput.value = selectedEvent.budget_limit || 0;
   document.getElementById("venue-cost").value = selectedEvent.venue_cost || 0;
   document.getElementById("food-cost").value = selectedEvent.food_cost_per_person || 0;
   document.getElementById("decorations-cost").value = selectedEvent.decorations_cost || 0;
@@ -266,6 +283,7 @@ async function saveBudgetToEvent() {
       credentials: "include",
       body: JSON.stringify({
         guest_count: budget.guests,
+        budget_limit: budget.budgetLimit,
         venue_cost: budget.venue,
         food_cost_per_person: budget.foodPerPerson,
         decorations_cost: budget.decorations,
@@ -309,6 +327,8 @@ async function generateSmartBudget() {
 
     const event = data.event || {};
     document.getElementById("guest-count").value = event.guest_count || 0;
+    const limitInput = document.getElementById("budget-limit");
+    if (limitInput) limitInput.value = event.budget_limit || 0;
     document.getElementById("venue-cost").value = event.venue_cost || 0;
     document.getElementById("food-cost").value = event.food_cost_per_person || 0;
     document.getElementById("decorations-cost").value = event.decorations_cost || 0;
@@ -342,7 +362,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("event-select").addEventListener("change", (e) => loadEventIntoForm(e.target.value));
 
   [
-    "guest-count", "venue-cost", "food-cost", "decorations-cost", "equipment-cost",
+    "guest-count", "budget-limit", "venue-cost", "food-cost", "decorations-cost", "equipment-cost",
     "staff-cost", "marketing-cost", "misc-cost", "contingency-percent"
   ].forEach(id => document.getElementById(id).addEventListener("input", calculateBudget));
 

@@ -161,12 +161,9 @@ def _find_best_caterer_for_event(event: dict[str, Any]):
 def calculate_budget_totals(event: dict[str, Any]) -> dict[str, Any]:
     guest_count = max(_to_int(event.get("guest_count"), 0), 0)
     venue_cost = _to_float(event.get("venue_cost"), 0.0)
-    estimated_venue_cost = _to_float(event.get("estimated_venue_cost"), 0.0)
-    if venue_cost <= 0 and estimated_venue_cost > 0:
-        venue_cost = estimated_venue_cost
-
+    # Prefer the event-linked venue/catering estimates when present.
+    venue_cost = max(venue_cost, _to_float(event.get("estimated_venue_cost"), 0.0))
     food_cost_per_person = _to_float(event.get("food_cost_per_person"), 0.0)
-    estimated_catering_cost = _to_float(event.get("estimated_catering_cost"), 0.0)
     decorations_cost = _to_float(event.get("decorations_cost"), 0.0)
     equipment_cost = _to_float(event.get("equipment_cost"), 0.0)
     staff_cost = _to_float(event.get("staff_cost"), 0.0)
@@ -175,9 +172,6 @@ def calculate_budget_totals(event: dict[str, Any]) -> dict[str, Any]:
     contingency_percent = _to_float(event.get("contingency_percent"), 0.0)
 
     food_total = guest_count * food_cost_per_person
-    if food_total <= 0 and estimated_catering_cost > 0:
-        food_total = estimated_catering_cost
-        food_cost_per_person = _safe_div(food_total, guest_count)
     subtotal = venue_cost + food_total + decorations_cost + equipment_cost + staff_cost + marketing_cost + misc_cost
     contingency = subtotal * (contingency_percent / 100.0)
     total = subtotal + contingency
@@ -198,15 +192,14 @@ def calculate_budget_totals(event: dict[str, Any]) -> dict[str, Any]:
         for key, value in breakdown_amounts.items()
     }
 
+    budget_limit = _to_float(event.get("budget_limit"), 0.0)
+    remaining_budget = budget_limit - total if budget_limit > 0 else None
+
     return {
         "guest_count": guest_count,
         "venue_cost": round(venue_cost, 2),
         "food_cost_per_person": round(food_cost_per_person, 2),
         "food_total": round(food_total, 2),
-        "selected_venue": event.get("selected_venue"),
-        "selected_catering": event.get("selected_catering"),
-        "estimated_venue_cost": round(estimated_venue_cost, 2),
-        "estimated_catering_cost": round(estimated_catering_cost, 2),
         "decorations_cost": round(decorations_cost, 2),
         "equipment_cost": round(equipment_cost, 2),
         "staff_cost": round(staff_cost, 2),
@@ -219,6 +212,9 @@ def calculate_budget_totals(event: dict[str, Any]) -> dict[str, Any]:
         "cost_per_guest": round(cost_per_guest, 2),
         "largest_category": largest_category,
         "breakdown_percentages": breakdown_percentages,
+        "budget_limit": round(budget_limit, 2),
+        "remaining_budget": round(remaining_budget, 2) if remaining_budget is not None else None,
+        "over_budget_by": round(abs(remaining_budget), 2) if remaining_budget is not None and remaining_budget < 0 else 0,
     }
 
 
@@ -244,8 +240,6 @@ def generate_budget_estimate(event: dict[str, Any]) -> dict[str, Any]:
     if _to_float(estimate.get("venue_cost"), 0.0) <= 0:
         if matching_venue:
             estimate["venue_cost"] = _to_float(matching_venue.get("estimated_cost"), 0.0)
-            estimate["selected_venue"] = matching_venue.get("name")
-            estimate["estimated_venue_cost"] = estimate["venue_cost"]
             venue_context.update({
                 "source": "database",
                 "message": f"Matched venue database entry: {matching_venue.get('name', location)}.",
@@ -259,8 +253,6 @@ def generate_budget_estimate(event: dict[str, Any]) -> dict[str, Any]:
             })
         elif recommended_venue:
             estimate["venue_cost"] = _to_float(recommended_venue.get("estimated_cost"), 0.0)
-            estimate["selected_venue"] = recommended_venue.get("name")
-            estimate["estimated_venue_cost"] = estimate["venue_cost"]
             venue_context.update({
                 "source": "recommendation",
                 "message": f"No venue was selected, so a typical venue estimate was used based on event size: {recommended_venue.get('name', 'Recommended venue') }.",
@@ -269,11 +261,8 @@ def generate_budget_estimate(event: dict[str, Any]) -> dict[str, Any]:
     if _to_float(estimate.get("food_cost_per_person"), 0.0) <= 0:
         if recommended_caterer and _to_float(recommended_caterer.get("cost_per_person"), 0.0) > 0:
             estimate["food_cost_per_person"] = _to_float(recommended_caterer.get("cost_per_person"))
-            estimate["selected_catering"] = recommended_caterer.get("name")
-            estimate["estimated_catering_cost"] = round(guest_count * estimate["food_cost_per_person"], 2)
         else:
             estimate["food_cost_per_person"] = defaults["food_cost_per_person"]
-            estimate["estimated_catering_cost"] = round(guest_count * estimate["food_cost_per_person"], 2)
 
     scaled = 1.0
     if guest_count >= 150:
@@ -365,23 +354,55 @@ def analyze_budget(event: dict[str, Any]) -> dict[str, Any]:
     elif 0 < totals["cost_per_guest"] <= 8:
         warnings.append("Cost per guest is very low, so double-check that all major categories are included.")
 
-    score = 100
-    score -= 18 if totals["contingency_percent"] <= 0 else 0
-    score -= 15 if totals["breakdown_percentages"]["food"] > 55 else 0
-    score -= 12 if totals["breakdown_percentages"]["venue"] > 45 else 0
-    score -= 10 if len(zero_optional) >= 3 else 0
-    score -= 10 if totals["cost_per_guest"] >= 40 else 0
-    score -= 8 if totals["guest_count"] >= 75 and totals["staff_cost"] <= 0 else 0
-    score = max(0, min(100, score))
+    budget_limit = totals.get("budget_limit", 0) or 0
+    remaining_budget = totals.get("remaining_budget")
+    over_budget_by = totals.get("over_budget_by", 0) or 0
 
-    if score >= 85:
-        label = "Healthy"
-    elif score >= 65:
-        label = "Watch"
-    elif score >= 45:
-        label = "Over Budget Risk"
+    if budget_limit > 0:
+        used_ratio = _safe_div(totals["total"], budget_limit)
+        if over_budget_by > 0:
+            warnings.insert(0, f"This plan is ${over_budget_by:.2f} over the user's maximum spending limit.")
+            suggestions.insert(0, "Reduce venue, catering, or optional costs before adding more expenses.")
+            score = max(0, int(70 - (_safe_div(over_budget_by, budget_limit) * 100)))
+        else:
+            # Budget fit is intentionally not just "money left percent." A plan can be healthy
+            # while using most of the budget, but it becomes tighter as the remaining cushion shrinks.
+            score = max(0, min(100, int(100 - (used_ratio * 25))))
+            if remaining_budget is not None:
+                suggestions.insert(0, f"You have about ${remaining_budget:.2f} left before reaching the spending limit.")
+            if used_ratio >= 0.9:
+                warnings.insert(0, "This event is within budget, but there is very little room left for changes.")
+            elif used_ratio <= 0.65:
+                suggestions.insert(0, "This event has strong budget flexibility. You can keep the savings or improve food, venue, or supplies.")
+
+        if over_budget_by > 0:
+            label = "Over Limit"
+        elif used_ratio >= 0.9:
+            label = "Tight"
+        elif used_ratio >= 0.75:
+            label = "Manageable"
+        else:
+            label = "Comfortable"
     else:
-        label = "High Risk"
+        score = 100
+        score -= 18 if totals["contingency_percent"] <= 0 else 0
+        score -= 15 if totals["breakdown_percentages"]["food"] > 55 else 0
+        score -= 12 if totals["breakdown_percentages"]["venue"] > 45 else 0
+        score -= 10 if len(zero_optional) >= 3 else 0
+        score -= 10 if totals["cost_per_guest"] >= 40 else 0
+        score -= 8 if totals["guest_count"] >= 75 and totals["staff_cost"] <= 0 else 0
+        score = max(0, min(100, score))
+
+        if score >= 85:
+            label = "Healthy"
+        elif score >= 65:
+            label = "Watch"
+        elif score >= 45:
+            label = "Over Budget Risk"
+        else:
+            label = "High Risk"
+
+        suggestions.insert(0, "Set a maximum spending limit so I can judge whether the plan actually fits what you can spend.")
 
     if not suggestions:
         suggestions.append("This budget looks balanced. Save it and revisit after venue or catering changes.")
@@ -392,6 +413,9 @@ def analyze_budget(event: dict[str, Any]) -> dict[str, Any]:
             "score": score,
             "label": label,
             "style": style,
+            "budget_limit": budget_limit,
+            "remaining_budget": remaining_budget,
+            "over_budget_by": over_budget_by,
         },
         "warnings": warnings,
         "suggestions": suggestions,
