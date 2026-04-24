@@ -46,6 +46,8 @@ async function loadAdminStats() {
     document.getElementById("total-users").textContent = data.total_users ?? 0;
     document.getElementById("total-events").textContent = data.total_events ?? 0;
     document.getElementById("total-tasks").textContent = data.total_tasks ?? 0;
+    const agendaStat = document.getElementById("total-agenda-items");
+    if (agendaStat) agendaStat.textContent = data.total_agenda_items ?? 0;
 }
 
 async function loadUsers() {
@@ -113,6 +115,9 @@ function applyFilters() {
             ${event.location}
             ${event.owner_name}
             ${event.owner_email}
+            ${event.selected_venue}
+            ${event.selected_catering}
+            ${event.description}
         `.toLowerCase();
 
         return text.includes(searchValue);
@@ -154,13 +159,66 @@ function renderEvents() {
         return;
     }
 
-    container.innerHTML = filteredEvents.map(event => `
-        <div class="admin-event-card">
-            <h3>${escapeHtml(event.title)}</h3>
+    container.innerHTML = filteredEvents.map(event => {
+        const completed = Number(event.completed_task_count || 0);
+        const totalTasks = Number(event.task_count || 0);
+        const pending = Math.max(totalTasks - completed, 0);
+        const budgetTotal = Number(event.budget_total || 0);
+        const budgetLimit = Number(event.budget_limit || 0);
+        const budgetText = budgetLimit > 0
+            ? `${formatCurrency(budgetTotal)} of ${formatCurrency(budgetLimit)}`
+            : formatCurrency(budgetTotal);
+        const cateringCost = Number(event.estimated_catering_cost || 0);
+        const venueCost = Number(event.estimated_venue_cost || 0);
 
-            <p><strong>Owner:</strong> ${escapeHtml(event.owner_name)} (${escapeHtml(event.owner_email)})</p>
-            <p><strong>Date:</strong> ${escapeHtml(event.start_datetime || event.date || "N/A")}</p>
-            <p><strong>Location:</strong> ${escapeHtml(event.location || "N/A")}</p>
-        </div>
-    `).join("");
+        return `
+            <div class="admin-event-card">
+                <div class="admin-event-title-row">
+                    <div>
+                        <h3>${escapeHtml(event.title || "Untitled Event")}</h3>
+                        <p class="muted-text">${escapeHtml(formatDateTimeRange(event.start_datetime, event.end_datetime, event.date))}</p>
+                    </div>
+                    <span class="admin-status-pill">${escapeHtml(Number(event.guest_count || 0))} guests</span>
+                </div>
+
+                <div class="admin-detail-grid">
+                    <p><strong>Owner</strong><span>${escapeHtml(event.owner_name || "Unknown")} (${escapeHtml(event.owner_email || "No email")})</span></p>
+                    <p><strong>Location</strong><span>${escapeHtml(event.location || "Not set")}</span></p>
+                    <p><strong>Venue</strong><span>${escapeHtml(event.selected_venue || "Not selected")}${venueCost > 0 ? ` • ${formatCurrency(venueCost)}` : ""}</span></p>
+                    <p><strong>Catering</strong><span>${escapeHtml(event.selected_catering || "Not selected")}${cateringCost > 0 ? ` • ${formatCurrency(cateringCost)}` : ""}</span></p>
+                    <p><strong>Budget</strong><span>${escapeHtml(budgetText)}</span></p>
+                    <p><strong>Planning</strong><span>${completed}/${totalTasks} tasks complete, ${pending} pending</span></p>
+                    <p><strong>Agenda</strong><span>${Number(event.agenda_count || 0)} agenda item(s), ${Number(event.lineup_count || 0)} lineup entry/entries</span></p>
+                    <p><strong>Next Agenda Time</strong><span>${escapeHtml(event.next_agenda_time || "Not scheduled")}</span></p>
+                </div>
+
+                ${event.description ? `<p class="admin-event-description"><strong>Description:</strong> ${escapeHtml(event.description)}</p>` : ""}
+            </div>
+        `;
+    }).join("");
+}
+
+function formatDateTimeRange(startDateTime, endDateTime, fallbackDate) {
+    if (startDateTime && endDateTime) return `${formatDateTime(startDateTime)} - ${formatDateTime(endDateTime)}`;
+    if (startDateTime) return formatDateTime(startDateTime);
+    if (fallbackDate) return formatDate(fallbackDate);
+    return "No date";
+}
+
+function formatDate(dateString) {
+    if (!dateString) return "No date";
+    const date = new Date(`${dateString}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return dateString;
+    return date.toLocaleDateString();
+}
+
+function formatDateTime(dateTimeString) {
+    if (!dateTimeString) return "";
+    const date = new Date(dateTimeString);
+    if (Number.isNaN(date.getTime())) return dateTimeString;
+    return date.toLocaleString();
+}
+
+function formatCurrency(amount) {
+    return `$${Number(amount || 0).toFixed(2)}`;
 }
