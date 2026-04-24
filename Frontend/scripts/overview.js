@@ -9,7 +9,7 @@ function getEventIdFromUrl() {
 }
 
 async function fetchAvailableEvents() {
-    const response = await fetch(`${API_BASE}/api/events`, { method: "GET", credentials: "include" });
+    const response = await fetch(`${API_BASE}/api/events/mine`, { method: "GET", credentials: "include" });
     const data = await response.json();
 
     if (!response.ok) throw new Error(data.error || "Could not load events.");
@@ -114,12 +114,6 @@ function renderOverview(event, tasks, agenda, budgetData = null) {
     document.getElementById("overview-event-when").textContent = formatDateTimeRange(event.start_datetime, event.end_datetime, event.date);
     document.getElementById("overview-event-description").textContent = event.description || "No description yet.";
     document.getElementById("overview-location").textContent = event.location || "Not set";
-    document.getElementById("overview-selected-venue").textContent = event.selected_venue || event.location || "Not selected";
-    const cateringCost = Number(event.estimated_catering_cost || 0);
-    const cateringLabel = event.selected_catering
-        ? `${event.selected_catering}${cateringCost > 0 ? ` (${formatCurrency(cateringCost)} est.)` : ""}`
-        : "Not selected";
-    document.getElementById("overview-selected-catering").textContent = cateringLabel;
     document.getElementById("overview-guests").textContent = String(event.guest_count || 0);
     document.getElementById("overview-schedule").textContent = formatDateTimeRange(event.start_datetime, event.end_datetime, event.date);
     const budgetLabel = budgetData?.health?.label ? `${formatCurrency(Number(event.budget_total || 0))} (${budgetData.health.label})` : formatCurrency(Number(event.budget_total || 0));
@@ -165,48 +159,17 @@ function renderAgendaSnapshot(agenda) {
         return;
     }
 
-    const sortedAgenda = [...agenda].sort((a, b) => {
-        const aKey = `${a.agenda_date || "9999-99-99"} ${a.start_time || "99:99"}`;
-        const bKey = `${b.agenda_date || "9999-99-99"} ${b.start_time || "99:99"}`;
-        return aKey.localeCompare(bKey);
-    });
-
-    container.innerHTML = sortedAgenda.slice(0, 8).map((item, index) => {
-        const lineup = Array.isArray(item.lineup) ? item.lineup : [];
-        const timeLabel = formatAgendaSchedule(item);
-        const duration = formatAgendaDuration(item);
-        return `
-            <div class="agenda-card overview-agenda-card detailed-agenda-card">
-                <div class="agenda-card-header">
-                    <div>
-                        <h4>${index + 1}. ${escapeHtml(item.title || "Agenda Item")}</h4>
-                        <p class="muted-text">${escapeHtml(timeLabel)}${duration ? ` • ${escapeHtml(duration)}` : ""}</p>
-                    </div>
-                    <span class="admin-status-pill">${lineup.length} lineup</span>
+    container.innerHTML = agenda.slice(0, 6).map(item => `
+        <div class="agenda-card overview-agenda-card">
+            <div class="agenda-card-header">
+                <div>
+                    <h4>${escapeHtml(item.title)}</h4>
+                    <p class="muted-text">${formatAgendaSchedule(item)}</p>
                 </div>
-
-                <div class="overview-agenda-details">
-                    <p><strong>Description:</strong> ${item.description ? escapeHtml(item.description) : "No description added."}</p>
-                    <p><strong>Assigned people:</strong> ${lineup.length ? `${lineup.length} person/people` : "None assigned"}</p>
-                </div>
-
-                ${lineup.length ? `
-                    <div class="lineup-block overview-lineup-block">
-                        <strong>Lineup</strong>
-                        <ul class="lineup-list overview-lineup-list">
-                            ${lineup.slice(0, 5).map(line => `
-                                <li>
-                                    <span>${escapeHtml(line.name || "Unnamed")}</span>
-                                    <span class="muted-text">${escapeHtml(line.role || "No role listed")}</span>
-                                </li>
-                            `).join("")}
-                        </ul>
-                        ${lineup.length > 5 ? `<p class="muted-text">+${lineup.length - 5} more lineup item(s)</p>` : ""}
-                    </div>
-                ` : ""}
             </div>
-        `;
-    }).join("");
+            ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
+        </div>
+    `).join("");
 }
 
 function showOverviewError(message) {
@@ -240,29 +203,6 @@ function formatAgendaSchedule(item) {
     if (item.start_time && item.end_time) return `${dateLabel} • ${item.start_time} - ${item.end_time}`;
     if (item.start_time) return `${dateLabel} • ${item.start_time}`;
     return dateLabel;
-}
-
-function formatAgendaDuration(item) {
-    if (!item.start_time || !item.end_time) return "";
-    const start = parseTimeToMinutes(item.start_time);
-    const end = parseTimeToMinutes(item.end_time);
-    if (start === null || end === null || end <= start) return "";
-    const total = end - start;
-    const hours = Math.floor(total / 60);
-    const minutes = total % 60;
-    if (hours && minutes) return `${hours} hr ${minutes} min`;
-    if (hours) return `${hours} hr`;
-    return `${minutes} min`;
-}
-
-function parseTimeToMinutes(value) {
-    if (!value) return null;
-    const match = String(value).match(/^(\d{1,2}):(\d{2})/);
-    if (!match) return null;
-    const hours = Number(match[1]);
-    const minutes = Number(match[2]);
-    if (Number.isNaN(hours) || Number.isNaN(minutes)) return null;
-    return hours * 60 + minutes;
 }
 
 function formatCurrency(amount) {

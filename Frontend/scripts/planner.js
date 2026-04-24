@@ -22,7 +22,7 @@ function getEventIdFromUrl() {
 }
 
 async function fetchAvailableEvents() {
-    const response = await fetch(`${API_BASE}/api/events`, {
+    const response = await fetch(`${API_BASE}/api/events/mine`, {
         method: "GET",
         credentials: "include"
     });
