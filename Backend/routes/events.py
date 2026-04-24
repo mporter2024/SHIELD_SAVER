@@ -144,18 +144,11 @@ def estimate_budget(event_id):
     )
     db.commit()
 
-    # Do not send side recommendations when the user has already selected/entered
-    # a venue or caterer. The budget page should not suggest replacing active choices
-    # unless the user explicitly asks for alternatives.
-    has_selected_venue = bool((event_data.get("selected_venue") or "").strip() or (event_data.get("location") or "").strip())
-    has_selected_catering = bool((event_data.get("selected_catering") or "").strip())
-
     return jsonify({
         "event": event_data,
         "analysis": analyze_budget(event_data),
-        "recommended_venue": None if has_selected_venue else estimated.get("recommended_venue"),
-        "recommended_caterer": None if has_selected_catering else estimated.get("recommended_caterer"),
-        "venue_context": estimated.get("venue_context"),
+        "recommended_venue": estimated.get("recommended_venue"),
+        "recommended_caterer": estimated.get("recommended_caterer"),
     }), 200
 
 
@@ -208,11 +201,6 @@ def create_event():
         "budget_subtotal": clean_number(data.get("budget_subtotal"), 0),
         "budget_contingency": clean_number(data.get("budget_contingency"), 0),
         "budget_total": clean_number(data.get("budget_total"), 0),
-        "budget_limit": clean_number(data.get("budget_limit"), 0),
-        "selected_venue": data.get("selected_venue"),
-        "selected_catering": data.get("selected_catering"),
-        "estimated_venue_cost": clean_number(data.get("estimated_venue_cost"), data.get("venue_cost", 0)),
-        "estimated_catering_cost": clean_number(data.get("estimated_catering_cost"), 0),
         "user_id": session["user_id"],
     }
 
@@ -230,10 +218,9 @@ def create_event():
                 title, date, start_datetime, end_datetime, location, description, user_id,
                 guest_count, venue_cost, food_cost_per_person, decorations_cost,
                 equipment_cost, staff_cost, marketing_cost, misc_cost,
-                contingency_percent, budget_subtotal, budget_contingency, budget_total,
-                budget_limit, selected_venue, selected_catering, estimated_venue_cost, estimated_catering_cost
+                contingency_percent, budget_subtotal, budget_contingency, budget_total
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 payload["title"], payload["date"], payload["start_datetime"], payload["end_datetime"],
@@ -241,9 +228,7 @@ def create_event():
                 payload["guest_count"], payload["venue_cost"], payload["food_cost_per_person"],
                 payload["decorations_cost"], payload["equipment_cost"], payload["staff_cost"],
                 payload["marketing_cost"], payload["misc_cost"], payload["contingency_percent"],
-                payload["budget_subtotal"], payload["budget_contingency"], payload["budget_total"],
-                payload["budget_limit"], payload["selected_venue"], payload["selected_catering"],
-                payload["estimated_venue_cost"], payload["estimated_catering_cost"]
+                payload["budget_subtotal"], payload["budget_contingency"], payload["budget_total"]
             ),
         )
         db.commit()
@@ -287,11 +272,6 @@ def update_event(event_id):
         "budget_subtotal": clean_number(data.get("budget_subtotal"), existing["budget_subtotal"] or 0) if "budget_subtotal" in data else None,
         "budget_contingency": clean_number(data.get("budget_contingency"), existing["budget_contingency"] or 0) if "budget_contingency" in data else None,
         "budget_total": clean_number(data.get("budget_total"), existing["budget_total"] or 0) if "budget_total" in data else None,
-        "budget_limit": clean_number(data.get("budget_limit"), existing["budget_limit"] or 0) if "budget_limit" in data else None,
-        "selected_venue": data.get("selected_venue") if "selected_venue" in data else None,
-        "selected_catering": data.get("selected_catering") if "selected_catering" in data else None,
-        "estimated_venue_cost": clean_number(data.get("estimated_venue_cost"), existing["estimated_venue_cost"] or 0) if "estimated_venue_cost" in data else None,
-        "estimated_catering_cost": clean_number(data.get("estimated_catering_cost"), existing["estimated_catering_cost"] or 0) if "estimated_catering_cost" in data else None,
     }
 
     derived_source = dict(existing)
@@ -324,12 +304,7 @@ def update_event(event_id):
                 contingency_percent = COALESCE(?, contingency_percent),
                 budget_subtotal = COALESCE(?, budget_subtotal),
                 budget_contingency = COALESCE(?, budget_contingency),
-                budget_total = COALESCE(?, budget_total),
-                budget_limit = COALESCE(?, budget_limit),
-                selected_venue = COALESCE(?, selected_venue),
-                selected_catering = COALESCE(?, selected_catering),
-                estimated_venue_cost = COALESCE(?, estimated_venue_cost),
-                estimated_catering_cost = COALESCE(?, estimated_catering_cost)
+                budget_total = COALESCE(?, budget_total)
             WHERE id = ?
             """,
             (
@@ -338,8 +313,6 @@ def update_event(event_id):
                 values["decorations_cost"], values["equipment_cost"], values["staff_cost"],
                 values["marketing_cost"], values["misc_cost"], values["contingency_percent"],
                 values["budget_subtotal"], values["budget_contingency"], values["budget_total"],
-                values["budget_limit"], values["selected_venue"], values["selected_catering"],
-                values["estimated_venue_cost"], values["estimated_catering_cost"],
                 event_id,
             ),
         )
@@ -356,13 +329,38 @@ def update_event(event_id):
 
 @events_bp.delete("/<int:event_id>")
 def delete_event(event_id):
+    if "user_id" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
     db = get_db()
 
-    db.execute("DELETE FROM tasks WHERE event_id = ?", (event_id,))
-    cursor = db.execute("DELETE FROM events WHERE id = ?", (event_id,))
-    db.commit()
+    existing = db.execute(
+        "SELECT id FROM events WHERE id = ? AND user_id = ?",
+        (event_id, session["user_id"]),
+    ).fetchone()
 
-    if cursor.rowcount == 0:
+    if existing is None:
         return jsonify({"error": "Event not found"}), 404
+
+    try:
+        # Delete child records first so SQLite foreign-key checks do not block
+        # the event deletion. Lineup items depend on agenda items, and agenda
+        # items/tasks depend on the event.
+        agenda_rows = db.execute(
+            "SELECT id FROM agenda_items WHERE event_id = ?",
+            (event_id,),
+        ).fetchall()
+        agenda_ids = [row["id"] for row in agenda_rows]
+
+        for agenda_id in agenda_ids:
+            db.execute("DELETE FROM lineup_items WHERE agenda_item_id = ?", (agenda_id,))
+
+        db.execute("DELETE FROM agenda_items WHERE event_id = ?", (event_id,))
+        db.execute("DELETE FROM tasks WHERE event_id = ?", (event_id,))
+        db.execute("DELETE FROM events WHERE id = ? AND user_id = ?", (event_id, session["user_id"]))
+        db.commit()
+    except sqlite3.Error as e:
+        db.rollback()
+        return jsonify({"error": "Could not delete event", "details": str(e)}), 500
 
     return jsonify({"message": "Event deleted successfully"}), 200
