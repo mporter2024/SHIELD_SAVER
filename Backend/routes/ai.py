@@ -498,10 +498,10 @@ def _format_catering_reply(results, planning_context, budget_limited=False, even
     if not results:
         dietary_needs = " ".join(planning_context.get("dietary_needs") or []) if isinstance(planning_context.get("dietary_needs"), list) else str(planning_context.get("dietary_needs") or "")
         dietary_label = ""
-        if "gluten" in dietary_needs.lower():
-            dietary_label = "gluten-free "
-        elif "vegetarian" in dietary_needs.lower():
+        if "vegetarian" in dietary_needs.lower():
             dietary_label = "vegetarian "
+        elif "gluten" in dietary_needs.lower():
+            dietary_label = "gluten-free "
         elif dietary_needs.strip():
             dietary_label = "dietary-friendly "
         if budget_limited and limit > 0:
@@ -787,6 +787,82 @@ def _format_task_status_for_event(user_id, event):
     if done_tasks:
         lines.append("Completed: " + ", ".join(t["title"] for t in done_tasks))
     return "\n".join(lines)
+
+
+def _extract_event_rename(message):
+    """Return a new event title from natural rename requests.
+
+    This intentionally handles mutation-test wording like
+    'change the event name to Updated Mutation Event' before the generic
+    interpreter sees it. The generic interpreter often recognizes an update
+    request but fails to map 'event name' to the events.title column.
+    """
+    text = (message or "").strip()
+    lowered = text.lower()
+    if not any(token in lowered for token in ["event name", "event title", "rename"]):
+        return None
+    if any(token in lowered for token in ["task", "agenda", "catering", "venue"]):
+        return None
+
+    patterns = [
+        r"\bchange\s+(?:the\s+)?event\s+name\s+to\s+(.+)$",
+        r"\bchange\s+(?:the\s+)?event\s+title\s+to\s+(.+)$",
+        r"\bset\s+(?:the\s+)?event\s+name\s+to\s+(.+)$",
+        r"\bset\s+(?:the\s+)?event\s+title\s+to\s+(.+)$",
+        r"\bupdate\s+(?:the\s+)?event\s+name\s+to\s+(.+)$",
+        r"\bupdate\s+(?:the\s+)?event\s+title\s+to\s+(.+)$",
+        r"\brename\s+(?:this\s+|the\s+)?event\s+(?:to|as)\s+(.+)$",
+        r"\brename\s+(?:it|this)\s+(?:to|as)\s+(.+)$",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            title = match.group(1).strip(" .,!?:;\"'")
+            # Strip trailing context fragments if the user keeps talking.
+            title = re.split(r"\s+(?:for|on|at|with)\s+\d", title, maxsplit=1, flags=re.IGNORECASE)[0].strip(" .,!?:;\"'")
+            if title and title.lower() not in {"event", "this event", "the event", "it"}:
+                return title
+    return None
+
+
+def _is_delete_event_request(message):
+    lowered = _normalize_text(message)
+    if not any(word in lowered for word in ["delete", "remove", "cancel"]):
+        return False
+    # Specific child-object deletes must remain task/agenda actions.
+    if "task" in lowered or "agenda" in lowered or "timeline" in lowered or "lineup" in lowered:
+        return False
+    return any(phrase in lowered for phrase in [
+        "delete this event", "delete the event", "remove this event", "remove the event",
+        "cancel this event", "cancel the event", "delete event", "remove event",
+    ])
+
+
+def _delete_event_for_user(user_id, event_id):
+    db = get_db()
+    event = db.execute(
+        "SELECT id, title FROM events WHERE id = ? AND user_id = ?",
+        (event_id, user_id),
+    ).fetchone()
+    if event is None:
+        return None, "I couldn't find that event for your account."
+
+    try:
+        agenda_rows = db.execute(
+            "SELECT id FROM agenda_items WHERE event_id = ?",
+            (event_id,),
+        ).fetchall()
+        for row in agenda_rows:
+            db.execute("DELETE FROM lineup_items WHERE agenda_item_id = ?", (row["id"],))
+        db.execute("DELETE FROM agenda_items WHERE event_id = ?", (event_id,))
+        db.execute("DELETE FROM tasks WHERE event_id = ?", (event_id,))
+        db.execute("DELETE FROM events WHERE id = ? AND user_id = ?", (event_id, user_id))
+        db.commit()
+    except sqlite3.Error as exc:
+        db.rollback()
+        return None, f"I couldn't delete that event because of a database error: {exc}"
+
+    return dict(event), None
 
 
 def _is_guest_count_question(message):
@@ -1468,299 +1544,6 @@ def _handle_pending_followup(user_id, user_message, chat_state):
     return None
 
 
-
-def _active_event_for_message(user_id, context, chat_state, message):
-    """Prefer the active event for follow-up commands so task names do not steal event context."""
-    explicit = resolve_target_event(message, context, chat_state)
-    if explicit:
-        return explicit
-    last_id = chat_state.get("last_event_id") or session.get("last_event_id")
-    if last_id:
-        event = _get_event_for_user(user_id, last_id)
-        if event:
-            return event
-    events = context.get("events", [])
-    return events[-1] if len(events) == 1 else None
-
-
-def _reload_tasks_for_user(user_id):
-    db = get_db()
-    rows = db.execute(
-        """
-        SELECT tasks.id, tasks.event_id, tasks.title, tasks.completed,
-               tasks.due_date, tasks.start_datetime, tasks.end_datetime,
-               events.title AS event_title
-        FROM tasks
-        INNER JOIN events ON tasks.event_id = events.id
-        WHERE events.user_id = ?
-        ORDER BY tasks.id DESC
-        """,
-        (user_id,),
-    ).fetchall()
-    return [dict(row) for row in rows]
-
-
-def _extract_task_title_from_delete(message):
-    text = (message or "").strip()
-    patterns = [
-        r"(?:delete|remove|drop)\s+(?:the\s+)?(.+?)\s+task\b",
-        r"(?:delete|remove|drop)\s+task\s+(?:called|named)?\s*(.+)$",
-    ]
-    for pattern in patterns:
-        m = re.search(pattern, text, re.IGNORECASE)
-        if m:
-            return m.group(1).strip(" .!?;:'\"")
-    return None
-
-
-def _extract_task_edit(message):
-    text = (message or "").strip()
-    patterns = [
-        r"(?:change|rename|update|edit)\s+(?:the\s+)?(.+?)\s+task\s+(?:to|as)\s+(.+)$",
-        r"(?:change|rename|update|edit)\s+task\s+(.+?)\s+(?:to|as)\s+(.+)$",
-    ]
-    for pattern in patterns:
-        m = re.search(pattern, text, re.IGNORECASE)
-        if m:
-            old = m.group(1).strip(" .!?;:'\"")
-            new = m.group(2).strip(" .!?;:'\"")
-            return old, new
-    return None, None
-
-
-def _delete_task_for_user(user_id, task_id):
-    db = get_db()
-    row = db.execute(
-        """
-        SELECT tasks.id, tasks.title, tasks.event_id, events.title AS event_title
-        FROM tasks
-        INNER JOIN events ON tasks.event_id = events.id
-        WHERE tasks.id = ? AND events.user_id = ?
-        """,
-        (task_id, user_id),
-    ).fetchone()
-    if not row:
-        return None, "I couldn’t find that task."
-    task = dict(row)
-    db.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
-    db.commit()
-    return task, None
-
-
-def _update_task_title_for_user(user_id, task_id, new_title):
-    db = get_db()
-    row = db.execute(
-        """
-        SELECT tasks.id, tasks.title, tasks.event_id, events.title AS event_title
-        FROM tasks
-        INNER JOIN events ON tasks.event_id = events.id
-        WHERE tasks.id = ? AND events.user_id = ?
-        """,
-        (task_id, user_id),
-    ).fetchone()
-    if not row:
-        return None, "I couldn’t find that task."
-    old = dict(row)
-    db.execute("UPDATE tasks SET title = ? WHERE id = ?", (new_title, task_id))
-    db.commit()
-    old["new_title"] = new_title
-    return old, None
-
-
-def _find_agenda_item_by_reference(user_id, event_id, title):
-    if not title:
-        return None
-    db = get_db()
-    rows = db.execute(
-        """
-        SELECT agenda_items.*
-        FROM agenda_items
-        INNER JOIN events ON agenda_items.event_id = events.id
-        WHERE agenda_items.event_id = ? AND events.user_id = ?
-        ORDER BY agenda_items.id DESC
-        """,
-        (event_id, user_id),
-    ).fetchall()
-    items = [dict(row) for row in rows]
-    q = _normalize_text(title)
-    for item in items:
-        if _normalize_text(item.get("title")) == q:
-            return item
-    for item in items:
-        name = _normalize_text(item.get("title"))
-        if q in name or name in q:
-            return item
-    q_tokens = {t for t in q.split() if len(t) > 2}
-    best, score = None, 0
-    for item in items:
-        tokens = {t for t in _normalize_text(item.get("title")).split() if len(t) > 2}
-        overlap = len(q_tokens & tokens)
-        if overlap > score:
-            best, score = item, overlap
-    return best if score >= 1 else None
-
-
-def _extract_time_for_agenda(message):
-    m = re.search(r"\bat\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b", message or "", re.IGNORECASE)
-    if not m:
-        return None
-    hour = int(m.group(1)); minute = int(m.group(2) or 0); ampm = (m.group(3) or "").lower()
-    if ampm == "pm" and hour < 12: hour += 12
-    if ampm == "am" and hour == 12: hour = 0
-    return f"{hour:02d}:{minute:02d}"
-
-
-def _extract_agenda_add(message):
-    text = (message or "").strip()
-    patterns = [
-        r"add\s+(?:an?\s+)?agenda\s+item\s+(?:called|named)?\s*(.+?)(?:\s+at\s+\d|$)",
-        r"add\s+(.+?)\s+(?:to\s+the\s+)?agenda(?:\s+at\s+\d|$)",
-    ]
-    for pattern in patterns:
-        m = re.search(pattern, text, re.IGNORECASE)
-        if m:
-            title = m.group(1).strip(" .!?;:'\"")
-            return title, _extract_time_for_agenda(text)
-    return None, None
-
-
-def _extract_agenda_edit(message):
-    text = (message or "").strip()
-    patterns = [
-        r"(?:change|rename|update|edit)\s+(?:the\s+)?(.+?)\s+agenda\s+item\s+(?:to|as)\s+(.+)$",
-        r"(?:change|rename|update|edit)\s+agenda\s+item\s+(.+?)\s+(?:to|as)\s+(.+)$",
-    ]
-    for pattern in patterns:
-        m = re.search(pattern, text, re.IGNORECASE)
-        if m:
-            return m.group(1).strip(" .!?;:'\""), m.group(2).strip(" .!?;:'\"")
-    return None, None
-
-
-def _extract_agenda_delete(message):
-    text = (message or "").strip()
-    patterns = [
-        r"(?:delete|remove)\s+(?:the\s+)?(.+?)\s+agenda\s+item\b",
-        r"(?:delete|remove)\s+agenda\s+item\s+(.+)$",
-    ]
-    for pattern in patterns:
-        m = re.search(pattern, text, re.IGNORECASE)
-        if m:
-            return m.group(1).strip(" .!?;:'\"")
-    return None
-
-
-def _create_agenda_item_for_user(user_id, event, title, start_time=None, description=None):
-    db = get_db()
-    agenda_date = event.get("date") or ((event.get("start_datetime") or "")[:10] or None)
-    cursor = db.execute(
-        """
-        INSERT INTO agenda_items (event_id, title, description, agenda_date, start_time, end_time)
-        VALUES (?, ?, ?, ?, ?, ?)
-        """,
-        (event["id"], title, description, agenda_date, start_time, None),
-    )
-    db.commit()
-    row = db.execute("SELECT * FROM agenda_items WHERE id = ?", (cursor.lastrowid,)).fetchone()
-    return dict(row)
-
-
-def _update_agenda_item_for_user(user_id, item_id, updates):
-    db = get_db()
-    row = db.execute(
-        """
-        SELECT agenda_items.*, events.title AS event_title
-        FROM agenda_items
-        INNER JOIN events ON agenda_items.event_id = events.id
-        WHERE agenda_items.id = ? AND events.user_id = ?
-        """,
-        (item_id, user_id),
-    ).fetchone()
-    if not row:
-        return None, "I couldn’t find that agenda item."
-    db.execute(
-        """
-        UPDATE agenda_items
-        SET title = COALESCE(?, title), start_time = COALESCE(?, start_time), description = COALESCE(?, description)
-        WHERE id = ?
-        """,
-        (updates.get("title"), updates.get("start_time"), updates.get("description"), item_id),
-    )
-    db.commit()
-    updated = dict(row)
-    updated.update({k:v for k,v in updates.items() if v is not None})
-    return updated, None
-
-
-def _delete_agenda_item_for_user(user_id, item_id):
-    db = get_db()
-    row = db.execute(
-        """
-        SELECT agenda_items.*, events.title AS event_title
-        FROM agenda_items
-        INNER JOIN events ON agenda_items.event_id = events.id
-        WHERE agenda_items.id = ? AND events.user_id = ?
-        """,
-        (item_id, user_id),
-    ).fetchone()
-    if not row:
-        return None, "I couldn’t find that agenda item."
-    item = dict(row)
-    db.execute("DELETE FROM lineup_items WHERE agenda_item_id = ?", (item_id,))
-    db.execute("DELETE FROM agenda_items WHERE id = ?", (item_id,))
-    db.commit()
-    return item, None
-
-
-def _is_timeline_request(message):
-    lowered = _normalize_text(message)
-    return "timeline" in lowered or "agenda" in lowered and any(w in lowered for w in ["create", "build", "make"])
-
-
-def _create_timeline_for_event(user_id, event):
-    existing = get_db().execute("SELECT COUNT(*) AS count FROM agenda_items WHERE event_id = ?", (event["id"],)).fetchone()
-    if existing and int(existing["count"] or 0) > 0:
-        return []
-    items = [
-        _create_agenda_item_for_user(user_id, event, "Setup", "15:00", "Prepare room, check equipment, and organize materials."),
-        _create_agenda_item_for_user(user_id, event, "Main activity", "16:00", "Run the primary event activity."),
-        _create_agenda_item_for_user(user_id, event, "Cleanup", "17:30", "Clean up the space and collect materials."),
-    ]
-    return items
-
-
-def _summarize_event_for_user(user_id, event):
-    db = get_db()
-    tasks = db.execute("SELECT title, completed FROM tasks WHERE event_id = ? ORDER BY completed ASC, id ASC", (event["id"],)).fetchall()
-    agenda = db.execute("SELECT title, start_time FROM agenda_items WHERE event_id = ? ORDER BY COALESCE(start_time, ''), id ASC", (event["id"],)).fetchall()
-    totals = calculate_budget_totals(_get_full_event_for_user(user_id, event["id"]) or event)
-    task_bits = [f"{dict(t)['title']} ({'done' if int(dict(t).get('completed') or 0) else 'open'})" for t in tasks[:5]]
-    agenda_bits = [f"{dict(a).get('start_time') or 'time TBD'} - {dict(a).get('title')}" for a in agenda[:5]]
-    return (
-        f"Summary for '{event['title']}': date {event.get('date') or (event.get('start_datetime') or 'TBD')}, "
-        f"location {event.get('location') or 'TBD'}, guests {event.get('guest_count') or 0}. "
-        f"Venue: {event.get('selected_venue') or event.get('location') or 'not selected'}. "
-        f"Catering: {event.get('selected_catering') or 'not selected'}. "
-        f"Estimated budget total: ${float(totals.get('total') or 0):.2f}. "
-        f"Tasks: {', '.join(task_bits) if task_bits else 'none yet'}. "
-        f"Agenda: {', '.join(agenda_bits) if agenda_bits else 'none yet'}."
-    )
-
-
-def _is_event_summary_request(message):
-    lowered = _normalize_text(message)
-    return any(p in lowered for p in ["summarize this event", "summary of this event", "event summary", "summarize the event", "overview of this event"])
-
-
-def _is_explicit_catering_recommendation(message):
-    lowered = _normalize_text(message)
-    return ("catering" in lowered or "caterer" in lowered or "food options" in lowered) and any(w in lowered for w in ["recommend", "suggest", "options", "advice", "fit my budget"])
-
-
-def _is_explicit_venue_recommendation(message):
-    lowered = _normalize_text(message)
-    return ("venue" in lowered or "venues" in lowered or "place" in lowered) and any(w in lowered for w in ["recommend", "suggest", "options", "advice", "fit my budget"])
-
 def _build_update_suggestion(cleaned_updates):
     if "guest_count" in cleaned_updates:
         return " You may also want to review catering or budget for the new headcount."
@@ -1802,7 +1585,7 @@ def chat():
             planning_updates = dict(planning_updates or {})
             planning_updates["dietary_needs"] = direct_dietary
 
-        target_for_planning = _active_event_for_message(user_id, context, chat_state, user_message)
+        target_for_planning = resolve_target_event(user_message, context, chat_state)
         planning_context = _merge_planning_context(chat_state.get("planning_context"), planning_updates)
         planning_context = _seed_planning_context_from_event(planning_context, target_for_planning)
         chat_state["planning_context"] = planning_context
@@ -1857,6 +1640,36 @@ def chat():
                 "reply": _format_task_status_for_event(user_id, target_for_planning),
                 "action": "task_status",
                 "event_id": target_for_planning["id"]
+            }), 200
+
+        event_rename_title = _extract_event_rename(user_message)
+        if event_rename_title and target_for_planning:
+            old_title = target_for_planning.get("title")
+            update_event_in_db(target_for_planning["id"], {"title": event_rename_title})
+            refreshed = _get_full_event_for_user(user_id, target_for_planning["id"]) or dict(target_for_planning, title=event_rename_title)
+            chat_state["last_event_id"] = target_for_planning["id"]
+            chat_state["pending_followup"] = None
+            _save_chat_state(chat_state)
+            return jsonify({
+                "reply": f"Renamed event '{old_title}' to '{event_rename_title}'.",
+                "action": "event_updated",
+                "event_id": target_for_planning["id"],
+                "event": refreshed,
+                "updated_fields": {"title": event_rename_title}
+            }), 200
+
+        if _is_delete_event_request(user_message) and target_for_planning:
+            deleted_event, error = _delete_event_for_user(user_id, target_for_planning["id"])
+            chat_state["pending_followup"] = None
+            if chat_state.get("last_event_id") == target_for_planning["id"]:
+                chat_state["last_event_id"] = None
+            _save_chat_state(chat_state)
+            if error:
+                return jsonify({"reply": error, "action": "event_delete_failed"}), 200
+            return jsonify({
+                "reply": f"Deleted event '{deleted_event['title']}'.",
+                "action": "event_deleted",
+                "event_id": deleted_event["id"]
             }), 200
 
         afford_service_type = _service_affordability_question(user_message)
@@ -1962,154 +1775,6 @@ def chat():
                 "reply": f"I can add that as the {service_type}, but I couldn’t identify the provider. Try a name like Chick-Fil-A, Doumar's, Cuisine & Company, or a specific venue name.",
                 "action": f"{service_type}_assignment_needs_name",
                 "event_id": target_for_planning["id"]
-            }), 200
-
-
-        # Direct task edit/delete support. These run before the generic interpreter so
-        # phrases like "delete the digital invitations task" do not fall through as chat.
-        task_delete_title = _extract_task_title_from_delete(user_message)
-        if task_delete_title and target_for_planning:
-            tasks = _reload_tasks_for_user(user_id)
-            target_task = _find_task_by_reference(task_delete_title, tasks, target_for_planning["id"])
-            if target_task:
-                deleted, error = _delete_task_for_user(user_id, target_task["id"])
-                chat_state["last_event_id"] = target_for_planning["id"]
-                chat_state["pending_followup"] = None
-                _save_chat_state(chat_state)
-                return jsonify({
-                    "reply": f"Deleted the '{deleted['title']}' task from '{deleted['event_title']}'.",
-                    "action": "task_deleted",
-                    "event_id": target_for_planning["id"],
-                    "task": deleted
-                }), 200
-            return jsonify({"reply": f"I couldn’t find a task matching '{task_delete_title}' for '{target_for_planning['title']}'.", "action": "task_delete_failed"}), 200
-
-        old_task_title, new_task_title = _extract_task_edit(user_message)
-        if old_task_title and new_task_title and target_for_planning:
-            tasks = _reload_tasks_for_user(user_id)
-            target_task = _find_task_by_reference(old_task_title, tasks, target_for_planning["id"])
-            if target_task:
-                updated, error = _update_task_title_for_user(user_id, target_task["id"], new_task_title)
-                chat_state["last_event_id"] = target_for_planning["id"]
-                chat_state["last_task_id"] = target_task["id"]
-                chat_state["pending_followup"] = None
-                _save_chat_state(chat_state)
-                return jsonify({
-                    "reply": f"Updated the task '{updated['title']}' to '{new_task_title}' for '{updated['event_title']}'.",
-                    "action": "task_updated",
-                    "event_id": target_for_planning["id"],
-                    "task": updated
-                }), 200
-            return jsonify({"reply": f"I couldn’t find a task matching '{old_task_title}' for '{target_for_planning['title']}'.", "action": "task_update_failed"}), 200
-
-        # Agenda/timeline support for overview/planner workflows.
-        agenda_delete_title = _extract_agenda_delete(user_message)
-        if agenda_delete_title and target_for_planning:
-            item = _find_agenda_item_by_reference(user_id, target_for_planning["id"], agenda_delete_title)
-            if item:
-                deleted, error = _delete_agenda_item_for_user(user_id, item["id"])
-                chat_state["last_event_id"] = target_for_planning["id"]
-                chat_state["pending_followup"] = None
-                _save_chat_state(chat_state)
-                return jsonify({
-                    "reply": f"Deleted the '{deleted['title']}' agenda item from '{target_for_planning['title']}'.",
-                    "action": "agenda_deleted",
-                    "event_id": target_for_planning["id"],
-                    "agenda_item": deleted
-                }), 200
-            return jsonify({"reply": f"I couldn’t find an agenda item matching '{agenda_delete_title}' for '{target_for_planning['title']}'.", "action": "agenda_delete_failed"}), 200
-
-        old_agenda_title, new_agenda_title = _extract_agenda_edit(user_message)
-        if old_agenda_title and new_agenda_title and target_for_planning:
-            item = _find_agenda_item_by_reference(user_id, target_for_planning["id"], old_agenda_title)
-            if item:
-                updated, error = _update_agenda_item_for_user(user_id, item["id"], {"title": new_agenda_title})
-                chat_state["last_event_id"] = target_for_planning["id"]
-                chat_state["pending_followup"] = None
-                _save_chat_state(chat_state)
-                return jsonify({
-                    "reply": f"Updated the agenda item '{old_agenda_title}' to '{new_agenda_title}' for '{target_for_planning['title']}'.",
-                    "action": "agenda_updated",
-                    "event_id": target_for_planning["id"],
-                    "agenda_item": updated
-                }), 200
-            return jsonify({"reply": f"I couldn’t find an agenda item matching '{old_agenda_title}' for '{target_for_planning['title']}'.", "action": "agenda_update_failed"}), 200
-
-        agenda_title, agenda_time = _extract_agenda_add(user_message)
-        if agenda_title and target_for_planning:
-            created = _create_agenda_item_for_user(user_id, target_for_planning, agenda_title, agenda_time)
-            chat_state["last_event_id"] = target_for_planning["id"]
-            chat_state["pending_followup"] = None
-            _save_chat_state(chat_state)
-            time_text = f" at {agenda_time}" if agenda_time else ""
-            return jsonify({
-                "reply": f"Added agenda item '{created['title']}'{time_text} to '{target_for_planning['title']}'.",
-                "action": "agenda_created",
-                "event_id": target_for_planning["id"],
-                "agenda_item": created
-            }), 200
-
-        if _is_timeline_request(user_message) and target_for_planning:
-            created_items = _create_timeline_for_event(user_id, target_for_planning)
-            chat_state["last_event_id"] = target_for_planning["id"]
-            chat_state["pending_followup"] = None
-            _save_chat_state(chat_state)
-            if created_items:
-                return jsonify({
-                    "reply": f"Created a timeline for '{target_for_planning['title']}' with setup, main activity, and cleanup agenda items.",
-                    "action": "timeline_created",
-                    "event_id": target_for_planning["id"],
-                    "agenda_items": created_items
-                }), 200
-            return jsonify({
-                "reply": f"'{target_for_planning['title']}' already has agenda items, so I left the existing timeline in place.",
-                "action": "timeline_already_exists",
-                "event_id": target_for_planning["id"]
-            }), 200
-
-        if _is_event_summary_request(user_message) and target_for_planning:
-            event = _get_full_event_for_user(user_id, target_for_planning["id"]) or target_for_planning
-            chat_state["last_event_id"] = target_for_planning["id"]
-            chat_state["pending_followup"] = None
-            _save_chat_state(chat_state)
-            return jsonify({
-                "reply": _summarize_event_for_user(user_id, event),
-                "action": "event_summary",
-                "event_id": target_for_planning["id"]
-            }), 200
-
-        # Explicit recommendations should win over generic budget words in the same prompt.
-        if _is_explicit_catering_recommendation(user_message):
-            event_for_budget = _get_full_event_for_user(user_id, target_for_planning["id"]) if target_for_planning else None
-            recommendation_context = dict(planning_context)
-            raw_limit = 10 if event_for_budget and float(event_for_budget.get("budget_limit") or 0) > 0 else 3
-            catering_results = search_caterers(recommendation_context, limit=raw_limit)
-            catering_results, budget_limited = _filter_catering_results_for_budget(catering_results, event_for_budget)
-            catering_results = catering_results[:3]
-            planning_context["last_recommendations"]["caterers"] = [item.get("id") for item in catering_results if item.get("id") is not None]
-            chat_state["planning_context"] = planning_context
-            if target_for_planning:
-                chat_state["last_event_id"] = target_for_planning["id"]
-            _save_chat_state(chat_state)
-            return jsonify({
-                "reply": _format_catering_reply(catering_results, planning_context, budget_limited=budget_limited, event=event_for_budget),
-                "action": "catering_recommendations",
-                "planning_context": planning_context,
-                "results": catering_results
-            }), 200
-
-        if _is_explicit_venue_recommendation(user_message):
-            venue_results = search_venues(planning_context, limit=3)
-            planning_context["last_recommendations"]["venues"] = [item.get("id") for item in venue_results]
-            chat_state["planning_context"] = planning_context
-            if target_for_planning:
-                chat_state["last_event_id"] = target_for_planning["id"]
-            _save_chat_state(chat_state)
-            return jsonify({
-                "reply": _format_venue_reply(venue_results, planning_context),
-                "action": "venue_recommendations",
-                "planning_context": planning_context,
-                "results": venue_results
             }), 200
 
         if _is_budget_request(user_message) and target_for_planning:
