@@ -6,7 +6,7 @@ from ai.unified_chatbot import UnifiedChatbot
 from ai.action_interpreter import interpret_message, get_default_chat_state, resolve_target_event
 from ai.entity_parser import extract_planning_preferences
 from ai.planning_engine import search_venues, search_caterers
-from ai.budget_engine import calculate_budget_totals
+from ai.budget_engine import calculate_budget_totals, analyze_budget, generate_budget_estimate
 from models.database import get_db
 import sqlite3
 import re
@@ -580,6 +580,212 @@ def _handle_service_assignment(user_id, user_message, context, chat_state):
 
 
 
+
+BUDGET_REQUEST_WORDS = [
+    "budget", "cost", "costs", "spend", "spending", "price", "prices",
+    "break down", "breakdown", "how much", "cheaper", "save money", "afford"
+]
+
+
+def _is_budget_request(message):
+    lowered = (message or "").lower()
+    return any(word in lowered for word in BUDGET_REQUEST_WORDS)
+
+
+def _format_money(value):
+    try:
+        return f"${float(value or 0):.2f}"
+    except (TypeError, ValueError):
+        return "$0.00"
+
+
+def _get_full_event_for_user(user_id, event_id):
+    if not event_id:
+        return None
+    db = get_db()
+    row = db.execute(
+        "SELECT * FROM events WHERE id = ? AND user_id = ?",
+        (event_id, user_id),
+    ).fetchone()
+    return dict(row) if row else None
+
+
+def _build_budget_reply(event, analysis, generated=False):
+    summary = analysis.get("summary", {})
+    health = analysis.get("health", {})
+    warnings = analysis.get("warnings", []) or []
+    suggestions = analysis.get("suggestions", []) or []
+
+    prefix = "I generated and saved a smart budget estimate." if generated else "Here is the current budget breakdown."
+    lines = [
+        f"{prefix} For '{event.get('title', 'this event')}':",
+        f"• Estimated total: {_format_money(summary.get('total'))}",
+        f"• Cost per guest: {_format_money(summary.get('cost_per_guest'))}",
+        f"• Venue: {_format_money(summary.get('venue_cost'))}",
+        f"• Food total: {_format_money(summary.get('food_total'))} ({_format_money(summary.get('food_cost_per_person'))}/person)",
+        f"• Largest category: {str(summary.get('largest_category') or 'none').title()}",
+        f"• Budget health: {health.get('label', 'Not analyzed')} ({health.get('score', '—')}/100)",
+    ]
+
+    if warnings:
+        lines.append("Main warning: " + warnings[0])
+    if suggestions:
+        lines.append("Suggestion: " + suggestions[0])
+
+    lines.append("You can ask me to make it cheaper, generate a smart budget, or update a specific category like venue cost or food per person.")
+    return "\n".join(lines)
+
+
+def _handle_budget_request(user_id, user_message, context, chat_state):
+    if not _is_budget_request(user_message):
+        return None
+
+    target_event = resolve_target_event(user_message, context, chat_state)
+    if not target_event:
+        return jsonify({
+            "reply": "I can help with the budget, but I couldn’t tell which event you mean. Please mention the event title or select an event first.",
+            "action": "budget_needs_event"
+        }), 200
+
+    full_event = _get_full_event_for_user(user_id, target_event.get("id"))
+    if not full_event:
+        return jsonify({
+            "reply": "I couldn’t find that event anymore.",
+            "action": "budget_failed"
+        }), 200
+
+    lowered = (user_message or "").lower()
+    should_generate = any(phrase in lowered for phrase in [
+        "generate", "estimate", "smart budget", "build a budget", "create a budget", "make a budget"
+    ])
+
+    generated = False
+    if should_generate:
+        estimate = generate_budget_estimate(full_event)
+        event_data = estimate.get("event", {})
+        update_fields = {
+            "guest_count": event_data.get("guest_count", 0),
+            "venue_cost": event_data.get("venue_cost", 0),
+            "food_cost_per_person": event_data.get("food_cost_per_person", 0),
+            "decorations_cost": event_data.get("decorations_cost", 0),
+            "equipment_cost": event_data.get("equipment_cost", 0),
+            "staff_cost": event_data.get("staff_cost", 0),
+            "marketing_cost": event_data.get("marketing_cost", 0),
+            "misc_cost": event_data.get("misc_cost", 0),
+            "contingency_percent": event_data.get("contingency_percent", 0),
+            "budget_subtotal": event_data.get("budget_subtotal", 0),
+            "budget_contingency": event_data.get("budget_contingency", 0),
+            "budget_total": event_data.get("budget_total", 0),
+        }
+        update_event_in_db(full_event["id"], update_fields)
+        full_event.update(update_fields)
+        generated = True
+
+    analysis = analyze_budget(full_event)
+    chat_state["last_event_id"] = full_event["id"]
+    chat_state["pending_followup"] = None
+    chat_state["planning_context"] = _seed_planning_context_from_event(chat_state.get("planning_context"), full_event)
+    _save_chat_state(chat_state)
+
+    return jsonify({
+        "reply": _build_budget_reply(full_event, analysis, generated=generated),
+        "action": "budget_answer",
+        "event_id": full_event["id"],
+        "analysis": analysis,
+        "event": full_event,
+    }), 200
+
+
+def _extract_task_update_request(message):
+    cleaned = (message or "").strip()
+    patterns = [
+        ("title", r"(?:rename|change|update)\s+(?:the\s+)?task\s+(.+?)\s+to\s+(.+)$"),
+        ("title", r"(?:rename|change|update)\s+(.+?)\s+task\s+to\s+(.+)$"),
+    ]
+    for field, pattern in patterns:
+        match = re.search(pattern, cleaned, re.IGNORECASE)
+        if match:
+            return {"task_ref": _clean_service_value(match.group(1)), "updates": {field: _clean_service_value(match.group(2))}}
+
+    date_match = re.search(r"(?:schedule|set|change|update)\s+(?:the\s+)?task\s+(.+?)\s+(?:for|on|to|by)\s+([a-z]+\s+\d{1,2}(?:st|nd|rd|th)?(?:,\s*\d{4})?)$", cleaned, re.IGNORECASE)
+    if date_match:
+        return {"task_ref": _clean_service_value(date_match.group(1)), "updates": {"due_date": _clean_service_value(date_match.group(2))}}
+
+    return None
+
+
+def update_task_for_user(user_id, task_id, updates):
+    db = get_db()
+    task = db.execute(
+        """
+        SELECT tasks.*, events.title AS event_title
+        FROM tasks
+        INNER JOIN events ON tasks.event_id = events.id
+        WHERE tasks.id = ? AND events.user_id = ?
+        """,
+        (task_id, user_id),
+    ).fetchone()
+    if not task:
+        return None, "That task was not found for the current user."
+
+    allowed = {"title", "due_date", "start_datetime", "end_datetime", "completed"}
+    set_parts = []
+    values = []
+    for key, value in (updates or {}).items():
+        if key in allowed and value not in (None, ""):
+            set_parts.append(f"{key} = ?")
+            values.append(value)
+
+    if not set_parts:
+        return None, "I found the task, but I couldn’t tell what to change."
+
+    values.append(task_id)
+    db.execute(f"UPDATE tasks SET {', '.join(set_parts)} WHERE id = ?", values)
+    db.commit()
+    updated = db.execute(
+        """
+        SELECT tasks.*, events.title AS event_title
+        FROM tasks
+        INNER JOIN events ON tasks.event_id = events.id
+        WHERE tasks.id = ?
+        """,
+        (task_id,),
+    ).fetchone()
+    return dict(updated), None
+
+
+def _handle_task_update(user_id, user_message, context, chat_state):
+    request_data = _extract_task_update_request(user_message)
+    if not request_data:
+        return None
+
+    event_hint = resolve_target_event(user_message, context, chat_state)
+    target_task = _find_task_by_reference(
+        request_data.get("task_ref"),
+        context.get("tasks", []),
+        event_hint.get("id") if event_hint else chat_state.get("last_event_id"),
+    )
+    if not target_task:
+        return jsonify({
+            "reply": "I can update a task, but I couldn’t tell which task you meant. Try using the task name, like 'rename task Confirm venue to Confirm park reservation.'",
+            "action": "task_update_needs_task"
+        }), 200
+
+    updated_task, error = update_task_for_user(user_id, target_task["id"], request_data.get("updates", {}))
+    if error:
+        return jsonify({"reply": error, "action": "task_update_failed"}), 200
+
+    chat_state["last_task_id"] = updated_task["id"]
+    chat_state["last_event_id"] = updated_task["event_id"]
+    chat_state["pending_followup"] = None
+    _save_chat_state(chat_state)
+
+    return jsonify({
+        "reply": f"Updated task '{updated_task['title']}' for '{updated_task['event_title']}'.",
+        "action": "task_updated",
+        "task": updated_task,
+    }), 200
+
 def _planning_signal_count(planning_context, keys):
     score = 0
     for key in keys:
@@ -1057,6 +1263,14 @@ def chat():
         followup_response = _handle_pending_followup(user_id, user_message, chat_state)
         if followup_response:
             return followup_response
+
+        task_update_response = _handle_task_update(user_id, user_message, context, chat_state)
+        if task_update_response:
+            return task_update_response
+
+        budget_response = _handle_budget_request(user_id, user_message, context, chat_state)
+        if budget_response:
+            return budget_response
 
         planning_updates = extract_planning_preferences(user_message)
         target_for_planning = resolve_target_event(user_message, context, chat_state)
