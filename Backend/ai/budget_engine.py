@@ -218,6 +218,61 @@ def calculate_budget_totals(event: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _fit_estimate_to_limit(estimate: dict[str, Any], budget_limit: float) -> dict[str, Any]:
+    """Trim generated/default costs so Generate Budget respects max spending power."""
+    if budget_limit <= 0:
+        return estimate
+
+    working = dict(estimate)
+    guest_count = max(_to_int(working.get("guest_count"), 0), 1)
+
+    def total() -> float:
+        return calculate_budget_totals(working)["total"]
+
+    if total() <= budget_limit:
+        return working
+
+    # Keep selected venue/catering if possible, but make the rest lean.
+    if not working.get("selected_venue") and _to_float(working.get("estimated_venue_cost"), 0) <= 0:
+        # Custom classroom/student-center style locations are often free in this project.
+        if (working.get("location") or "").strip():
+            working["venue_cost"] = 0.0
+            working["estimated_venue_cost"] = 0.0
+
+    lean = {
+        "decorations_cost": 25.0 if guest_count <= 50 else 50.0,
+        "equipment_cost": 35.0 if guest_count <= 50 else 75.0,
+        "staff_cost": 0.0 if guest_count <= 50 else 50.0,
+        "marketing_cost": 10.0 if guest_count <= 50 else 25.0,
+        "misc_cost": 20.0 if guest_count <= 50 else 40.0,
+        "contingency_percent": 5.0,
+    }
+    working.update(lean)
+    if total() <= budget_limit:
+        return working
+
+    # Bare minimum if the limit is tight.
+    working.update({
+        "decorations_cost": 0.0,
+        "equipment_cost": 0.0,
+        "staff_cost": 0.0,
+        "marketing_cost": 0.0,
+        "misc_cost": 0.0,
+        "contingency_percent": 0.0,
+    })
+    if total() <= budget_limit:
+        return working
+
+    # Only lower catering if it was generated/defaulted. Do not silently replace a named caterer.
+    if not working.get("selected_catering"):
+        venue = max(_to_float(working.get("venue_cost"), 0), _to_float(working.get("estimated_venue_cost"), 0))
+        affordable_food_pp = max((budget_limit - venue) / guest_count, 0.0)
+        working["food_cost_per_person"] = round(affordable_food_pp, 2)
+        working["estimated_catering_cost"] = round(affordable_food_pp * guest_count, 2)
+
+    return working
+
+
 def generate_budget_estimate(event: dict[str, Any]) -> dict[str, Any]:
     style = _infer_event_style(event)
     defaults = _style_defaults(style)
@@ -278,6 +333,10 @@ def generate_budget_estimate(event: dict[str, Any]) -> dict[str, Any]:
 
     if _to_float(estimate.get("contingency_percent"), 0.0) <= 0:
         estimate["contingency_percent"] = defaults["contingency_percent"]
+
+    # If the user set a max spending limit, Generate Budget should work around it
+    # instead of generating a plan that immediately exceeds it.
+    estimate = _fit_estimate_to_limit(estimate, _to_float(estimate.get("budget_limit"), 0.0))
 
     totals = calculate_budget_totals(estimate)
     estimate.update({

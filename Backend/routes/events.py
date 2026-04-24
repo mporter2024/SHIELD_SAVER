@@ -149,6 +149,7 @@ def estimate_budget(event_id):
         "analysis": analyze_budget(event_data),
         "recommended_venue": estimated.get("recommended_venue"),
         "recommended_caterer": estimated.get("recommended_caterer"),
+        "venue_context": estimated.get("venue_context"),
     }), 200
 
 

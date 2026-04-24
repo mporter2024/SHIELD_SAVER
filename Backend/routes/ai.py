@@ -579,6 +579,83 @@ def _is_budget_request(message):
     return any(word in lowered for word in BUDGET_REQUEST_WORDS)
 
 
+def _extract_guest_count_followup(message):
+    """Handle short follow-ups like '30 people' or 'make it 30 guests'."""
+    text = (message or "").strip().lower()
+    patterns = [
+        r"^(?:make\s+it\s+|update\s+(?:the\s+)?guest\s+count\s+(?:to\s+)?|set\s+(?:the\s+)?guest\s+count\s+(?:to\s+)?)?(\d{1,5})\s*(?:people|guests|attendees|person)?\.?$",
+        r"^(?:we\s+expect|expecting|about|around)\s+(\d{1,5})\s*(?:people|guests|attendees)\.?$",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            try:
+                value = int(match.group(1))
+                return value if value > 0 else None
+            except (TypeError, ValueError):
+                return None
+    return None
+
+
+def _budget_fit_updates(event, limit=None):
+    """Return conservative updates that try to make the current plan fit the max spending limit.
+
+    This keeps selected catering/venue when possible, but trims generated/default optional
+    categories first so setting a budget does not just report that the user is over limit.
+    """
+    if not event:
+        return {}
+    budget_limit = float(limit if limit is not None else (event.get("budget_limit") or 0))
+    if budget_limit <= 0:
+        return {}
+
+    working = dict(event)
+    # Very low-risk defaults. These are campus-event friendly and avoid adding needless
+    # recommendations/costs just because the generator has generic defaults.
+    guest_count = max(int(float(working.get("guest_count") or 0)), 1)
+    if float(working.get("venue_cost") or 0) > budget_limit * 0.5 and not working.get("selected_venue"):
+        working["venue_cost"] = 0
+        working["estimated_venue_cost"] = 0
+
+    # First pass: make optional categories lean.
+    lean = {
+        "decorations_cost": 25.0 if guest_count <= 50 else 50.0,
+        "equipment_cost": 35.0 if guest_count <= 50 else 75.0,
+        "staff_cost": 0.0 if guest_count <= 50 else 50.0,
+        "marketing_cost": 10.0 if guest_count <= 50 else 25.0,
+        "misc_cost": 20.0 if guest_count <= 50 else 40.0,
+        "contingency_percent": 5.0,
+    }
+    working.update(lean)
+    if calculate_budget_totals(working)["total"] <= budget_limit:
+        return lean
+
+    # Second pass: bare minimum optional costs.
+    bare = {
+        "decorations_cost": 0.0,
+        "equipment_cost": 0.0,
+        "staff_cost": 0.0,
+        "marketing_cost": 0.0,
+        "misc_cost": 0.0,
+        "contingency_percent": 0.0,
+    }
+    working.update(bare)
+    if calculate_budget_totals(working)["total"] <= budget_limit:
+        return bare
+
+    # Third pass: if catering was generated/defaulted rather than explicitly selected,
+    # reduce per-person food to fit the remaining budget. Do not silently downgrade a
+    # named caterer the user selected.
+    if not working.get("selected_catering"):
+        venue = float(working.get("venue_cost") or working.get("estimated_venue_cost") or 0)
+        max_food_pp = max((budget_limit - venue) / guest_count, 0)
+        bare["food_cost_per_person"] = round(max_food_pp, 2)
+        bare["estimated_catering_cost"] = round(max_food_pp * guest_count, 2)
+        return bare
+
+    return bare
+
+
 def _get_full_event_for_user(user_id, event_id):
     db = get_db()
     row = db.execute("SELECT * FROM events WHERE id = ? AND user_id = ?", (event_id, user_id)).fetchone()
@@ -627,6 +704,10 @@ def _set_budget_limit_for_event(user_id, event_id, amount):
     db = get_db()
     db.execute("UPDATE events SET budget_limit = ? WHERE id = ? AND user_id = ?", (float(amount), event_id, user_id))
     db.commit()
+    event = _get_full_event_for_user(user_id, event_id)
+    fit_updates = _budget_fit_updates(event, amount)
+    if fit_updates:
+        update_event_in_db(event_id, fit_updates)
     event = _recalculate_and_save_event_budget(event_id)
     return _get_full_event_for_user(user_id, event_id) or event
 
@@ -642,30 +723,50 @@ def _infer_custom_catering_cost_per_person(name):
     return 15.0
 
 
+def _clean_service_candidate(name):
+    name = (name or "").strip(" .!?;:")
+    name = re.sub(r"\b(?:to|for|on|in)\s+(?:that|the|this)?\s*(?:event|one|it)\b.*$", "", name, flags=re.IGNORECASE).strip(" .!?;:")
+    name = re.sub(r"\b(?:that|the|this)\s*(?:event|one|it)\b", "", name, flags=re.IGNORECASE).strip(" .!?;:")
+    # Common spoken/typed variants that otherwise look like broken custom names.
+    normalized = re.sub(r"[^a-z0-9]", "", name.lower())
+    if normalized in {"chickfil", "chickfila", "chickfilacatering", "chickfilfood"} or normalized.startswith("chickfil"):
+        return "Chick-Fil-A"
+    return name
+
+
 def _extract_custom_service_name(message, service_type):
     cleaned = (message or "").strip()
+    # Make typo-style phrases like "chick-fil-catering" parse as a provider,
+    # not as "that event" after the word catering.
+    cleaned = re.sub(r"(?i)(chick\s*[- ]?fil\s*[- ]?a?)\s*[- ]?(catering|caterer|food)", r"\1 \2", cleaned)
     if service_type == "catering":
         patterns = [
-            r"(?:add|use|choose|select|set|make)\s+(.+?)\s+(?:as\s+)?(?:the\s+)?(?:catering|caterer|food)(?:\s+for\s+.+)?$",
-            r"(?:catering|caterer|food)\s+(?:to|as|from|is)?\s*(.+?)(?:\s+for\s+.+)?$",
+            r"(?:add|use|choose|select|set|make|switch\s+to|change\s+to)\s+(.+?)\s+(?:as\s+)?(?:the\s+)?(?:catering|caterer|food)(?:\s+(?:to|for)\s+.+)?$",
+            r"(?:add|use|choose|select|set|make|switch\s+to|change\s+to)\s+(?:the\s+)?(?:catering|caterer|food)\s+(?:to|as|from)?\s*(.+?)(?:\s+(?:to|for)\s+.+)?$",
+            r"(?:catering|caterer|food)\s+(?:to|as|from|is)?\s*(.+?)(?:\s+(?:to|for)\s+.+)?$",
         ]
     else:
         patterns = [
-            r"(?:set|make|change|switch)\s+(?:the\s+)?(?:venue|location|place)\s+(?:to|as|at)?\s*(.+?)(?:\s+for\s+.+)?$",
-            r"(?:use|choose|select|add)\s+(.+?)\s+as\s+(?:the\s+)?(?:venue|location|place)(?:\s+for\s+.+)?$",
-            r"(?:venue|location|place)\s+(?:to|as|at|is)?\s*(.+?)(?:\s+for\s+.+)?$",
+            r"(?:set|make|change|switch)\s+(?:the\s+)?(?:venue|location|place)\s+(?:to|as|at)?\s*(.+?)(?:\s+(?:to|for)\s+.+)?$",
+            r"(?:use|choose|select|add)\s+(.+?)\s+as\s+(?:the\s+)?(?:venue|location|place)(?:\s+(?:to|for)\s+.+)?$",
+            r"(?:venue|location|place)\s+(?:to|as|at|is)?\s*(.+?)(?:\s+(?:to|for)\s+.+)?$",
         ]
     for pattern in patterns:
         match = re.search(pattern, cleaned, re.IGNORECASE)
         if match:
-            name = match.group(1).strip(" .!?;:")
-            name = re.sub(r"\b(?:to that event|to the event|for that event|for the event)$", "", name, flags=re.IGNORECASE).strip(" .!?;:")
-            if name and name.lower() not in {"that", "it", "this", "the"}:
+            name = _clean_service_candidate(match.group(1))
+            if name and name.lower() not in {"that", "it", "this", "the", "event", "that event", "the event"}:
                 return name
     return None
 
 
 def _find_service_match(message, service_type):
+    # Fast path for common provider variants, including typo forms like
+    # "chick-fil-catering".
+    normalized_message = re.sub(r"[^a-z0-9]", "", (message or "").lower())
+    if service_type == "catering" and "chickfil" in normalized_message:
+        return {"name": "Chick-Fil-A", "cost_per_person": 12.0}
+
     db = get_db()
     if service_type == "venue":
         rows = db.execute("SELECT * FROM venues ORDER BY LENGTH(name) DESC").fetchall()
@@ -1048,6 +1149,21 @@ def chat():
         planning_context = _seed_planning_context_from_event(planning_context, target_for_planning)
         chat_state["planning_context"] = planning_context
 
+        guest_count_followup = _extract_guest_count_followup(user_message)
+        if guest_count_followup is not None and target_for_planning:
+            update_event_in_db(target_for_planning["id"], {"guest_count": guest_count_followup})
+            refreshed = _recalculate_and_save_event_budget(target_for_planning["id"])
+            chat_state["last_event_id"] = target_for_planning["id"]
+            planning_context["guest_count"] = guest_count_followup
+            chat_state["planning_context"] = planning_context
+            _save_chat_state(chat_state)
+            return jsonify({
+                "reply": f"Updated '{target_for_planning['title']}' to {guest_count_followup} guests. I also refreshed the budget totals for that event.",
+                "action": "event_updated",
+                "event": refreshed,
+                "event_id": target_for_planning["id"]
+            }), 200
+
         budget_limit_amount = _extract_budget_limit_amount(user_message)
         if budget_limit_amount is not None and target_for_planning:
             event = _set_budget_limit_for_event(user_id, target_for_planning["id"], budget_limit_amount)
@@ -1056,7 +1172,7 @@ def chat():
             chat_state["planning_context"] = planning_context
             _save_chat_state(chat_state)
             return jsonify({
-                "reply": f"Got it. I’ll treat ${budget_limit_amount:.2f} as the maximum spending limit for '{target_for_planning['title']}'. " + _format_budget_summary(event),
+                "reply": f"Got it. I’ll keep '{target_for_planning['title']}' at or under ${budget_limit_amount:.2f} where possible. I trimmed generated/default budget categories to fit that limit before saving. " + _format_budget_summary(event),
                 "action": "budget_limit_set",
                 "event": event
             }), 200
